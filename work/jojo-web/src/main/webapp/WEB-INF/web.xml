@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+
+	<display-name>huifu esper framework</display-name>
+
+	<!-- [INSERT FRAGMENT HERE] -->
+	<!-- Define the basename for a resource bundle for I18N -->
+	<context-param>
+		<param-name>applicationName</param-name>
+		<param-value>esper</param-value>
+	</context-param>
+	<!-- <context-param>
+		<param-name>loadConfiguration</param-name>
+		<param-value>true</param-value>
+	</context-param>-->
+	<!-- <filter> <filter-name>logonFilter</filter-name> <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> 
+		<init-param> <param-name>targetBeanName</param-name> <param-value>logonFilter</param-value> 
+		</init-param> <init-param> <param-name>targetFilterLifecycle</param-name> 
+		<param-value>true</param-value> </init-param> </filter> -->
+	<filter>
+		<filter-name>byPassOtherFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>byPassOtherFilter</param-value>
+		</init-param>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>rewriteFilter</filter-name>
+		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	 <filter> 
+		 <filter-name>sitemesh</filter-name> 
+		 <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class> 
+	</filter>
+
+	<!-- <filter> <filter-name>sessionFilter</filter-name> <filter-class>com.huifu.saturn.web.common.session.support.filter.ChinapnrSessionRequestFilter</filter-class> 
+		</filter> <filter> <filter-name>sitemesh</filter-name> <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class> 
+		</filter>--> <!-- Context Configuration locations for Spring XML files -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+            classpath*:/spring.app.xml,
+            classpath*:/applicationContext-quartz.xml,
+            classpath*:/applicationContext-service.xml,
+            classpath*:/applicationContext-dao-mongoDB.xml,
+            
+            <!-- oracle 
+            classpath*:applicationContext-dao.xml,
+			classpath*:applicationContext-resources-jdbc.xml,
+            classpath*:applicationContext-resources-jndi.xml,
+             -->
+             /WEB-INF/applicationContext.xml,
+             /WEB-INF/applicationContext-common.xml,
+             /WEB-INF/applicationContext-validation.xml
+        </param-value>
+	</context-param>
+
+
+
+	<filter-mapping>
+		<filter-name>byPassOtherFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- 分布式session filter <filter-mapping> <filter-name>sessionFilter</filter-name> 
+		<url-pattern>/*</url-pattern> <dispatcher>REQUEST</dispatcher> <dispatcher>FORWARD</dispatcher> 
+		</filter-mapping> -->
+	<filter-mapping>
+		<filter-name>sitemesh</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>rewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	 <listener>
+		<listener-class>com.huifu.saturn.runtime.context.SaturnContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.huifu.esper.webapp.common.listener.InitApplicationListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>sitemesh-freemarker</servlet-name>
+		<servlet-class>com.opensymphony.module.sitemesh.freemarker.FreemarkerDecoratorServlet</servlet-class>
+		<init-param>
+			<param-name>TemplatePath</param-name>
+			<param-value>/</param-value>
+		</init-param>
+		<init-param>
+			<param-name>default_encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet>
+		<servlet-name>xfireServlet</servlet-name>
+		<servlet-class>org.codehaus.xfire.spring.XFireSpringServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>xfireServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/app/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>sitemesh-freemarker</servlet-name>
+		<url-pattern>*.ftl</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>/index/100/</welcome-file>
+	</welcome-file-list>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.htm</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/500.htm</location>
+	</error-page>
+
+</web-app>
