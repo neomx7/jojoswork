@@ -7,9 +7,8 @@
 package com.jojo.webapp.common.listener;
 
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
-import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.ContextLoaderListener;
 
 import com.jojo.web.common.context.ContextHolder;
 
@@ -17,7 +16,7 @@ import com.jojo.web.common.context.ContextHolder;
  * 该类主要是为了保存应用上下文以及Spring容器上下文对象，方便后续使用
  * 
  */
-public class InitApplicationListener extends ContextLoader implements ServletContextListener {
+public class InitApplicationListener extends ContextLoaderListener {
 
     public InitApplicationListener() {
     }
@@ -32,9 +31,10 @@ public class InitApplicationListener extends ContextLoader implements ServletCon
 //
 //        // 初始化Spring容器
 //        ContextHolder.setApplicationContext(initWebApplicationContext(ContextHolder.servletContext));
+        super.contextInitialized(sce);
         
         ContextHolder.setServletContext(sce.getServletContext()) ;
-        ContextHolder.setApplicationContext(initWebApplicationContext(ContextHolder.servletContext));
+//        ContextHolder.setApplicationContext(initWebApplicationContext(ContextHolder.servletContext));
     }
 
     /** 
@@ -43,7 +43,8 @@ public class InitApplicationListener extends ContextLoader implements ServletCon
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
 
-        closeWebApplicationContext(sce.getServletContext());
+        super.contextDestroyed(sce);
+//        closeWebApplicationContext(sce.getServletContext());
 
     }
 

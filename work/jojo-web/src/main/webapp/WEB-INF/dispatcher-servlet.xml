@@ -8,7 +8,7 @@
 
 	<!-- Scans the classpath of this application for @Components to deploy as 
 		beans -->
-	<context:component-scan base-package="com.huifu.scp.webapp" />
+	<context:component-scan base-package="com.jojo.webapp" />
 
 	<!-- Application Message Bundle -->
 	<bean id="messageSource"
@@ -16,8 +16,9 @@
 		<property name="basename" value="ApplicationResource" />
 	</bean>
 
+<!-- com.huifu.webapp.exception.SaturnMappingExceptionResolver -->
 	<bean id="exceptionResolver"
-		class="com.huifu.webapp.exception.SaturnMappingExceptionResolver">
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
 				<prop key="org.springframework.dao.DataAccessException">
@@ -33,7 +34,7 @@
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="2097152" />
-		<property name="defaultEncoding" value="GBK" />
+		<property name="defaultEncoding" value="UTF－8" />
 	</bean>
 
 	<!-- Configures the @Controller programming model -->

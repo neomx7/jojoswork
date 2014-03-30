@@ -773,7 +773,7 @@
 		<jmock.version>2.5.1</jmock.version>
 		<junit.version>4.8.2</junit.version>
 		<jwebunit.version>2.5</jwebunit.version>
-		<spring.version>3.2.4.RELEASE</spring.version>
+		<spring.version>3.2.8.RELEASE</spring.version>
 		<spring.security.version>3.0.5.RELEASE</spring.security.version>
 		<spring.data.version>1.5.0.RELEASE</spring.data.version>
 
@@ -812,7 +812,6 @@
 		<slf4j.version>1.6.1</slf4j.version>
 		<drools.version>5.5.0.Final</drools.version>
 		<!-- epser version -->
-		<!-- <esper.version>1.0.1</esper.version> -->
 		<!-- skip test -->
 		<maven.test.skip>true</maven.test.skip>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>

@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
 
-	<display-name>huifu esper framework</display-name>
+	<display-name>jojo work framework</display-name>
 
 	<!-- [INSERT FRAGMENT HERE] -->
 	<!-- Define the basename for a resource bundle for I18N -->
 	<context-param>
 		<param-name>applicationName</param-name>
-		<param-value>esper</param-value>
+		<param-value>jojo</param-value>
 	</context-param>
 	<!-- <context-param>
 		<param-name>loadConfiguration</param-name>
@@ -61,10 +61,9 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-            classpath*:/spring.app.xml,
             classpath*:/applicationContext-quartz.xml,
             classpath*:/applicationContext-service.xml,
-            classpath*:/applicationContext-dao-mongoDB.xml,
+            <!-- classpath*:/applicationContext-dao-mongoDB.xml, -->
             
             <!-- oracle 
             classpath*:applicationContext-dao.xml,
@@ -101,11 +100,12 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	 <listener>
-		<listener-class>com.huifu.saturn.runtime.context.SaturnContextLoaderListener</listener-class>
-	</listener>
+	 <!-- com.huifu.saturn.runtime.context.SaturnContextLoaderListener -->
+<!-- 	 <listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener> -->
 	<listener>
-		<listener-class>com.huifu.esper.webapp.common.listener.InitApplicationListener</listener-class>
+		<listener-class>com.jojo.webapp.common.listener.InitApplicationListener</listener-class>
 	</listener>
 	<listener>
 		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>

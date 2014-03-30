@@ -16,7 +16,7 @@
 		</property>
 	</bean>
 
-	<bean id="byPassOtherFilter" class="com.huifu.esper.webapp.common.filter.ByPassOtherFilter">
+	<bean id="byPassOtherFilter" class="com.jojo.webapp.common.filter.ByPassOtherFilter">
 		<property name="byPassStaticsSet">
 			<set>
 				<value>scripts</value>
