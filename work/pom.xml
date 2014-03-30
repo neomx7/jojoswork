@@ -41,6 +41,79 @@
 				<artifactId>activiti-engine</artifactId>
 				<version>${version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-spring</artifactId>
+				<version>${version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-bpmn-converter</artifactId>
+				<version>${version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-bpmn-layout</artifactId>
+				<version>${version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-bpmn-model</artifactId>
+				<version>${version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-camel</artifactId>
+				<version>${version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-common-rest</artifactId>
+				<version>${version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-diagram-rest</artifactId>
+				<version>${version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-explorer</artifactId>
+				<version>${version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-json-converter</artifactId>
+				<version>${version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-ldap</artifactId>
+				<version>${version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-modeler</artifactId>
+				<version>${version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-mule</artifactId>
+				<version>${version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-osgi</artifactId>
+				<version>${version}</version>
+			</dependency>
 			<!-- activiti5 depends -->
 			<dependency>
 				<groupId>org.mule.modules</groupId>
