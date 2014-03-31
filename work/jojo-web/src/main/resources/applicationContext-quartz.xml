@@ -26,7 +26,7 @@
 			<ref bean="demoJobDetail" />
 		</property>
 		<property name="cronExpression">
-			<value>0/20 * * * * ?</value>
+			<value>0 0/20 * * * ?</value>
 		</property>
 	</bean>
 	<!-- 调度的配置结束 -->
@@ -44,7 +44,7 @@
 
 	<!-- 具体工作的bean -->
 	<!-- demo job show-->
-	<bean id="ruleLoadJob" class="com.jojo.service.quartz.SchedulingJob">
+	<bean id="demoJob" class="com.jojo.service.quartz.SchedulingJob">
 	</bean>
 
 </beans> 
