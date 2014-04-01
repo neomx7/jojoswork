@@ -12,7 +12,7 @@
 
 	<!-- Application Message Bundle -->
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-		<!-- ApplicationResource -->
+		<!-- ApplicationResource i18n/messages-->
 		<property name="basename" value="i18n/messages" />
 	</bean>
 
@@ -37,7 +37,7 @@
 
 	<!-- Configures the @Controller programming model -->
 	<mvc:annotation-driven />
-	<mvc:view-controller path="/index" view-name="index" />
+<!-- 	<mvc:view-controller path="/index" view-name="index" /> -->
 
 	<!-- Configures Handler Interceptors -->
 	<mvc:interceptors>
