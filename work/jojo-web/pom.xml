@@ -21,11 +21,11 @@
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-spring</artifactId>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-webapp-rest2</artifactId>
 			<type>war</type>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-cxf</artifactId>
@@ -90,7 +90,13 @@
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-mule</artifactId>
-
+			<!-- 排除掉重复bind的 SLF4J jar -->
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-jdk14</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.activiti</groupId>
@@ -393,23 +399,20 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock-junit4</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<!-- Upgrade junit-dep used by jmock -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit-dep</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>

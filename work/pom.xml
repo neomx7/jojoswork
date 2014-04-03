@@ -590,6 +590,11 @@
 				<optional>true</optional>
 			</dependency>
 			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit-dep</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.jmock</groupId>
 				<artifactId>jmock</artifactId>
 				<version>${jmock.version}</version>
@@ -598,11 +603,6 @@
 				<groupId>org.jmock</groupId>
 				<artifactId>jmock-junit4</artifactId>
 				<version>${jmock.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit-dep</artifactId>
-				<version>4.5</version>
 			</dependency>
 
 			<!-- 网页测试，注释掉 -->
@@ -851,7 +851,7 @@
 		<freemarker.version>2.3.16</freemarker.version>
 		<jetty.version>6.1.26</jetty.version>
 		<jmock.version>2.5.1</jmock.version>
-		<junit.version>4.8.2</junit.version>
+		<junit.version>4.11</junit.version>
 		<jwebunit.version>2.5</jwebunit.version>
 		<spring.version>3.2.8.RELEASE</spring.version>
 		<spring.security.version>3.0.5.RELEASE</spring.security.version>
