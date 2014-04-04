@@ -174,10 +174,9 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>postgresql</groupId>
+				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
-				<version>8.4-701.jdbc4</version>
-				<scope>test</scope>
+				<version>${postgre.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>wsdl4j</groupId>
@@ -303,11 +302,6 @@
 				<version>${spring.data.version}</version>
 			</dependency>
 			<!-- postgreSQL -->
-			<dependency>
-				<groupId>postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>9.1-901.jdbc4</version>
-			</dependency>
 			
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -856,7 +850,7 @@
 		<spring.version>3.2.8.RELEASE</spring.version>
 		<spring.security.version>3.0.5.RELEASE</spring.security.version>
 		<spring.data.version>1.5.0.RELEASE</spring.data.version>
-
+		<postgre.version>9.3-1100-jdbc41</postgre.version>
 		<urlrewrite.version>3.1.0</urlrewrite.version>
 		<!-- Cargo settings -->
 		<cargo.container>tomcat7x</cargo.container>

@@ -1,10 +1,9 @@
 /**
  * JOJO
- *
+ * 
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
 package com.jojo.test.demo;
-
 
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -14,6 +13,7 @@ import org.activiti.engine.test.ActivitiRule;
 import org.activiti.engine.test.Deployment;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,63 +33,64 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(
-        locations={
-                "file:src/main/resources/applicationContext-service.xml"
-                ,"file:src/main/resources/applicationContext-tx.xml"
-                ,"classpath*:test-applicationContext-demo.xml"
-        })
+@ContextConfiguration(locations = { "file:src/main/resources/applicationContext-service.xml",
+        "file:src/main/resources/applicationContext-tx.xml", "classpath*:test-applicationContext-demo.xml" })
 public class DemoBusinessProcessTest
 {
     private static Logger logger = LoggerFactory.getLogger(DemoBusinessProcessTest.class);
-    
+
     private static String deploymentId = null;
-    
+
     @Autowired
     private RuntimeService runtimeService;
-    
+
     @Autowired
     private TaskService taskService;
-    
-    @Autowired 
-    private RepositoryService repositoryService;
-    
+
     @Autowired
-    @Rule
-    public ActivitiRule activitiSpringRule;
-    
-    
+    private RepositoryService repositoryService;
+
+    // @Autowired
+    // @Rule
+    // public ActivitiRule activitiSpringRule;
+
     @BeforeClass
     public static void preClass()
     {
-//        RepositoryService repositoryService = (RepositoryService) applicationContext.getBean("repositoryService");
+        // RepositoryService repositoryService = (RepositoryService)
+        // applicationContext.getBean("repositoryService");
     }
-    
+
+    @Before
+    public void setUP()
+    {
+
+        // if (!StringUtils.isNotEmpty(deploymentId))
+        // {
+        // return;
+        // }
+
+    }
+
     public void preWork()
     {
-        
-        if (!StringUtils.isNotEmpty(deploymentId))
-        {
-            return;
-        }
-        deploymentId = repositoryService
-                .createDeployment()
-                .addClasspathResource("processfile/demo.xml")
-                .deploy()
+        deploymentId = repositoryService.createDeployment().addClasspathResource("processfile/demo.bpmn20.xml").deploy()
                 .getId();
-        logger.info("deploymentId [{}]",deploymentId);
-        
+        logger.info("deploymentId [{}]", deploymentId);
+
     }
-    
+
     @Test
     @Deployment
-    public void simpleProcessTest() {
-      runtimeService.startProcessInstanceByKey("simpleProcess");
-      Task task = taskService.createTaskQuery().singleResult();
-      Assert.assertEquals("Demo Task", task.getName());
-    
-      taskService.complete(task.getId());
-      Assert.assertEquals(0, runtimeService.createProcessInstanceQuery().count());
-     
+    public void simpleProcessTest()
+    {
+        preWork();
+        runtimeService.startProcessInstanceByKey("helloProcess");
+        Task task = taskService.createTaskQuery().singleResult();
+        Assert.assertEquals("Demo Task", task.getName());
+
+        taskService.complete(task.getId());
+        Assert.assertEquals(0, runtimeService.createProcessInstanceQuery().count());
+
     }
 }
