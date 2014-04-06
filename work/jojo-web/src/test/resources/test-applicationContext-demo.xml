@@ -22,6 +22,7 @@
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="databaseSchemaUpdate" value="true" />
 		<property name="jobExecutorActivate" value="false" />
+		<property name="deploymentResources" value="classpath*:/processfile/*.bpmn20.xml" />
 		<property name="beans">
 			<map>
 				<entry key="printer" value-ref="printer" />

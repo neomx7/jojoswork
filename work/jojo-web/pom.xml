@@ -17,15 +17,21 @@
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-engine</artifactId>
 		</dependency>
+		<!-- activiti5 example -->
+<!-- 		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-engine-examples</artifactId>
+		</dependency> -->
+			<dependency>
+			        <groupId>org.activiti</groupId>
+			        <artifactId>activiti-cdi</artifactId>
+			</dependency>
+
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-spring</artifactId>
 		</dependency>
-<!-- 		<dependency>
-			<groupId>org.activiti</groupId>
-			<artifactId>activiti-webapp-rest2</artifactId>
-			<type>war</type>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-webapp-rest2</artifactId> <type>war</type> </dependency> -->
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-cxf</artifactId>
@@ -226,10 +232,10 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
-			<dependency>
-				<groupId>javax.servlet.jsp</groupId>
-				<artifactId>jsp-api</artifactId>
-			</dependency>		
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
@@ -484,8 +490,8 @@
 					</webAppConfig>
 				</configuration>
 			</plugin>
-			
-			
+
+
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>

@@ -18,6 +18,7 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="databaseSchemaUpdate" value="true" />
+		<!-- 只有启用job执行器之后，定时器才会被触发。(jobExecutorActivate需要设置为true， 不过，默认job执行器是关闭的) -->
 		<property name="jobExecutorActivate" value="false" />
 	</bean>
 

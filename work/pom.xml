@@ -41,6 +41,18 @@
 				<artifactId>activiti-engine</artifactId>
 				<version>${version}</version>
 			</dependency>
+			<!-- activiti5 example -->
+<!-- 			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-engine-examples</artifactId>
+				<version>${version}</version>
+			</dependency> -->
+			<dependency>
+				<groupId>org.activiti</groupId>
+				<artifactId>activiti-cdi</artifactId>
+				<version>${version}</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.activiti</groupId>
 				<artifactId>activiti-spring</artifactId>
@@ -302,7 +314,7 @@
 				<version>${spring.data.version}</version>
 			</dependency>
 			<!-- postgreSQL -->
-			
+
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
@@ -833,7 +845,7 @@
 		<!-- Application settings -->
 		<copyright.year>2013-2096</copyright.year>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version>5.14</version>
+		<version>5.15</version>
 		<mule.version>3.3.0</mule.version>
 		<cxf.version>2.6.1</cxf.version>
 		<restlet.version>2.0.14</restlet.version>
@@ -988,6 +1000,21 @@
 		</testResources>
 	</build>
 
+
+	<repositories>
+		<repository>
+			<id>mvn-central</id>
+			<name>Maven Central Repository</name>
+			<url>http://repo1.maven.org/maven2/</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>			
+		</repository>
+	</repositories>
 
 	<modules>
 		<module>jojo-web</module>
