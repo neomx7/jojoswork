@@ -1058,6 +1058,7 @@
 
 	<modules>
 		<module>jojo-web</module>
+		<module>jojo-portal</module>
 		<module>jojo-integration</module>
 		<module>jojo-facade</module>
 		<module>jojo-biz</module>

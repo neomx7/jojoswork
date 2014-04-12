@@ -1,0 +1,376 @@
+/* CSS Document */
+#top {
+	border-bottom: 1px solid #ccd;
+	background: #f6f6f6;
+	height: 30px;
+	line-height: 30px;
+	min-width: 1320px;
+	margin-bottom: 12px;
+}
+
+#top .grid {
+	width: 1320px;
+	margin: 0 auto;
+}
+
+#top .user-nav,#top dl dt {
+	float: left;
+}
+
+#top dl dt {
+	float: left;
+	margin: 0 -1px;
+	background: url(/scppun/images/sep-line.png) right 50% no-repeat;
+}
+
+#top dl dt a {
+	padding: 0 12px;
+}
+
+#top dl .menu-dt {
+	height: 30px;
+	position: relative;
+	border-right: 1px solid #f6f6f6;
+	padding-right: 12px;
+}
+
+#top dl .menu-dt:hover {
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	height: 31px;
+	background: #fff;
+}
+
+#top dl .menu-dt:hover a {
+	padding: 0 12px 0 11px;
+}
+
+#top dl .menu-dt ul {
+	left: -1px;
+	position: absolute;
+	display: none;
+	border: 1px solid #ccc;
+	border-top: 0;
+	width: 170px;
+	top: 31px;
+	z-index: 999;
+	background: #fff;
+}
+
+#top dl .menu-dt ul li{
+	border-top: 1px solid #ddd;
+	background: #FFFFFF;
+}
+
+#top dl .menu-dt:hover ul {
+	display: block;
+}
+
+#top dl .menu-dt ul li:hover {
+	background: #fed;
+}
+
+#top dl .menu-dt b {
+	position: absolute;
+	right: 12px;
+	top: 12px;
+	width: 0;
+	height: 0;
+	border-width: 4px;
+	border-style: solid;
+	border-color: #666 #f5f5f5 #f5f5f5;
+	font-size: 0;
+	line-height: 0;
+}
+
+#top dl .menu-dt:hover b {
+	position: absolute;
+	right: 12px;
+	top: 8px;
+	width: 0;
+	height: 0;
+	border-width: 4px;
+	border-style: solid;
+	border-color: #fff #fff #666 #fff;
+	font-size: 0;
+	line-height: 0;
+}
+
+#top .fun-nav {
+	float: right;
+}
+
+#header {
+	height: 70px;
+	width: 1320px;
+	margin: 0 auto;
+}
+
+#header .logo {
+	margin-top: 12px;
+	padding-left: 12px;
+}
+
+.page {
+	width: 1320px;
+	margin: 0 auto;
+	min-height: 520px;
+	clear: both;
+}
+
+.left {
+	float: left;
+	width: 180px;
+	margin-bottom: 12px;
+}
+
+.left ul,.content .content-right ul {
+	border: 1px solid #ddd;
+	border-top: 1px solid #ccd;
+	border-bottom: 0;
+}
+
+.left .h4{
+	background: #F6F6F6;
+	padding-left: 12px;
+}
+
+.left ul li{
+	padding: 6px 0;
+	border-bottom: solid 1px #ddd;
+}
+
+.left ul .on {
+	background: #fed;
+}
+
+.left ul li a {
+	padding: 0 0 0 12px;
+}
+
+.content {
+	width: 1127px;
+	float: left;
+	margin-left: 12px;
+	margin-bottom: 12px;
+	color: #666;
+}
+
+.content .content-right {
+	width: 307px;
+	float: right;
+	margin-left: 12px;
+	color: #333;
+	border-bottom: solid 1px #ddd;
+}
+
+.content .content-right .h4 {
+	background: #F6F6F6;
+	padding-left: 12px;
+	border-bottom: solid 1px #ddd;
+}
+
+.content .content-right ul li {
+	padding: 6px 0 6px 12px;
+}
+
+.content .content-left {
+	float: left;
+	width: 806px;
+	border: solid 1px #ddd;
+	border-top: 1px solid #ccd;
+}
+
+.content .content-left .content-left-header {
+	font-size: 18px;
+	background: #F6F6F6;
+	text-align: center;
+	padding: 2px 0;
+	color: #333;
+	line-height: 57px;
+	background: #f0ffe6;
+	border-bottom: solid 1px #ddd;
+}
+
+.content .tips {
+	margin-top: 12px;
+	padding: 6px 12px;
+	background-color: #fffff0;
+	border: #d7c2a2 1px dashed;
+	color: #333;
+}
+
+.content .content-left table th{
+	width: 12px;
+	text-align: right;
+	padding: 10px 0;
+}
+
+.content .tips ul li {
+	list-style: disc;
+	margin: 3px 0 3px 20px;
+}
+
+.content .tips h4 {
+	color: #f80;
+	line-height: 190%;
+	padding-left: 19px;
+}
+
+.content .tips .light {
+	background: url(/scppun/images/light_s.gif) no-repeat left top;
+}
+
+#pagination {
+	width: 100%;
+	margin: 7px auto 6px auto;
+	text-align: center;
+}
+
+#pagination span {
+	padding: 1px 3px;
+}
+
+.errorTip {
+	width: 100%;
+	margin: 0 auto;
+	text-align: center;
+	padding: 24px 0;
+	color: #333;
+	background: #FFF1F0;
+	border: 1px solid #f2bfbb;
+}
+
+.warnTip {
+	width: 100%;
+	margin: 0 auto;
+	text-align: center;
+	color: #333;
+	background: #ffefc8;
+	border: 1px solid #edc898;
+	min-height: 78px;
+	line-height: 78px;
+}
+
+.tipTitle {
+	font-size: 14px;
+	font-weight: bold;
+	padding-bottom: 5px;
+}
+
+.tipContent {
+	text-align: left;
+	color: orange;
+	padding-left: 12px;
+	line-height: 23px;
+}
+
+.tip {
+	width: 1280px;
+	margin: 0 auto;
+	text-align: center;
+	height: 78px;
+	line-height: 78px;
+	background: #c8ffc8;
+	border: 1px solid #98ff98;
+}
+
+.tip a {
+	text-decoration: none;
+}
+
+#btn-nav {
+	width: 100%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#btn-nav a {
+	text-decoration: none;
+}
+
+#btn-nav .btn {
+	margin: 10px;
+	padding: 3px 12px;
+	display: -moz-inline-stack;
+	display: inline-block;
+	vertical-align: middle;
+	*vertical-align: auto;
+	zoom: 1;
+	*display: inline;
+	text-align: center;
+	overflow: visible;
+	cursor: pointer;
+	color: #fff;
+	background-color: #e64545;
+	border: solid 1px #e64545;
+	border-radius: 2px;
+	text-shadow: 0 1px rgba(51, 51, 51, 0.3);
+}
+
+.link {
+	cursor: pointer;
+	color: #06c;
+}
+
+.link:hover {
+	color: #f60;
+}
+
+.odd {
+	background-color: #F9F9F9;
+}
+
+#footer {
+	background: #f6f6f6;
+	text-align: center;
+	line-height: 30px;
+	min-width: 1280px;
+	padding: 0;
+	border: 0 none;
+	width: 100%;
+	clear: both;
+	margin-top: 12px;
+	border-top: 1px solid #ccd;
+}
+
+
+
+
+.left_menu {
+	background: #F6F6F6;
+	float: left;
+	width: 140px;
+}
+.left_menu ul{
+	padding: 5px 0;
+	border: 1px solid #ddd;
+}
+.left_menu ul li{
+	padding: 5px 0;	
+	border-top: 1px solid #ddd;
+	background: #FCFCFC;
+	cursor:pointer;
+}
+.left_menu span { 
+	display:block;
+	font-weight:bold;
+	padding-left: 12px;
+}
+.left_menu ul li ul{ 
+	margin-top:6px;
+	margin-left:0px; 
+	border-left:0px solid #ccc; 
+	border-right:0px solid #ccc; 
+	border-top:0px solid #618cc0;
+	border-bottom:0px solid #618cc0;
+	padding:0px;
+}
+.left_menu ul li ul li{
+	padding: 6px 0;
+	background: #FFFFFF;
+	border-top: solid 1px #ddd;
+}
+.left_menu ul li ul li a {
+	padding: 0 0 0 12px;
+}

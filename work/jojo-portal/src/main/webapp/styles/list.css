@@ -1,0 +1,90 @@
+#tabs {
+	background: #f1f1f1;
+	border-bottom: 1px solid #ccd;
+	height: 27px;
+	margin: 0 0 3px 0;
+	width: 1127px;
+}
+
+#tabs .on{
+	background: #fff;
+	color: #333;
+	border: 1px solid #ddd;
+	border-bottom: 0;
+}
+
+#tabs a{
+	float: left;
+	margin-top: 3px;
+	padding: 3px 12px;
+	font-weight: bold;
+	color: #666;
+}
+
+#table-list{
+	width: 1127px;
+}
+
+#table-list td {
+	border: 1px solid #ddd;
+	padding: 5px 0;
+	text-align: center;
+	line-height: 170%;
+}
+
+#table-list tr:hover{
+	background: #fed;
+	color: #000;
+}
+
+#table-list th {
+	border: 1px solid #ddd;
+	border-top: 1px solid #ccd;
+	background: #F6F6F6;
+	padding: 6px 0;
+	text-align: center;
+}
+
+
+
+#Search {
+	margin: 0 auto;
+	padding: 6px 12px;
+}
+
+#Search input{
+	padding: 5px;
+	border: 1px solid #ccc;
+}
+
+#Search input {
+	width: 210px;
+	margin: 0 12px 0 6px;
+}
+
+#Search select{
+	padding: 5px;
+	border: 1px solid #ccc;
+}
+
+#Search select {
+	width: 222px;
+	margin: 0 12px 0 6px;
+}
+
+#Search .submit-btn {
+	padding: 4px 12px;
+	display: -moz-inline-stack;
+	vertical-align: middle;
+	*vertical-align: auto;
+	zoom: 1;
+	*display: inline;
+	text-align: center;
+	overflow: visible;
+	cursor: pointer;
+	color: #fff;
+	background-color: #e64545;
+	border: solid 1px #e64545;
+	border-radius: 2px;
+	text-shadow: 0 1px rgba(51, 51, 51, 0.3);
+}

@@ -1,0 +1,14 @@
+<decorators defaultdir="/decorators">
+    <excludes>
+         <pattern>/ajax/**</pattern>
+         <pattern>/images/**</pattern>
+         <pattern>/scripts/**</pattern>
+         <pattern>/styles/**</pattern>
+         <pattern>/statics/**</pattern>
+         <pattern>/services/**</pattern>
+    </excludes>
+    
+	<decorator name="default" page="default.ftl">
+        <pattern>/*</pattern>
+ 	</decorator> 
+</decorators>
