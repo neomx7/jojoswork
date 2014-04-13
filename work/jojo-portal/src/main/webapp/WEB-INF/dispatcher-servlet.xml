@@ -36,7 +36,7 @@
 	</bean>
 
 	<!-- Configures the @Controller programming model -->
-	<mvc:annotation-driven />
+<!-- 	<mvc:annotation-driven /> -->
 <!-- 	<mvc:view-controller path="/index" view-name="index" /> -->
 
 	<!-- Configures Handler Interceptors -->
@@ -86,6 +86,8 @@
 			</map>
 		</property>
 	</bean>
-
-
+	
+	 <!-- 声明DispatcherServlet不要拦截下面声明的目录 -->  
+    <mvc:resources location="scripts/" mapping="/scripts/**" /> 
+    <mvc:resources location="data/" mapping="/data/**" /> 
 </beans>
