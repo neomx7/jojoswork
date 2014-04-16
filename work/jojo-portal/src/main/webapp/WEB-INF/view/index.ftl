@@ -31,27 +31,7 @@
 														</div>
 													</div>
 												</div>
-												<div style="height: 54px; width: 80px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
-													<div style="float: left; margin-left: 0px;">
-														<div tabindex="0" class="v-button v-button-process process v-button-main-menu-button main-menu-button v-button-link link" role="button" style="height: 54px; width: 80px;">
-															<span class="v-button-wrap">
-																<img alt="" class="v-icon" src="/activiti-explorer/VAADIN/themes/activiti/img/mm-process.png">
-																<span class="v-button-caption">流程</span>
-															</span>
-														</div>
-													</div>
-												</div>
-												<div style="height: 54px; width: 80px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
-													<div style="float: left; margin-left: 0px;">
-														<div tabindex="0" class="v-button v-button-report report v-button-main-menu-button main-menu-button v-button-link link" role="button" style="height: 54px; width: 80px;">
-															<span class="v-button-wrap">
-																<img alt="" class="v-icon" src="/activiti-explorer/VAADIN/themes/activiti/img/mm-reports.png">
-																<span class="v-button-caption">报表</span>
-															</span>
-														</div>
-													</div>
-												</div>
-												<div style="height: 54px; width: 90px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
+												<div id="menu_1_10" style="height: 54px; width: 90px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 0px;">
 														<div tabindex="0" class="v-button v-button-manage manage v-button-main-menu-button main-menu-button v-button-link link" role="button" style="height: 54px; width: 90px;">
 															<span class="v-button-wrap">
@@ -61,7 +41,7 @@
 														</div>
 													</div>
 												</div>
-												<div style="height: 54px; width: 765px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
+												<div style="height: 54px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 649px;">
 														<div tabindex="0" class="v-menubar v-menubar-person person">
 															<span class="v-menubar-menuitem v-menubar-menuitem-person-menu">
@@ -84,7 +64,9 @@
 					<div style="height: 36px; overflow: hidden; padding-left: 0px; padding-top: 0px; left: 0px; top: 0px; width: 100%;">
 						<div style="float: left; margin-left: 0px;">
 							<div class="v-horizontallayout v-horizontallayout-toolbar toolbar" style="overflow: hidden; height: 36px; width: 100%;">
-								<div style="overflow: hidden; margin: 0px 10px; width: 1743px; height: 36px;">
+								<div style="overflow: hidden; margin: 0px 10px; width: 100%; height: 36px;">
+									
+									<!-- #遍历每个2级菜单 -->
 									<div style="height: 27px; width: 69px; overflow: hidden; float: left; padding-left: 0px; padding-top: 9px;">
 										<div style="float: left; margin-left: 0px;">
 											<div class="v-customcomponent v-customcomponent-clickable clickable" style="width: 69px; height: 18px;">
@@ -92,34 +74,8 @@
 													<div style="overflow: hidden; margin: 0px; width: 69px; height: 18px;">
 														<div style="height: 18px; width: 69px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 															<div style="float: left; margin-left: 0px;">
-																<div tabindex="0" class="v-button v-button-link link" role="button">
-																	<span class="v-button-wrap"><span class="v-button-caption">我的流程</span></span>
-																</div>
-															</div>
-														</div>
-														<div style="height: 9px; width: 0px; overflow: hidden; float: left; padding-left: 0px; padding-top: 9px;">
-															<div style="float: left; margin-left: 0px;">
-																<div tabindex="0" class="v-button" role="button" style="display: none;">
-																	<span class="v-button-wrap"><span class="v-button-caption"></span></span>
-																</div>
-															</div>
-														</div>
-														<div style="width: 0px; height: 0px; clear: both; overflow: hidden;"></div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									
-									<div style="height: 27px; width: 117px; overflow: hidden; float: left; padding-left: 21px; padding-top: 9px;">
-										<div style="float: left; margin-left: 0px;">
-											<div class="v-customcomponent v-customcomponent-clickable clickable" style="width: 117px; height: 18px;">
-												<div class="v-horizontallayout" style="overflow: hidden; width: 117px; height: 18px;">
-													<div style="overflow: hidden; margin: 0px; width: 117px; height: 18px;">
-														<div style="height: 18px; width: 117px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
-															<div style="float: left; margin-left: 0px;">
-																<div tabindex="0" class="v-button v-button-link link v-button-active active" role="button">
-																	<span class="v-button-wrap"><span class="v-button-caption">已部署流程定义</span></span>
+																<div tabindex="0" class="v-button v-button-link link" role="button" id="menu_1">
+																	<span class="v-button-wrap"><span class="v-button-caption">你赢了</span></span>
 																</div>
 															</div>
 														</div>
@@ -138,7 +94,7 @@
 									</div>
 									
 									
-									<div style="height: 36px; width: 1143px; overflow: hidden; float: left; padding-left: 21px; padding-top: 0px;">
+									<div style="height: 36px; width: 100%; overflow: hidden; float: left; padding-left: 21px; padding-top: 0px;">
 										<div style="float: left; margin-left: 0px;">
 											<div class="v-label" style="width: 1143px;">&nbsp;</div>
 										</div>
