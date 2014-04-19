@@ -7,8 +7,13 @@
          <pattern>/statics/**</pattern>
          <pattern>/services/**</pattern>
     </excludes>
-    
-	<decorator name="default" page="default.ftl">
-        <pattern>/*</pattern>
- 	</decorator> 
+
+	<decorator name="index" page="default.ftl">
+        <pattern>/index</pattern>
+ 	</decorator>
+
+ 	<decorator name="error" page="global-error.ftl">
+        <pattern>/error/*</pattern>
+ 	</decorator>
+
 </decorators>
