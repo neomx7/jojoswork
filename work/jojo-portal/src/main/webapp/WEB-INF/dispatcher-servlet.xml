@@ -50,7 +50,7 @@
 
 	<!-- FreeMarker Configurer and View Resolver -->
 	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-		<property name="templateLoaderPath" value="/WEB-INF/view/" />
+		<property name="templateLoaderPath" value="/WEB-INF/" />
 		<property name="freemarkerSettings">
 			<props>
 				<prop key="defaultEncoding">UTF-8</prop>
@@ -86,8 +86,8 @@
 			</map>
 		</property>
 	</bean>
-	
-	 <!-- 声明DispatcherServlet不要拦截下面声明的目录 -->  
-    <mvc:resources location="scripts/" mapping="/scripts/**" /> 
-    <mvc:resources location="data/" mapping="/data/**" /> 
+
+	 <!-- 声明DispatcherServlet不要拦截下面声明的目录 -->
+    <mvc:resources location="scripts/" mapping="/scripts/**" />
+    <mvc:resources location="data/" mapping="/data/**" />
 </beans>

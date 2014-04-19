@@ -17,7 +17,7 @@ body {
   color: red;
 }
 
-.v-panel-nocaption.v-panel-nocaption-light {  
+.v-panel-nocaption.v-panel-nocaption-light {
   border: none;
 }
 
@@ -27,7 +27,7 @@ body {
 
 .v-label-caption,
 .v-button-caption {
-	text-shadow: none;	
+	text-shadow: none;
 }
 
 .clickable {
@@ -55,7 +55,7 @@ body {
 	color:#007dc3;
 	font:18px Arial, Helvetica, sans-serif;
 }
- 
+
 /* ---------------
    Form Properties
    --------------- */
@@ -65,7 +65,7 @@ body {
 }
 
 .formprop-user-selected {
-	font-weight: bold;	
+	font-weight: bold;
 	padding-left: 20px;
 	background: url(img/user-16.png) no-repeat;
 }
@@ -77,7 +77,7 @@ body {
 /* -----------------------
    Buttons - Normal button
    ----------------------- */
- 
+
 .v-button:focus {
     background-position: 0 0;
     background-image: url(img/button-bg-left-active.gif);
@@ -121,7 +121,7 @@ body {
 }
 
 .v-button.v-disabled .v-button-wrap .v-button-caption {
-	color: #646464;	
+	color: #646464;
 	cursor: default;
 }
 /* ----------------------
@@ -151,11 +151,11 @@ body {
 }
 
 .v-button-small:focus .v-button-wrap {
-	background: transparent url(img/button-bg-small-right-focus.gif) repeat-x right 0;	
+	background: transparent url(img/button-bg-small-right-focus.gif) repeat-x right 0;
 }
 
 .v-button-small:focus {
-	background: transparent url(img/button-bg-small-left-focus.gif) repeat-x 0 0;	
+	background: transparent url(img/button-bg-small-left-focus.gif) repeat-x 0 0;
 }
 
 .v-button-small .v-button-wrap .v-button-caption {
@@ -188,8 +188,14 @@ body {
 /* ---------------------
    Table - default style
    --------------------- */
-.v-table-row-odd, .v-table-row {
+.v-table-row {
  	background-color: #fff;
+	overflow:hidden;
+	font:12px/14px Arial, Helvetica, sans-serif;
+}
+
+.v-table-row-odd {
+ 	background-color: light-gray;
 	overflow:hidden;
 	font:12px/14px Arial, Helvetica, sans-serif;
 }
@@ -200,11 +206,11 @@ body {
 	font-weight: bold;
 	text-shadow: none;
 }
- 
+
 .v-table-row-odd .v-table-cell-content, .v-table-row .v-table-cell-content {
 	border: none;
 	height: 35px;
-	border-bottom: 1px solid #c5c5c5;	
+	border-bottom: 1px solid #c5c5c5;
 }
 
 .v-table-cell-content {
@@ -230,7 +236,7 @@ body {
 /* -----
    Login
    ----- */
-   
+
 /* General backrgound and font settings */
 .login-general {
   color: white; /* color of text */
@@ -244,7 +250,7 @@ body {
 #login-content {
   height: 200px;
 }
-      
+
 /* white part of background */
 #login-background {
   position: absolute;
@@ -263,7 +269,7 @@ body {
   text-align: center;
   z-index: 1;
 }
-      
+
 #login-logo {
   margin: 0 auto;
   height: 130px;
@@ -271,7 +277,7 @@ body {
   text-align: center;
 }
 
-/* Text fields of input form */     
+/* Text fields of input form */
 input.login-field {
   font-size: 16px;
   height:30px;
@@ -290,7 +296,7 @@ input.login-field {
 .login-field-caption {
   line-height: 200%
 }
-      
+
 /* 'Log in' Button */
 .login-button {
   text-align: center;
@@ -311,7 +317,7 @@ input.login-field {
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
-      
+
 .login-button:hover {
   background-color: #86e379;
 }
@@ -335,11 +341,11 @@ input.login-field {
    Main content
    ------------ */
 .main {
-	background-color: #fff;	
+	background-color: #fff;
 }
 
 .main-content {
-	background-color: #fff;	
+	background-color: #fff;
 }
 
 /* ------
@@ -355,8 +361,8 @@ input.login-field {
 .header .v-button .v-button-wrap {
 	display: block;
 	height: 100%;
-	width: 100%;	
-	background:url(img/separator-1.gif) no-repeat 100% 50%;	
+	width: 100%;
+	background:url(img/separator-1.gif) no-repeat 100% 50%;
 }
 
 .header .v-button:hover, .header .v-button.active {
@@ -390,7 +396,7 @@ input.login-field {
 }
 
 .main-menu-button .v-button-wrap .v-button-caption {
-	display: block;	
+	display: block;
 	width: 100%;
 	text-align: center;
 	font-size:12px;
@@ -403,7 +409,7 @@ input.login-field {
 	padding-top: 2px;
 	margin: 0px;
 }
- 
+
 /* ---------------------
    Header - Profile link
    --------------------- */
@@ -426,7 +432,7 @@ input.login-field {
    background-color: #005eab;
    color: #fff;
 }
- 
+
 .v-menubar-popup .v-menubar-submenu-person .v-menubar-menuitem-selected {
  	background: #1B7EC3;
 }
@@ -448,7 +454,7 @@ input.login-field {
 }
 
 .v-horizontallayout-toolbar .v-horizontallayout-spacing-on {
-	padding-right: 15px;	
+	padding-right: 15px;
 }
 
 .toolbar .v-button-toolbar-count.link.v-button-link {
@@ -479,7 +485,7 @@ input.login-field {
 
 .toolbar .v-button-wrap .v-button-caption {
 	font:16px/18px Arial, Helvetica, sans-serif;
-	padding:0 5px 0 0;	
+	padding:0 5px 0 0;
 	text-decoration: none;
 	color: #8e8e8e;
 }
@@ -515,10 +521,10 @@ input.login-field {
 }
 
 .toolbar .v-menubar {
-	background: none;	
+	background: none;
 	border: none;
 	font:16px/18px Arial, Helvetica, sans-serif;
-	padding: 0px;	
+	padding: 0px;
 	text-decoration: none;
 	color: #8e8e8e;
 }
@@ -548,11 +554,11 @@ input.login-field {
 }
 
 .v-menubar-toolbar-popup .v-menubar-menuitem .v-menubar-menuitem-caption {
-	text-shadow: none;	
+	text-shadow: none;
 }
- 
+
 div.v-menubar-toolbar-popup {
-	padding-left: 0px;	
+	padding-left: 0px;
 }
 
 .v-menubar-toolbar-popup .v-menubar-menuitem {
@@ -565,7 +571,7 @@ div.v-menubar-toolbar-popup {
 }
 
 .v-menubar-popup .v-menubar-submenu-toolbar-popup .v-menubar-menuitem-selected .v-menubar-menuitem-caption {
-	text-shadow: none;	
+	text-shadow: none;
 }
 
 /* ------
@@ -580,7 +586,7 @@ div.v-menubar-toolbar-popup {
 }
 
 .footer .v-label {
-	text-align: center;	
+	text-align: center;
 }
 
 /* ----------------------
@@ -589,7 +595,7 @@ div.v-menubar-toolbar-popup {
 div.searchbox {
 	border-right: 1px solid #c5c5c5;
 	margin-left: -1px;
-	background: none;	
+	background: none;
 }
 
 .v-textfield.v-textfield-searchbox.searchbox, .v-textfield-focus.v-textfield-searchbox.searchbox  {
@@ -611,7 +617,7 @@ div.searchbox {
 }
 
 .searchbox .v-csslayout {
-	background:url(img/bg-input-c-1.gif) repeat-x;	
+	background:url(img/bg-input-c-1.gif) repeat-x;
 }
 
 /* ----------------------
@@ -636,7 +642,7 @@ div.searchbox {
    color:#3c3c3c;
    text-shadow: none;
 }
- 
+
 .v-menubar-popup .v-menubar-submenu-searchbox-sortmenu .v-menubar-menuitem-selected {
  	background: #eaeaea;
  	color: #464646;
@@ -657,7 +663,7 @@ div.searchbox {
 }
 
 .v-panel-task-event-panel .v-verticallayout .v-verticallayout-margin-top {
-	padding-top: 5px; 
+	padding-top: 5px;
 }
 
 .v-gridlayout-event-grid .v-gridlayout-spacing-on {
@@ -666,7 +672,7 @@ div.searchbox {
 }
 
 .v-gridlayout-event-grid .v-gridlayout-margin-top {
-	padding-top: 10px;	
+	padding-top: 10px;
 }
 
 .task-event-author {
@@ -700,7 +706,7 @@ div.searchbox {
  .title-block .v-gridlayout-spacing-on {
  	padding-top: 5px;
 }
- 
+
 .title-block .v-gridlayout-margin-bottom {
  	padding-bottom: 5px;
 }
@@ -716,31 +722,31 @@ div.searchbox {
 
 .title-block .task-duedate, .title-block .job-duedate {
 	padding-left: 20px;
-	background: transparent url(img/duedate-16.png) no-repeat 0 0; 	
+	background: transparent url(img/duedate-16.png) no-repeat 0 0;
 }
 
 .title-block .task-priority-low {
 	padding-left: 20px;
-	background: transparent url(img/priority-low-16.png) no-repeat 0 0; 	
+	background: transparent url(img/priority-low-16.png) no-repeat 0 0;
 }
 .title-block .task-priority-medium {
 	padding-left: 20px;
-	background: transparent url(img/priority-medium-16.png) no-repeat 0 0; 	
+	background: transparent url(img/priority-medium-16.png) no-repeat 0 0;
 }
 .title-block .task-priority-high {
 	padding-left: 20px;
-	background: transparent url(img/priority-high-16.png) no-repeat 0 0; 	
+	background: transparent url(img/priority-high-16.png) no-repeat 0 0;
 }
 
 .title-block .task-create-time, .title-block .process-deploy-time,
 .title-block .process-start-time, .title-block .deployment-deploy-time {
 	padding-left: 20px;
-	background: transparent url(img/create-time-16.png) no-repeat 0 0; 	
+	background: transparent url(img/create-time-16.png) no-repeat 0 0;
 }
 
 .title-block .process-version {
 	padding-left: 20px;
-	background: transparent url(img/version-16.png) no-repeat 0 0; 	
+	background: transparent url(img/version-16.png) no-repeat 0 0;
 }
 
 /* --------------------
@@ -774,9 +780,9 @@ div.searchbox {
 
 /* -------------
    Task - Detail
-   ------------- */	
+   ------------- */
 .involve-people .v-gridlayout .v-gridlayout-margin-top {
-	padding-top: 5px;	
+	padding-top: 5px;
 }
 
 .subtasks .v-gridlayout-spacing-on {
@@ -813,7 +819,7 @@ div.searchbox {
 /* -------------
    Database page
    ------------- */
-   
+
 .database-table .v-table-cell-content {
   height: 50px;
 }
@@ -834,7 +840,7 @@ div.searchbox {
 /* ----
    Jobs
    ---- */
-   
+
 .job-exception-message {
 	color: #AA0000;
 	font-weight: bold;
@@ -846,11 +852,11 @@ div.searchbox {
 .v-table-related-content-list,
 .v-table-related-content-list .v-table-body {
 	background: none;
-	border: none;	
+	border: none;
 }
 
-.v-table-related-content-list .v-table-body .v-table-row, 
-.v-table-related-content-list .v-table-body .v-table-row-odd, 
+.v-table-related-content-list .v-table-body .v-table-row,
+.v-table-related-content-list .v-table-body .v-table-row-odd,
 .v-table-related-content-list .v-table-body .v-table-row .v-table-cell-content,
 .v-table-related-content-list .v-table-body .v-table-row-odd .v-table-cell-content{
 	background: none;
@@ -872,11 +878,11 @@ div.searchbox {
 }
 
 .v-table-related-content-list a span {
-	text-decoration: none;	
+	text-decoration: none;
 }
 
 .v-table-related-content-list a:hover span {
-	text-decoration: underline;	
+	text-decoration: underline;
 }
 
 /* ------------------------
@@ -884,11 +890,11 @@ div.searchbox {
    ------------------------ */
 
 .v-table-related-content-create-list {
-	margin-right: 0px;	
+	margin-right: 0px;
 }
 
 .v-table-related-content-create-list .v-table-body {
-	border: none;	
+	border: none;
 }
 
 .v-table-related-content-create-list .v-table-body .v-table-table {
@@ -913,8 +919,8 @@ div.searchbox {
 
 .v-table-related-content-create-list .v-table-row.v-selected .v-table-cell-content,
 .v-table-related-content-create-list .v-table-row-odd.v-selected .v-table-cell-content {
-	border-top: 1px solid #c5c5c5; 
-	border-bottom: 1px solid #c5c5c5; 
+	border-top: 1px solid #c5c5c5;
+	border-bottom: 1px solid #c5c5c5;
 }
 
 .v-table-related-content-create-list .v-selected .v-table-cell-content-related-last-column {
@@ -941,7 +947,7 @@ div.searchbox {
 	margin-bottom: 5px;
 	background-color: #FFF298;
 }
- 
+
 /**********************
 * Custom Scrollbar CSS
 **********************/

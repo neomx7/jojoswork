@@ -1,3 +1,6 @@
+//工程相对路径
+var appRelPath="";
+
 // ### 页面布局排版 部分 ### //
 var myLayout = null;
 // 作用不明
@@ -68,13 +71,13 @@ $(document).ready(function()
 {
     try
     {
-    initLayout();
-    initJqGird();
+        initLayout();
+        initJqGird();
 
-    // 增加top窗点击事件（第1、2级menu）
+        // 增加top窗点击事件（第1、2级menu）
 
-   bindMenuEvents();
-  // alert("-------[Done]-------");
+        bindMenuEvents();
+        // alert("-------[Done]-------");
     }
     catch (e)
     {
@@ -82,21 +85,146 @@ $(document).ready(function()
         alert(e);
     }
 
-
 });
 
 /**
- *
+ * //去掉全部元素的active样式(下面的白色三角底) $("div[id^='menu_1#']").each(function() {
+ * $(this).children(1).children(1).removeClass("v-button-active").removeClass("active"); }
  */
 function bindMenuEvents()
 {
-    //
-    $("div[id^='menu_1_']").each(
-        function(){
-        //    alert($(this).attr("id"));
-            //这里把ajax的结果(html内容)通过js替换dom中的元素
-        }
-    );
+    // ajax 触发 点击1级菜单刷新 2级top菜单栏
+    $("div[id^='menu_1#']").each(function(){
+        $(this).bind("click",function(){
+            // 去掉全部元素的active样式(下面的白色三角底)
+            $("div[id^='menu_1#']").each(function()
+            {
+                $(this).children(1).children(1).removeClass("v-button-active active");
+            });
+
+            // 当前元素置为 active 样式
+            var activingDiv = $(this).children(1).children(1);
+            activingDiv.addClass("v-button-active").addClass("active");
+
+            var jsonData = {};
+            var menduId = ($(this).attr("id").split("#")[1]);
+            if (jsonData["theId"] && jsonData["theId"].push)
+            {
+                jsonData["theId"].push(menduId || '');
+            }
+            else
+            {
+                jsonData["theId"] = (menduId || '');
+            }
+            jsonData = $.toJSON(jsonData);
+            // = {"theId" : "'" + menduId + "'"};
+            $.ajax({
+                type : 'POST',
+                contentType : 'application/json',
+                url : 'menu/show',
+                data : jsonData,
+                dataType : 'html',
+                success : function(dataResult)
+                {
+                    // 这里把ajax的结果(html内容)通过js替换dom中的元素
+                    // json格式的 List<MenuMO> 数组字符串
+                    // 遍历 list, 并生成 html
+                    var josnArray = eval(dataResult);
+                    $("div[id='div_menu_2']").empty();
+                    for (var idx = 0; idx < josnArray.length; idx++)
+                    {
+                        // alert(josnArray[i].theId + josnArray[i].theName);
+                        $("div[id='div_menu_2']")
+                                .append(
+                                        "<div tabindex=\"0\" class=\"v-button v-button-link link\" role=\"button\" id=\"menu_2#"
+                                                + josnArray[idx].theId
+                                                + "\"  style=\"width: 69px;\"><span class=\"v-button-wrap\"><span class=\"v-button-caption\">"
+                                                + josnArray[idx].theName
+                                                + "</span></span></div>");
+                    }
+                    bind2LvMenuEvents();
+                    // do sth more...
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert("error info :" + errorThrown)
+                }
+           });
+        });
+
+    });
+
+
+
+
+    //3 v-selected
+}
+
+function bind2LvMenuEvents()
+{
+    // 2级菜单
+    $("div[id^='menu_2#']").each(function(){
+        //先解除绑定
+        $(this).unbind("click");
+        $(this).bind("click", function(){
+            // 去掉全部元素的active样式(下面的白色三角底)
+            $("div[id^='menu_2#']").each(function()
+            {
+                $(this).removeClass("v-button-active active");
+            });
+
+            // 当前元素置为 active 样式
+            $(this).addClass("v-button-active").addClass("active");
+
+            // ajax 触发 点击2级菜单刷新3级左侧菜单栏
+            var jsonData = {};
+            var menduId = ($(this).attr("id").split("#")[1]);
+            if (jsonData["theId"] && jsonData["theId"].push)
+            {
+                jsonData["theId"].push(menduId || '');
+            }
+            else
+            {
+                jsonData["theId"] = (menduId || '');
+            }
+            jsonData = $.toJSON(jsonData);
+            $.ajax({
+                type : 'POST',
+                contentType : 'application/json',
+                url : 'menu/show',
+                data : jsonData,
+                dataType : 'html',
+                success : function(dataResult)
+                {
+                    // 这里把ajax的结果(html内容)通过js替换dom中的元素
+                    // json格式的 List<MenuMO> 数组字符串
+                    // 遍历 list, 并生成 html
+                    var josnArray = eval(dataResult);
+                    $("table[id='tbl_menu_3']").children("tbody").empty();
+                    for (var idx = 0; idx < josnArray.length; idx++)
+                    {
+                        // alert(josnArray[i].theId + josnArray[i].theName);
+                        $("table[id='tbl_menu_3']").children("tbody")
+                                .append(
+                                        "<tr class=\"" + (idx%2==0?"v-table-row":"v-table-row-odd")+ "\" "
+                                        + "id=\"menu_3#" + josnArray[idx].theId + "\">"
+                                        + "<td class=\"v-table-cell-content\" style=\"width: 100%;\"><div class=\"v-table-cell-wrapper\" style=\"width: 22px;\">"
+                                        + "<div class=\"v-embedded v-embedded-image\" style=\"width: 22px; height: 22px;\">"
+                                        + "<img src=\""+appRelPath+"/styles/activiti/img/task-22.png\"></div></div></td>"
+                                        + "<td class=\"v-table-cell-content\" style=\"width: 100%;\"><div class=\"v-table-cell-wrapper\" style=\"width: 100%;\">"
+                                        + josnArray[idx].theName +"</div></td></tr>"
+                                        );
+                    }
+                    // do sth more...
+
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert("error info :" + errorThrown)
+                }
+            });
+        });
+    });
 }
 
 function initLayout()
@@ -272,28 +400,27 @@ function initJqGird()
         height : "auto", // 表格高度
         width : 900, // 表格宽度
         // 表格结构定义
-        colNames : [
-                "编号", "userName", "status"
+        colNames : [ "编号", "userName", "status"
         ],
         colModel : [
-                {
-                    name : "id",
-                    index : "id",
-                    width : 60,
-                    sorttype : "int"
-                },
-                {
-                    name : "userName",
-                    index : "userName",
-                    width : 100,
-                    sorttype : "string"
-                },
-                {
-                    name : "status",
-                    index : "status",
-                    width : 90,
-                    sorttype : "string"
-                }
+        {
+            name : "id",
+            index : "id",
+            width : 60,
+            sorttype : "int"
+        },
+        {
+            name : "userName",
+            index : "userName",
+            width : 100,
+            sorttype : "string"
+        },
+        {
+            name : "status",
+            index : "status",
+            width : 90,
+            sorttype : "string"
+        }
         ],
         // ,{
         // name : "status",
@@ -315,8 +442,7 @@ function initJqGird()
         // rownumbers : true, // 是否显示列数
         viewrecords : true, // 是否显示行数
         rowNum : 10, // 每页默认显示记录数
-        rowList : [
-                10, 20, 30
+        rowList : [ 10, 20, 30
         ], // 可调整每页显示的记录数
         multiselect : false, // 是否支持多选
         sortname : "id",// 根据哪个字段排序
@@ -328,10 +454,7 @@ function initJqGird()
     });
     // 定义默认按键的显示
     // ,refresh刷新按钮是否显示、edit编辑按钮是否显示、add添加按钮是否显示、del删除按钮是否显示、refreshtitle刷新按钮提示信息
-    $('#jqGirdList').jqGrid(
-     'navGrid',
-     '#pager'
-    ,
+    $('#jqGirdList').jqGrid('navGrid', '#pager',
     {
         refresh : true,
         edit : true,

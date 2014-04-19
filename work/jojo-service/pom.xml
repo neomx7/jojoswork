@@ -26,7 +26,40 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
+		<!-- spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
 
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
 		<!-- quartz -->
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
@@ -135,20 +168,20 @@
 			</plugin>
 
 			<!-- 增加spring的handler 管理 -->
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> <version>2.1</version> 
-				<configuration> </configuration> <executions> <execution> <phase>package</phase> <goals> <goal>shade</goal> </goals> <configuration> 
-				<transformers> <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> <manifestEntries> 
-				<Main-Class>util.Process</Main-Class> </manifestEntries> </transformer> <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
-				<resource>META-INF/cxf/bus-extensions.txt</resource> </transformer> <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
-				<resource>META-INF/spring.handlers</resource> </transformer> <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
-				<resource>META-INF/spring.tooling</resource> </transformer> <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> <version>2.1</version>
+				<configuration> </configuration> <executions> <execution> <phase>package</phase> <goals> <goal>shade</goal> </goals> <configuration>
+				<transformers> <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> <manifestEntries>
+				<Main-Class>util.Process</Main-Class> </manifestEntries> </transformer> <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+				<resource>META-INF/cxf/bus-extensions.txt</resource> </transformer> <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+				<resource>META-INF/spring.handlers</resource> </transformer> <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+				<resource>META-INF/spring.tooling</resource> </transformer> <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
 				<resource>META-INF/spring.schemas</resource> </transformer> </transformers> </configuration> </execution> </executions> </plugin> -->
 
 			<!-- 增加编译可执行`的maven插件,注释后不会生成可执行jar，否则生成可执行jar -->
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-assembly-plugin</artifactId> <configuration> 
-				<appendAssemblyId>false</appendAssemblyId> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> 
-				<descriptors> <descriptor>pomConfig.xml</descriptor> </descriptors> <archive> <manifest> <mainClass>com.huifu.esper.service.EsperServMain</mainClass> 
-				</manifest> </archive> </configuration> <executions> <execution> <id>make-assembly</id> <phase>package</phase> <goals> <goal>assembly</goal> 
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-assembly-plugin</artifactId> <configuration>
+				<appendAssemblyId>false</appendAssemblyId> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs>
+				<descriptors> <descriptor>pomConfig.xml</descriptor> </descriptors> <archive> <manifest> <mainClass>com.huifu.esper.service.EsperServMain</mainClass>
+				</manifest> </archive> </configuration> <executions> <execution> <id>make-assembly</id> <phase>package</phase> <goals> <goal>assembly</goal>
 				</goals> </execution> </executions> </plugin> -->
 
 			<plugin>
@@ -168,7 +201,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<outputDirectory>${project.build.directory}/</outputDirectory> 
+					<outputDirectory>${project.build.directory}/</outputDirectory>
 				</configuration>
 				<executions>
 					<execution>
@@ -206,6 +239,6 @@
 			</resource>
 		</resources>
 
-	</build>		
+	</build>
 
-</project>	
+</project>

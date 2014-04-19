@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @author jojo
  * 
  */
-public class BaseModel implements Serializable
+public class BaseBO implements Serializable
 {
 
     /**   */

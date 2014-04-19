@@ -1,6 +1,6 @@
 /**
  * JOJO
- * 
+ *
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
 package com.jojo.webapp.Controller;
@@ -23,18 +23,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jojo.biz.model.UserModel;
+import com.jojo.biz.model.UserBO;
 import com.jojo.web.common.gird.DataRequest;
 import com.jojo.web.common.gird.DataResponse;
 import com.jojo.webapp.form.IndexForm;
 
 /**
  * <summary>
- * 
+ *
  * </summary>
- * 
+ *
  * @author jojo
- * 
+ *
  */
 @Controller
 public class IndexController
@@ -45,8 +45,8 @@ public class IndexController
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String test(@ModelAttribute("form") IndexForm form)
     {
-        logger.info("进Action了");
-        return "index";  // 设置返回页面，这里对应 /WEB-INF/view 目录下的 index.ftl 文件
+        logger.info("enter index navigation.");
+        return "view/index";  // 设置返回页面，这里对应 /WEB-INF 目录下的 {0}.ftl 文件
     }
 
     @RequestMapping(value = "/user/list", method = RequestMethod.GET)
@@ -54,8 +54,8 @@ public class IndexController
     public Map<String, Object> getUserList()
     {
         logger.info("列表");
-        List<UserModel> list = new ArrayList<UserModel>();
-        UserModel um = new UserModel();
+        List<UserBO> list = new ArrayList<UserBO>();
+        UserBO um = new UserBO();
         um.setId("1");
         um.setUserName("sss");
         um.setAge(222);
@@ -69,7 +69,7 @@ public class IndexController
 
     @RequestMapping(value = "/user/add", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, String> addUser(@RequestBody UserModel model)
+    public Map<String, String> addUser(@RequestBody UserBO model)
     {
         logger.info("新增");
         logger.info("捕获到前台传递过来的Model，名称为：" + model.getUserName());
@@ -79,22 +79,22 @@ public class IndexController
     }
 
     /**
-     * 
+     *
      * <summary>
      * <p>排序字段sord作为参数传入</p>
      * </summary>
-     * 
+     *
      * @author jojo
-     * 
+     *
      * @return
      */
     @RequestMapping(value = "/demo/list")
     @ResponseBody
-    public DataResponse<UserModel> query(
+    public DataResponse<UserBO> query(
             @RequestParam(defaultValue = "1", value = "page") String page,
-            @RequestParam(defaultValue = "20", value = "rows") String rows, 
+            @RequestParam(defaultValue = "20", value = "rows") String rows,
             @RequestParam("sidx") String sidx,
-            @RequestParam("sord") String sord, 
+            @RequestParam("sord") String sord,
 //            @RequestParam("_search") boolean search,
             @RequestParam(required = false, value = "searchField") String searchField,
             @RequestParam(required = false, value = "searchOper") String searchOper,
@@ -115,7 +115,7 @@ public class IndexController
             request.setSearchField(searchField);
             request.setSearchOper(searchOper);
             request.setSearchString(searchString);
-            return findResult(request, UserModel.class);
+            return findResult(request, UserBO.class);
         }
         catch (Exception e)
         {
@@ -197,9 +197,9 @@ public class IndexController
         return response;
     }
 
-    private UserModel createOneUser(String id, String userName, String status)
+    private UserBO createOneUser(String id, String userName, String status)
     {
-        UserModel userModel = new UserModel();
+        UserBO userModel = new UserBO();
         userModel.setId(id);
         userModel.setUserName(userName);
         userModel.setStatus(status);
