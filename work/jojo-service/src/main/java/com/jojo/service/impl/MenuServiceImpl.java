@@ -8,10 +8,10 @@ package com.jojo.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import com.jojo.service.MenuService;
 import com.jojo.service.model.MenuMO;
@@ -39,7 +39,7 @@ public class MenuServiceImpl implements MenuService
     {
 
         List<MenuMO> list = new ArrayList<MenuMO>();
-        if (StringUtils.isEmpty(parentId))
+        if (StringUtils.isBlank(parentId))
         {
             return list;
         }

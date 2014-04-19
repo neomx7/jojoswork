@@ -142,8 +142,8 @@ function bindMenuEvents()
                                                 + josnArray[idx].theName
                                                 + "</span></span></div>");
                     }
-                    bind2LvMenuEvents();
                     // do sth more...
+                    bind2LvMenuEvents();
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown)
                 {
@@ -157,7 +157,6 @@ function bindMenuEvents()
 
 
 
-    //3 v-selected
 }
 
 function bind2LvMenuEvents()
@@ -216,13 +215,35 @@ function bind2LvMenuEvents()
                                         );
                     }
                     // do sth more...
-
+                    bind3LvMenuEvents();
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown)
                 {
                     alert("error info :" + errorThrown)
                 }
             });
+        });
+    });
+}
+
+/**
+ *
+ */
+function bind3LvMenuEvents()
+{
+    // 3级菜单,在内容区域里增加新标签(添加时根据 id 去重复),标签内容使用 ajax 的页面返回的 html 填充
+    $("tr[id^='menu_3#']").each(function(){
+        //先解除绑定
+        $(this).unbind("click");
+        $(this).bind("click", function(){
+            // 去掉全部元素的select样式(淡蓝色背景)
+            $("tr[id^='menu_3#']").each(function()
+            {
+                $(this).removeClass("v-selected");
+            });
+
+            // 当前元素置为 active 样式
+            $(this).addClass("v-selected");
         });
     });
 }

@@ -1,3 +1,57 @@
+	<#-- link css -->
+	<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="${rc.contextPath}/styles/activiti/lt7.css" /><![endif]-->
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/styles/activiti/styles.css" /> 
+	<#--
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/styles/reindeer/styles.css" />
+	-->
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/ui-lightness/jquery.ui.all.css" />
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryLayout/layout-default-latest.css" />
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryJqGird/css/ui.jqgrid.css" />
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/ui.multiselect.css" />
+
+	<#-- style -->
+	<style>
+	/** layout css */
+	html, body {
+	    margin: 0;
+	    padding: 0;
+	    font-size: 75%;
+	}
+	/** custom css */
+	.ui-layout-pane #indexHeader
+	{
+		padding:0px;
+	}
+	</style>
+
+	<#-- jquery -->
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jquery.json-2.4.min.js"></script>
+
+	<#-- jquery UI -->
+	<script src="${rc.contextPath}/scripts/jquery/jqueryUI/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
+	<#--
+	<script src="${rc.contextPath}/scripts/jquery/jqueryUI/custom/jquery-ui-custom.min.js" type="text/javascript"></script>
+	-->
+
+	<#-- jquery Layout -->
+	<script src="${rc.contextPath}/scripts/jquery/jqueryLayout/jquery.layout-latest.js" type="text/javascript"></script>
+	<script src="${rc.contextPath}/scripts/jquery/debug/debug.js" type="text/javascript"></script>
+
+	<#-- jquery JqGird -->
+	<script src="${rc.contextPath}/scripts/jquery/jqueryJqGird/js/i18n/grid.locale-cn.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$.jgrid.no_legacy_api = true;
+		$.jgrid.useJSON = true;
+	</script>
+	<script src="${rc.contextPath}/scripts/jquery/jqueryJqGird/js/minified/jquery.jqGrid.min.js" type="text/javascript"></script>
+	<script src="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/ui.multiselect.js" type="text/javascript"></script>
+	<script src="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/jquery.tablednd.js" type="text/javascript"></script>
+	<script src="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/jquery.contextmenu.js" type="text/javascript"></script>
+
+	<#-- index -->
+	<script src="${rc.contextPath}/scripts/jquery/index.js" type="text/javascript"></script>
+
 <!-- #TopPane -->
 <!-- manually attach allowOverflow method to pane -->
 <div id="TopPane" class="ui-layout-north" style="padding:0px;" onmouseover="myLayout.allowOverflow('north')" onmouseout="myLayout.resetOverflow(this)">
@@ -137,7 +191,6 @@
 						<div class="v-table-row-spacer" style="height: 0px;"></div>
 						<table class="v-table-table" id="tbl_menu_3">
 							<tbody>
-								<tr class="v-table-row v-selected v-table-focus"><td class="v-table-cell-content" style="width: 22px;"><div class="v-table-cell-wrapper" style="width: 22px;"><div class="v-embedded v-embedded-image" style="width: 22px; height: 22px;"><img src="/activiti-explorer/VAADIN/themes/activiti/img/task-22.png"></div></div></td><td class="v-table-cell-content" style="width: 365px;"><div class="v-table-cell-wrapper" style="width: 365px;">Verify monthly financial report</div></td></tr>
 							</tbody>
 						</table>
 						<div class="v-table-row-spacer" style="height: 0px;"></div>
