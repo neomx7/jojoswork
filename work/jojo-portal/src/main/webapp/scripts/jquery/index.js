@@ -1,8 +1,20 @@
 //工程相对路径
 var appRelPath="";
 
+var mainTabs = null;
 //tab个数
 var tabCounter = 0;
+
+$.fn.tabIndex = function () {
+    return $(this).parent().find(this).index() - 1;
+};
+$.fn.selectTabByID = function (tabID) {
+    $(this).tabs("option", "active", $('#' + tabID).tabIndex());
+};
+$.fn.selectTabByIndex = function (tabIndex) {
+    $(this).tabs("option", "active", tabIndex);
+};
+
 
 // ### 页面布局排版 部分 ### //
 var myLayout = null;
@@ -62,12 +74,12 @@ var stateResetSettings =
     south__size : "auto",
     south__initClosed : false,
     south__initHidden : false,
-    west__size : 200,
+    west__size : 240,
     west__initClosed : false,
     west__initHidden : false,
     east__size : 300,
     east__initClosed : false,
-    east__initHidden : false
+    east__initHidden : true //先隐藏右边栏
 };
 
 
@@ -80,13 +92,17 @@ function addTab(tabs,tabLabel,tabContentHtml,theId)
  var newTabId = "tabs-" + theId;
  var li = $( tabTemplate.replace( /#\{href\}/g, "#" + newTabId ).replace( /#\{label\}/g, label ) );
 
- tabs = $(tabs);
- tabs.find( ".ui-tabs-nav" ).append( li );
- tabs.append( "<div id='" + newTabId + "'>" + tabContentHtml + "</div>" );
- tabs.tabs( "refresh" );
+ mainTabs = $(tabs);
+ mainTabs.find( ".ui-tabs-nav" ).append( li );
+ mainTabs.append( "<div id='" + newTabId + "'>" + tabContentHtml + "</div>" );
+ tabCounter = (tabCounter + 1);
+ mainTabs.tabs( "refresh" );
  //焦点指向这里
-
- tabCounter++;
+// var activeLiA = ( $("#tabs ul li[id='"+newTabId+"'] A"));
+// activeLiA.trigger("click");
+// mainTabs.tabs('select', '#' + newTabId);
+// mainTabs.tabs("select" , '#' + newTabId);
+ $("#tabs").selectTabByID(newTabId);// worked.
 }
 
 
@@ -96,27 +112,47 @@ $(document).ready(function()
     try
     {
         initLayout();
+        myLayout.loadState( stateResetSettings );
        // initJqGird();
-        var tabs = $("#tabs").tabs();
+
+        mainTabs =$('#tabs').tabs(
+//            {
+//                add: function(e, ui) {
+//                    // append close thingy
+//                    $(ui.tab).parents('li:first')
+//                        .append('<span class="ui-tabs-close ui-icon ui-icon-close" title="Close Tab"></span>')
+//                        .find('span.ui-tabs-close')
+//                        .show()
+//                        .click(function() {
+//                            maintab.tabs('remove', $('li', maintab).index($(this).parents('li:first')[0]));
+//                        });
+//                    // select just added tab
+//                    maintab.tabs('select', '#' + ui.panel.id);
+//                }
+//            }
+        );
+        tabCounter = mainTabs.length;
+
+
         //tab 标签
       //close icon: removing the tab on click
-        tabs.delegate( "span.ui-icon-close", "click", function() {
+        mainTabs.delegate( "span.ui-icon-close", "click", function() {
          var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
          $( "#" + panelId ).remove();
-         tabs.tabs( "refresh" );
+         mainTabs.tabs( "refresh" );
         });
-        tabs.bind( "keyup", function( event ) {
+        mainTabs.bind( "keyup", function( event ) {
          if ( event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE ) {
-             var panelId = tabs.find( ".ui-tabs-active" ).remove().attr( "aria-controls" );
+             var panelId = mainTabs.find( ".ui-tabs-active" ).remove().attr( "aria-controls" );
              $( "#" + panelId ).remove();
-             tabs.tabs( "refresh" );
+             mainTabs.tabs( "refresh" );
          }
         });
         //拖拽改变次序
-        tabs.find( ".ui-tabs-nav" ).sortable({
+        mainTabs.find( ".ui-tabs-nav" ).sortable({
             axis: "x",
             stop: function() {
-                tabs.tabs( "refresh" );
+                mainTabs.tabs( "refresh" );
             }
         });
 
@@ -276,6 +312,12 @@ function bind2LvMenuEvents()
     });
 }
 
+//已废弃
+//function addMainTab(menuName, dataResult, theId)
+//{
+//    $(mainTabs).tabs('add',("#tabs-"+theId), menuName);
+//}
+
 /**
  *
  */
@@ -292,7 +334,8 @@ function bind3LvMenuEvents()
                 $(this).removeClass("v-selected");
             });
 
-            //TODO 如果标签超过7个,不允许再新增
+            //TODO 如果标签超过7个,不允许再新增;
+           //TODO 如果标签已存在,不允许再新增;
 
             // 当前元素置为 active 样式
             $(this).addClass("v-selected");
@@ -316,6 +359,7 @@ function bind3LvMenuEvents()
                     // 这里把ajax的结果(html内容)通过js替换dom中的元素
                     // 通过 jquery-UI 放入新的标签内
                     addTab(tabs,  menuName, dataResult, theId);
+//                     addMainTab(menuName, dataResult, theId);
                     // do sth more...
 
                 },
@@ -387,7 +431,7 @@ function initLayout()
             east__minSize : 200,
             east__maxSize : .5 // 50% of layout width
             ,
-            center__minWidth : 100
+            center__minWidth : 300
 
             // some pane animation settings
             ,

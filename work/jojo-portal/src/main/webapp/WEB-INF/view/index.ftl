@@ -106,7 +106,7 @@
 <!-- #LeftPane -->
 <!-- allowOverflow auto-attached by option: west__showOverflowOnHover = true -->
 <div id="LeftPane" class="ui-layout-west">
-	<div style="height: 100%; overflow: hidden; padding-left: 0px; padding-top: 0px; position: absolute; left: 0px; top: 36px; width: 100%;">
+	<div style="height: auto; overflow: hidden; padding-left: 0px; padding-top: 0px; position: absolute; left: 0px; top: 36px; width: 100%;">
 		<div style="float: left; margin-left: 0px;">
 			<div class="v-table v-table-task-list task-list v-table-scrollable scrollable" style="height: 100%; width: 100%;">
 				<div class="v-table-header-wrap" style="width: 100%; display: none;">
@@ -173,16 +173,15 @@
 <!-- #CenterPane -->
 <div id="CenterPane" class="ui-layout-center">
 	<#-- 标签 tab 形式,使用 jquery-UI -->
-	<div id="tabs" style="height:100%;">
+	<div id="tabs" style="height:95%;">
 
 		<#-- 默认元素不能删除 -->
 		<ul>
-			<li><a href="#tabs-1">Nunc tincidunt</a></li>
+			<li><a href="#tabs-1">欢迎使用.</a></li>
 		</ul>
-		<div id="tabs-1">
+		<div id="tabs-1" >
 			<p>默认内容,显示欢迎信息,用户个人信息</p>
 		</div>
-
 	</div>
 
 </div>
