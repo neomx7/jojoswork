@@ -25,6 +25,8 @@ public class MenuMO extends BasePOJO
     private int sortWay;
     private String parentId;
     private String iconURL;
+    private String action;
+    private String extraParams;
 
     public int getLevel()
     {
@@ -94,6 +96,18 @@ public class MenuMO extends BasePOJO
             builder.append(iconURL);
             builder.append(", ");
         }
+        if (action != null)
+        {
+            builder.append("action=");
+            builder.append(action);
+            builder.append(", ");
+        }
+        if (extraParams != null)
+        {
+            builder.append("extraParams=");
+            builder.append(extraParams);
+            builder.append(", ");
+        }
         if (super.toString() != null)
         {
             builder.append("toString()=");
@@ -101,6 +115,22 @@ public class MenuMO extends BasePOJO
         }
         builder.append("]");
         return builder.toString();
+    }
+    public String getAction()
+    {
+        return action;
+    }
+    public void setAction(String action)
+    {
+        this.action = action;
+    }
+    public String getExtraParams()
+    {
+        return extraParams;
+    }
+    public void setExtraParams(String extraParams)
+    {
+        this.extraParams = extraParams;
     }
 
 }

@@ -46,7 +46,7 @@ public class IndexController
     public String test(@ModelAttribute("form") IndexForm form)
     {
         logger.info("enter index navigation.");
-        return "view/index";  // 设置返回页面，这里对应 /WEB-INF 目录下的 {0}.ftl 文件
+        return "view/index";  // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
     }
 
     @RequestMapping(value = "/user/list", method = RequestMethod.GET)

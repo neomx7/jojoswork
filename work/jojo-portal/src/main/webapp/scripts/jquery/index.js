@@ -1,6 +1,9 @@
 //工程相对路径
 var appRelPath="";
 
+//tab个数
+var tabCounter = 0;
+
 // ### 页面布局排版 部分 ### //
 var myLayout = null;
 // 作用不明
@@ -67,16 +70,60 @@ var stateResetSettings =
     east__initHidden : false
 };
 
+
+var tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
+//增加新标签
+//actual addTab function: adds new tab using the input from the form above
+function addTab(tabs,tabLabel,tabContentHtml,theId)
+{
+ var label = tabLabel;
+ var newTabId = "tabs-" + theId;
+ var li = $( tabTemplate.replace( /#\{href\}/g, "#" + newTabId ).replace( /#\{label\}/g, label ) );
+
+ tabs = $(tabs);
+ tabs.find( ".ui-tabs-nav" ).append( li );
+ tabs.append( "<div id='" + newTabId + "'>" + tabContentHtml + "</div>" );
+ tabs.tabs( "refresh" );
+ //焦点指向这里
+
+ tabCounter++;
+}
+
+
+
 $(document).ready(function()
 {
     try
     {
         initLayout();
-        initJqGird();
+       // initJqGird();
+        var tabs = $("#tabs").tabs();
+        //tab 标签
+      //close icon: removing the tab on click
+        tabs.delegate( "span.ui-icon-close", "click", function() {
+         var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
+         $( "#" + panelId ).remove();
+         tabs.tabs( "refresh" );
+        });
+        tabs.bind( "keyup", function( event ) {
+         if ( event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE ) {
+             var panelId = tabs.find( ".ui-tabs-active" ).remove().attr( "aria-controls" );
+             $( "#" + panelId ).remove();
+             tabs.tabs( "refresh" );
+         }
+        });
+        //拖拽改变次序
+        tabs.find( ".ui-tabs-nav" ).sortable({
+            axis: "x",
+            stop: function() {
+                tabs.tabs( "refresh" );
+            }
+        });
 
         // 增加top窗点击事件（第1、2级menu）
 
         bindMenuEvents();
+
         // alert("-------[Done]-------");
     }
     catch (e)
@@ -206,7 +253,10 @@ function bind2LvMenuEvents()
                         $("table[id='tbl_menu_3']").children("tbody")
                                 .append(
                                         "<tr class=\"" + (idx%2==0?"v-table-row":"v-table-row-odd")+ "\" "
-                                        + "id=\"menu_3#" + josnArray[idx].theId + "\">"
+                                        + "id=\"menu_3#" + josnArray[idx].theId + "\" "
+                                        + "theName=\"" + josnArray[idx].theName + "\" "
+                                        + "theId=\"" + josnArray[idx].theId + "\" "
+                                        + "action=\"" + josnArray[idx].action + "\"" + ">"
                                         + "<td class=\"v-table-cell-content\" style=\"width: 100%;\"><div class=\"v-table-cell-wrapper\" style=\"width: 22px;\">"
                                         + "<div class=\"v-embedded v-embedded-image\" style=\"width: 22px; height: 22px;\">"
                                         + "<img src=\""+appRelPath+"/styles/activiti/img/task-22.png\"></div></div></td>"
@@ -242,8 +292,41 @@ function bind3LvMenuEvents()
                 $(this).removeClass("v-selected");
             });
 
+            //TODO 如果标签超过7个,不允许再新增
+
             // 当前元素置为 active 样式
             $(this).addClass("v-selected");
+            var theId = $(this).attr("theId");
+            var menuName = $(this).attr("theName");
+
+
+          //ajax 刷新action 到内容区域,如果有额外参数,通过 action附带
+            var textData = $(this).attr("extraParams") ;
+            textData = (textData==null ? "" : textData||'');
+            var action = ($(this).attr("action"));
+//            alert(action);
+            $.ajax({
+                type : 'POST',
+                contentType : 'application/json',
+                url : action,
+                data : textData,
+                dataType : 'html',
+                success : function(dataResult)
+                {
+                    // 这里把ajax的结果(html内容)通过js替换dom中的元素
+                    // 通过 jquery-UI 放入新的标签内
+                    addTab(tabs,  menuName, dataResult, theId);
+                    // do sth more...
+
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert("error info :" + errorThrown)
+                }
+            });
+
+
+
         });
     });
 }
@@ -393,37 +476,21 @@ function initLayout()
     // $('#btnReset').show();
 }
 
-function initJqGird()
-{
 
-    $("#jqGirdList").jqGrid(
-    { // jqGrid固定的写法:$("#list").jqGrid({参数})
-        contentType : 'application/json',
-        datatype : "json", // 将这里改为使用JSON数据
-        url : "demo/list", // 这是Action的请求地址，注意相对路径需要去掉最前面的一个'/'
-        mtype : "post", // 提交类型
-        prmNames :
-        {
-            search : "search"
-        },
-        jsonReader :
-        {
-            // id : "0",
-            root : "rows",
-            page : "page",
-            total : "total",
-            records : "records",
-            repeatitems : false,
-            userdata : "userdata"
-        // repeatitems : false
-        },
 
-        height : "auto", // 表格高度
-        width : 900, // 表格宽度
-        // 表格结构定义
-        colNames : [ "编号", "userName", "status"
-        ],
-        colModel : [
+/**
+ *<summary>
+ *生成 jqGird 的富客户端可编辑 list 表格,
+ *</summary>
+ *
+ * @param tblId 表格dom元素的 id
+ * @param listAction 展示列表内容的 url
+ * @param colNames 列表表头,<br>
+ *        形式为 [ "编号", "userName", "status"]
+ *
+ * @param colModel 返回list结果,json数组<br>
+ *        形式为
+ *       colModel : [
         {
             name : "id",
             index : "id",
@@ -442,7 +509,46 @@ function initJqGird()
             width : 90,
             sorttype : "string"
         }
-        ],
+        ]
+
+ * @param sortname 指定默认的排序列，可以是列名也可以是数字。此参数会在被传递到Server端;其他非默认的排序都在colModel中的sorttype属性设定.其值为java 列表对象中的属性,如'id'
+ * @param caption 表格标题
+ */
+function initJqGird(tblId,listAction,colNames,colModel,sortname,caption)
+{
+
+    $('#'+tblId).jqGrid(
+    { // jqGrid固定的写法:$("#list").jqGrid({参数})
+        contentType : 'application/json',
+        datatype : "json", // 将这里改为使用JSON数据
+        url : listAction, // 这是Action的请求地址，注意相对路径需要去掉最前面的一个'/'
+        mtype : "post", // 提交类型
+        prmNames :
+        {
+            search : "search"
+        },
+        jsonReader :
+        {
+            id : "0",  //repeatitems为 false 时,给'0'
+            root : "rows",// json中代表实际模型数据的入口,即列表对象list<xxx>
+            page : "page",// json中代表当前页码的数据
+            total : "total",// json中代表页码总数的数据
+            records : "records", // json中代表数据行总数的数据
+            repeatitems : false,  //为 false 时传值不区分次序,只根据 name 获取,而所使用的name是来自于colModel中的name设定。
+//            id: "id", cell: "cell", //注：id/cell在repeatitems为true时可以用到，即每一个记录是由一对id和cell组合而成，即可以适用另一种json结构。
+            userdata: "userdata"
+//           , subgrid: {
+//            root:"rows",
+//            repeatitems: true,
+//            cell:"cell"
+//            }
+        },
+
+        height : "auto", // 表格高度
+        width : 900, // 表格宽度
+        // 表格结构定义
+        colNames : colNames,
+        colModel : colModel,
         // ,{
         // name : "status",
         // index : "status",
@@ -463,11 +569,10 @@ function initJqGird()
         // rownumbers : true, // 是否显示列数
         viewrecords : true, // 是否显示行数
         rowNum : 10, // 每页默认显示记录数
-        rowList : [ 10, 20, 30
-        ], // 可调整每页显示的记录数
+        rowList : [ 10, 20, 30 ], // 可调整每页显示的记录数
         multiselect : false, // 是否支持多选
-        sortname : "id",// 根据哪个字段排序
-        caption : "jqGrid表格测试", // 表格标题
+        sortname : sortname,// 根据哪个字段排序,如'id'
+        caption : caption, // 表格标题
         recordtext : "记录 {0} - {1} 总记录数 {2}",// 显示记录数的格式
         emptyrecords : "无数据",// 空记录时的提示信息
         loadtext : "获取数据中...",// 获得数据时的提示信息
@@ -475,7 +580,7 @@ function initJqGird()
     });
     // 定义默认按键的显示
     // ,refresh刷新按钮是否显示、edit编辑按钮是否显示、add添加按钮是否显示、del删除按钮是否显示、refreshtitle刷新按钮提示信息
-    $('#jqGirdList').jqGrid('navGrid', '#pager',
+    $('#'+tblId).jqGrid('navGrid', '#pager',
     {
         refresh : true,
         edit : true,

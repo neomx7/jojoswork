@@ -66,12 +66,14 @@ public class MenuServiceImpl implements MenuService
             mo.setTheId("003");
             mo.setTheName("demo1");
             mo.setLevel(3);
+            mo.setAction("demo/toList");
             list.add(mo);
 
             MenuMO mo2 = new MenuMO();
             mo2.setTheId("030");
             mo2.setTheName("demo2");
-            mo2.setLevel(2);
+            mo2.setLevel(3);
+            mo2.setAction("demo/toList");
             list.add(mo2);
         }
 

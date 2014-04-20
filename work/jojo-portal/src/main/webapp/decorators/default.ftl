@@ -9,10 +9,38 @@
 	<#--
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/styles/reindeer/styles.css" />
 	-->
+
+	<#-- 橙色, ok -->
+	<#--
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/ui-lightness/jquery.ui.all.css" />
+	-->
+	<#-- 蓝色, ok -->
+	<#--
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/start/jquery-ui.css" />
+	-->
+	<#-- gray色, ok -->
+	<#--
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/smoothness/jquery-ui.css" />
+	-->
+	<#-- 白底红字, ok? -->
+	<#--
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/flick/jquery-ui.css" />
+	-->
+	<#-- 蓝底橙字, ok? -->
+	<#--
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/excite-bike/jquery-ui.css" />
+	-->
+
+	<#-- 雨过天晴色, ok -->
+	<#--
+	-->
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/cupertino/jquery-ui.css" />
+
+
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryLayout/layout-default-latest.css" />
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryJqGird/css/ui.jqgrid.css" />
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/ui.multiselect.css" />
+
 
 	<#-- style -->
 	<style>
@@ -33,8 +61,24 @@
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jquery.json-2.4.min.js"></script>
 
+
 	<#-- jquery UI -->
+	<#--
 	<script src="${rc.contextPath}/scripts/jquery/jqueryUI/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
+	-->
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.position.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.core.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.button.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.tabs.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.dialog.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.mouse.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.sortable.js"></script>
+
+
+
+
 	<#--
 	<script src="${rc.contextPath}/scripts/jquery/jqueryUI/custom/jquery-ui-custom.min.js" type="text/javascript"></script>
 	-->
