@@ -9,21 +9,21 @@
 			<div class="v-loading-indicator" style="position: absolute; display: none;"></div>
 			<div class="v-verticallayout v-verticallayout-main main" style="overflow: hidden; width: 100%;">
 				<div style="overflow: hidden; margin: 0px; width: 100%; ">
-					<#-- 欢迎界面的头 -->
+					<#-- 欢迎界面的题头 -->
 					<div style="height: 54px; width: 100%; overflow: hidden; padding-left: 0px; padding-top: 0px;">
-						<div style="float: left; margin-left: 0px;">
+						<div style="float: left; margin-left: 0px; width: 100%;">
 							<div class="v-csslayout v-csslayout-header header" style="width: 100%;">
 								<div class="v-csslayout-margin">
 									<div class="v-csslayout-container">
 										<div class="v-horizontallayout" style="overflow: hidden; height: 54px; width: 100%;">
-											<div style="overflow: hidden; margin: 0px 18px 0px 0px; width: 1745px; height: 54px;">
-												<div style="height: 54px; width: 650px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
+											<div style="overflow: hidden; margin: 0px 18px 0px 0px; width: 100%; height: 54px;">
+												<div style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 0px;">
 														<#-- TODO 换掉logo class="v-label v-label-h1 h1 v-label-logo logo" -->
-														<div class="v-label v-label-h1 h1 v-label-logo " style="width: 650px;"></div>
+														<div class="v-label v-label-h1 h1 v-label-logo " style="width: 100%;"></div>
 													</div>
 												</div>
-												<div id="menu_1#000" style="height: 54px; width: 80px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
+												<div id="menu_1#000" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 0px;">
 														<div tabindex="0" class="v-button v-button-main-menu-button main-menu-button v-button-link link v-button-active active" role="button" style="height: 54px; width: 80px;">
 															<span class="v-button-wrap">
@@ -33,7 +33,7 @@
 														</div>
 													</div>
 												</div>
-												<div id="menu_1#001" style="height: 54px; width: 90px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
+												<div id="menu_1#001" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 0px;">
 														<div tabindex="0" class="v-button v-button-main-menu-button main-menu-button v-button-link link" role="button" style="height: 54px; width: 90px;">
 															<span class="v-button-wrap">
@@ -173,10 +173,10 @@
 <!-- #CenterPane -->
 <div id="CenterPane" class="ui-layout-center">
 	<#-- 标签 tab 形式,使用 jquery-UI -->
-	<div id="tabs" style="height:95%;">
+	<div id="tabs" style="height:99%;">
 
 		<#-- 默认元素不能删除 -->
-		<ul>
+		<ul id="tabsUL" >
 			<li><a href="#tabs-1">欢迎使用.</a></li>
 		</ul>
 		<div id="tabs-1" >

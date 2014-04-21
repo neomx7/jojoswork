@@ -83,18 +83,21 @@ var stateResetSettings =
 };
 
 
-var tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
+var tabTemplate = "<li id='#{li_id}'><a href='#{href}'>#{label}</a><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
 //增加新标签
 //actual addTab function: adds new tab using the input from the form above
 function addTab(tabs,tabLabel,tabContentHtml,theId)
 {
  var label = tabLabel;
  var newTabId = "tabs-" + theId;
- var li = $( tabTemplate.replace( /#\{href\}/g, "#" + newTabId ).replace( /#\{label\}/g, label ) );
-
+ var li = $( tabTemplate.replace( /#\{li_id\}/g, "#" + "tabs_Li_" + theId ).replace( /#\{href\}/g, "#" + newTabId ).replace( /#\{label\}/g, label ) );
  mainTabs = $(tabs);
- mainTabs.find( ".ui-tabs-nav" ).append( li );
- mainTabs.append( "<div id='" + newTabId + "'>" + tabContentHtml + "</div>" );
+// mainTabs.find( ".ui-tabs-nav" ).append( li );
+// mainTabs.append( "<div id='" + newTabId + "' style='width:98%;'>" + tabContentHtml + "</div>" );
+// mainTabs.find( ".ui-tabs-nav" ).append( li );
+ $('#tabsUL').append(li);
+ $('#tabs').append("<div id='" + newTabId + "' style='width:98%;'>" + tabContentHtml + "</div>");
+
  tabCounter = (tabCounter + 1);
  mainTabs.tabs( "refresh" );
  //焦点指向这里
@@ -103,6 +106,8 @@ function addTab(tabs,tabLabel,tabContentHtml,theId)
 // mainTabs.tabs('select', '#' + newTabId);
 // mainTabs.tabs("select" , '#' + newTabId);
  $("#tabs").selectTabByID(newTabId);// worked.
+// 重新加载css样式
+// $("#tabs").trigger("create");
 }
 
 

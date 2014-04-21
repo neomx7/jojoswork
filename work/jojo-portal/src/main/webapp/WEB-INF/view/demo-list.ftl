@@ -1,7 +1,7 @@
 <#-- 增加初始化 js -->
 <script type="text/javascript" src="${rc.contextPath}/scripts/portal/demo-list/demo-list.js"></script>
 
-<div class="v-csslayout v-csslayout-block-holder block-holder" style="width: 100%;">
+<div class="v-csslayout" style="width: 100%;">
 	<div class="v-csslayout-margin">
 		<div class="v-csslayout-container">
 			<!-- 调用表格并分页 -->

@@ -55,6 +55,14 @@
 	{
 		padding:0px;
 	}
+	.ui-layout-pane {
+		background: #FFF;
+		border: 1px solid #BBB;
+		padding: 2px;
+		overflow: auto;
+	}
+
+
 	</style>
 
 	<#-- jquery -->
