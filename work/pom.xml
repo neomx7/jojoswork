@@ -306,19 +306,19 @@
 			</dependency>
 			<!-- spring integration -->
 			<dependency>
-					<groupId>org.springframework.integration</groupId>
-					<artifactId>spring-integration-core</artifactId>
-					<version>${spring.integration.version}</version>
-				</dependency>
-			<dependency>
-			  <groupId>org.springframework.integration</groupId>
-			  <artifactId>spring-integration-xml</artifactId>
-			  <version>${spring.integration.version}</version>
+				<groupId>org.springframework.integration</groupId>
+				<artifactId>spring-integration-core</artifactId>
+				<version>${spring.integration.version}</version>
 			</dependency>
 			<dependency>
-			  <groupId>org.springframework.integration</groupId>
-			  <artifactId>spring-integration-ws</artifactId>
-			  <version>${spring.integration.version}</version>
+				<groupId>org.springframework.integration</groupId>
+				<artifactId>spring-integration-xml</artifactId>
+				<version>${spring.integration.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.integration</groupId>
+				<artifactId>spring-integration-ws</artifactId>
+				<version>${spring.integration.version}</version>
 			</dependency>
 
 
@@ -928,10 +928,28 @@
 		<profile>
 			<id>dev</id>
 			<properties>
-				<dbunit.operation.type>CLEAN_INSERT</dbunit.operation.type>
-				<!--saturn-config -->
-				<cookie.domain>localhost</cookie.domain>
-				<domain.name>www.jojo.com</domain.name>
+				<env>dev</env>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>test</id>
+			<properties>
+				<env>test</env>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>pre</id>
+			<properties>
+				<env>pre</env>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>product</id>
+			<properties>
+				<env>product</env>
 			</properties>
 		</profile>
 		<!-- ================= Container Profiles ================= -->
@@ -1048,6 +1066,9 @@
 			<testResource>
 				<directory>src/test/resources</directory>
 				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/applicationContext-resources-${ex.sourceType}.xml</exclude>
+				</excludes>
 			</testResource>
 		</testResources>
 	</build>

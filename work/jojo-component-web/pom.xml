@@ -438,6 +438,13 @@
 		        <artifactId>plexus-archiver</artifactId>
 		</dependency> -->
 
+		<!-- 增加对jojo-facade的依赖 -->
+		<dependency>
+			<groupId>com.jojo</groupId>
+			<artifactId>jojo-facade</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
 	</dependencies>
 
 
