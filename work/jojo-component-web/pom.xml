@@ -8,9 +8,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>jojo-web</artifactId>
+	<artifactId>jojo-component-web</artifactId>
 	<packaging>war</packaging>
-	<name>jojo-web</name>
+	<name>jojo-component-web</name>
 
 	<dependencies>
 		<dependency>
@@ -513,15 +513,15 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
 					<encoding>UTF-8</encoding>
 				</configuration>
-			</plugin>			
-			
+			</plugin>
+
 		</plugins>
 
 
@@ -539,4 +539,4 @@
 		</testResources>
 	</build>
 
-</project>	
+</project>
