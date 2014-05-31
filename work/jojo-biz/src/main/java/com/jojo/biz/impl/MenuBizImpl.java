@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jojo.biz.MenuBiz;
 import com.jojo.biz.model.MenuBO;
-import com.jojo.service.MenuService;
+import com.jojo.facade.service.MenuService;
 import com.jojo.util.service.model.MenuMO;
 
 /**

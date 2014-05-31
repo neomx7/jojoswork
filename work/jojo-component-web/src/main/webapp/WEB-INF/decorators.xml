@@ -6,9 +6,10 @@
          <pattern>/styles/**</pattern>
          <pattern>/statics/**</pattern>
          <pattern>/services/**</pattern>
+         <pattern>/httpInvoker/**</pattern>
     </excludes>
-    
+
 	<decorator name="default" page="default.ftl">
         <pattern>/*</pattern>
- 	</decorator> 
+ 	</decorator>
 </decorators>

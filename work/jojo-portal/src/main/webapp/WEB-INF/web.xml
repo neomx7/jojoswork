@@ -59,7 +59,7 @@
  			classpath*:/applicationContext-biz.xml,
             classpath*:/applicationContext-quartz.xml,
             classpath*:/applicationContext-service.xml,
-            classpath*:/spring-remoting.xml,
+            classpath*:/application-servlet.xml,
             <!-- classpath*:/applicationContext-dao-mongoDB.xml, -->
 
             <!-- oracle

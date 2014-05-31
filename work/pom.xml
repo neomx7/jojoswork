@@ -877,8 +877,8 @@
 		<jmock.version>2.5.1</jmock.version>
 		<junit.version>4.11</junit.version>
 		<jwebunit.version>2.5</jwebunit.version>
-		<spring.version>4.0.2.RELEASE</spring.version>
-		<spring.integration.version>4.0.2.RELEASE</spring.integration.version>
+		<spring.version>3.2.4.RELEASE</spring.version>
+		<spring.integration.version>3.0.2.RELEASE</spring.integration.version>
 		<spring.security.version>3.2.3.RELEASE</spring.security.version>
 		<spring.data.version>1.8.0.RELEASE</spring.data.version>
 		<postgre.version>9.3-1100-jdbc41</postgre.version>

@@ -34,18 +34,26 @@ public class WorkFlowController
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = "/workflow/queryDefines")
-    public List<WorkFlowDefine> queryDefines(@ModelAttribute("condition") WorkFlowQuery query)
+    public String queryDefines(@ModelAttribute("condition") WorkFlowQuery query)
     {
         //调用工作流服务获取列表
 //        // Simple Service
 //        TempConverter converter = ContextHolder.getBean("simpleGateway", TempConverter.class);
-//        System.out.println(converter.fahrenheitToCelcius(68.0f));
+//        System.out.println(converter .fahrenheitToCelcius(68.0f));
 
-        WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) ContextHolder.getBean("workFlowServiceProxy");
-        List<?> result = workFlowExecutor.queryFlowDefines();
-        System.out.println(result);
+        WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
+        try
+        {
+            List<WorkFlowDefine> result = workFlowExecutor.queryFlowDefines();
+            System.out.println(result);
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
 
-        return null;
+        return "view/index";
     }
 
 }

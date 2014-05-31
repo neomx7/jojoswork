@@ -1,4 +1,4 @@
-package com.jojo.service;
+package com.jojo.facade.service;
 
 import java.util.List;
 

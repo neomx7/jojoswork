@@ -5,15 +5,16 @@
  */
 package com.jojo.service.process;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import com.jojo.facade.workflow.WorkFlowExecutor;
-import com.jojo.service.esb.TempConverter;
 import com.jojo.util.pojo.ProcessTaskForm;
-import com.jojo.web.common.context.ContextHolder;
+import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 
 /**
  * <summary>
@@ -23,6 +24,7 @@ import com.jojo.web.common.context.ContextHolder;
  * @author jojo
  *
  */
+@Repository
 public class WorkFlowExecutorImpl implements WorkFlowExecutor
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -89,12 +91,13 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     }
 
     @Override
-    public List<?> queryFlowDefines()
+    public List<WorkFlowDefine> queryFlowDefines()
     {
 //      // Simple Service
 //      TempConverter converter = ContextHolder.getBean("simpleGateway", TempConverter.class);
 //      System.out.println(converter.fahrenheitToCelcius(68.0f));
-        return null;
+        System.out.println("come here ..........");
+        return new ArrayList<WorkFlowDefine>();
     }
 
 }
