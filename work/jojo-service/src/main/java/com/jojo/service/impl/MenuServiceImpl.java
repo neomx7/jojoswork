@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.jojo.service.MenuService;
-import com.jojo.service.model.MenuMO;
+import com.jojo.util.service.model.MenuMO;
 
 /**
  * <summary>

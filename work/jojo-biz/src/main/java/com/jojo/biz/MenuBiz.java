@@ -8,7 +8,6 @@ package com.jojo.biz;
 import java.util.List;
 
 import com.jojo.biz.model.MenuBO;
-import com.jojo.service.model.MenuMO;
 
 /**
  * <summary>

@@ -7,8 +7,13 @@ package com.jojo.service.process;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jojo.facade.workflow.WorkFlowExecutor;
+import com.jojo.service.esb.TempConverter;
 import com.jojo.util.pojo.ProcessTaskForm;
+import com.jojo.web.common.context.ContextHolder;
 
 /**
  * <summary>
@@ -20,6 +25,7 @@ import com.jojo.util.pojo.ProcessTaskForm;
  */
 public class WorkFlowExecutorImpl implements WorkFlowExecutor
 {
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /* (non-Javadoc)
      * @see com.jojo.facade.workflow.WorkFlowExecutor#queryList(int, java.lang.String)
@@ -38,6 +44,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     public void startProcessInstanceByKey(String processKey, String operId)
     {
         // TODO Auto-generated method stub
+        logger.info("startProcessInstanceByKey [{}] and operId [{}]", new Object[]{processKey,operId} );
 
     }
 
@@ -78,6 +85,15 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     public ProcessTaskForm getTaskForm(String taskId)
     {
         // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<?> queryFlowDefines()
+    {
+//      // Simple Service
+//      TempConverter converter = ContextHolder.getBean("simpleGateway", TempConverter.class);
+//      System.out.println(converter.fahrenheitToCelcius(68.0f));
         return null;
     }
 

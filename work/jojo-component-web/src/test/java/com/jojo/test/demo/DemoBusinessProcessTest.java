@@ -1,6 +1,6 @@
 /**
  * JOJO
- * 
+ *
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
 package com.jojo.test.demo;
@@ -30,9 +30,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * <summary>
  * 流程测试类
  * </summary>
- * 
+ *
  * @author jojo
- * 
+ *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/resources/applicationContext-service.xml",
@@ -45,7 +45,7 @@ public class DemoBusinessProcessTest
 
     @Autowired
     private ProcessEngine processEngine;
-    
+
     @Autowired
     private RuntimeService runtimeService;
 
@@ -98,13 +98,13 @@ public class DemoBusinessProcessTest
         Assert.assertEquals(0, runtimeService.createProcessInstanceQuery().count());
 
     }
-    
+
     /**
-     * 
+     *
      * <summary>
      * <p><b>一个完整的快速上手的流程例子</b></p>
      * </summary>
-     * 
+     *
      * @author jojo
      *
      */
@@ -128,8 +128,7 @@ public class DemoBusinessProcessTest
 
         // Start a process instance
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("financialReport");
-        
-        
+
         //迭代下面Task节点
         //认领任务
 //        taskService.claim(task.getId(), "fozzie");

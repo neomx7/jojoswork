@@ -18,6 +18,19 @@ public interface WorkFlowExecutor
     /**
      *
      * <summary>
+     * [获取流程定义的列表]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @return
+     */
+    public List<?> queryFlowDefines();
+
+    /**
+     *
+     * <summary>
      * <p>根据状态和当前操作者 id 得到工作流列表</p>
      *
      * </summary>

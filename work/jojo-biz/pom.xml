@@ -19,10 +19,10 @@
 			<artifactId>jojo-util</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<!-- 增加对jojo-service的依赖 -->
+		<!-- 增加对jojo-facade的依赖 -->
 		<dependency>
 			<groupId>com.jojo</groupId>
-			<artifactId>jojo-service</artifactId>
+			<artifactId>jojo-facade</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- spring -->
