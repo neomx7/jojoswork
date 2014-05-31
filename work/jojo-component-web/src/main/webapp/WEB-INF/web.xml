@@ -104,10 +104,10 @@
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    <init-param>
+<!--     <init-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/application-servlet.xml</param-value>
-    </init-param>
+    </init-param> -->
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
@@ -136,6 +136,7 @@
 	<servlet-mapping>
 		<servlet-name>dispatcher</servlet-name>
 		<url-pattern>/app/*</url-pattern>
+		<!-- <url-pattern>/</url-pattern> -->
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -159,16 +160,16 @@
 		<servlet-name>httpinvoker</servlet-name>
 		<url-pattern>/workFlow.service</url-pattern>
 	</servlet-mapping> -->
-<!-- 	<servlet>
-        <servlet-name>httpInvokerService</servlet-name>
+	<servlet>
+        <servlet-name>httpService</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>httpInvokerService</servlet-name>
-        /httpInvoker
-        <url-pattern>/workFlowHttpInvokerService</url-pattern>
+        <servlet-name>httpService</servlet-name>
+       <!--  <url-pattern>/workFlowHttpInvokerService</url-pattern> -->
+ 		<url-pattern>/workFlowService</url-pattern>
     </servlet-mapping>
- -->
+
 
 	<welcome-file-list>
 		<welcome-file>/index/100/</welcome-file>

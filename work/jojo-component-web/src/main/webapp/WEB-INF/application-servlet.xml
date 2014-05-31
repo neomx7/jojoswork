@@ -8,9 +8,7 @@
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-    <!-- 交给Spring管理，bean的名称是：userService -->
-    <bean id="workFlowService" class="com.jojo.service.process.WorkFlowExecutorImpl"/>
-    <!-- 这个配置，就是把userService接口，提供给远程调用 -->
+
     <bean id="httpService"
         class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
         <property name="service">
@@ -20,7 +18,6 @@
             value="com.jojo.facade.workflow.WorkFlowExecutor">
         </property>
     </bean>
-    <!-- 远程服务的URL -->
     <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
          <property name="mappings">
             <props>
@@ -28,6 +25,17 @@
             </props>
         </property>
     </bean>
+ <bean id="workFlowService" class="com.jojo.service.process.WorkFlowExecutorImpl"/>
+
+<!--  <bean name="httpService"
+        class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service">
+            <ref bean="workFlowService" />
+        </property>
+        <property name="serviceInterface"
+            value="com.jojo.facade.workflow.WorkFlowExecutor">
+        </property>
+    </bean> -->
 
     <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
     <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />

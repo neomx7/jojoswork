@@ -7,7 +7,7 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	<bean id="workFlowServiceProxy" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-	<!-- workFlow.service workFlowHttpInvokerService-->
+	<!-- workFlowService workFlowHttpInvokerService-->
 		<property name="serviceUrl" value="http://127.0.0.1:10086/jojo/workFlowService" />
 		<property name="serviceInterface" value="com.jojo.facade.workflow.WorkFlowExecutor" />
 	</bean>
