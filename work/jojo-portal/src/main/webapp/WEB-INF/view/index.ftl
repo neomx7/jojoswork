@@ -43,6 +43,17 @@
 														</div>
 													</div>
 												</div>
+												<div id="menu_1#002" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
+													<div style="float: left; margin-left: 0px;">
+														<div tabindex="0" class="v-button v-button-main-menu-button main-menu-button v-button-link link" role="button" style="height: 54px; width: 90px;">
+															<span class="v-button-wrap">
+																<img alt="" class="v-icon" src="${rc.contextPath}/styles/activiti/img/mm-process.png">
+																<span class="v-button-caption">流程</span>
+															</span>
+														</div>
+													</div>
+												</div>
+
 												<div style="height: 54px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 649px;">
 														<div tabindex="0" class="v-menubar v-menubar-person person">

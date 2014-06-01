@@ -5,17 +5,18 @@
  */
 package com.jojo.webapp.Controller.workflow;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jojo.facade.workflow.WorkFlowExecutor;
+import com.jojo.util.pojo.DataRequest;
+import com.jojo.util.pojo.DataResponse;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
-import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
 import com.jojo.web.common.context.ContextHolder;
 
 /**
@@ -29,31 +30,69 @@ import com.jojo.web.common.context.ContextHolder;
  *
  */
 @Controller
-public class WorkFlowController
+public class WorkFlowController extends BaseController
 {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+    *
+    * <summary>
+    * <p>
+    * 点击左侧边栏的3级菜单,显示已经部署的流程定义list页面
+    * </p>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @return
+    */
+   @RequestMapping(value = "/workflow/toList")
+   public String toList()
+   {
+    // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
+       return "view/workflow/workflow-list";
+   }
+
+    /**
+     *
+     * <summary>
+     * [使用json字符串传递查询参数+返回结果]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param query
+     * @return
+     */
     @RequestMapping(value = "/workflow/queryDefines")
-    public String queryDefines(@ModelAttribute("condition") WorkFlowQuery query)
+    @ResponseBody
+    public DataResponse<WorkFlowDefine> queryDefines(@RequestParam(defaultValue = "1", value = "page") String page,
+            @RequestParam(defaultValue = "20", value = "rows") String rows,
+            @RequestParam(required = false, value = "searchField") String searchField,
+            @RequestParam(required = false, value = "searchOper") String searchOper,
+            @RequestParam(required = false, value = "searchString") String searchString,
+            HttpServletRequest httpServletRequest)
     {
-        //调用工作流服务获取列表
-//        // Simple Service
-//        TempConverter converter = ContextHolder.getBean("simpleGateway", TempConverter.class);
-//        System.out.println(converter .fahrenheitToCelcius(68.0f));
-
+        // 调用工作流服务获取列表，workFlowExecutor是实现在工作流服务上的remoting 服务
         WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
         try
         {
-            List<WorkFlowDefine> result = workFlowExecutor.queryFlowDefines();
-            System.out.println(result);
+            DataRequest request = new DataRequest();
+            request.setPage(StringUtils.isEmpty(page) ? 1 : Integer.valueOf(page));
+            request.setRows(StringUtils.isEmpty(rows) ? 20 : Integer.valueOf(rows));
+            request.setSearchField(searchField);
+            request.setSearchOper(searchOper);
+            request.setSearchString(searchString);
+            // List<WorkFlowDefine> result =
+            // workFlowExecutor.queryFlowDefines();
+            return findResult(request, WorkFlowDefine.class, workFlowExecutor, "queryFlowDefines");
         }
         catch (Exception e)
         {
-            // TODO: handle exception
-            e.printStackTrace();
+            logger.error("queryDefines 4 workflow failed. exception info: [{}]", e);
         }
 
-        return "view/index";
+        return null;
     }
 
 }

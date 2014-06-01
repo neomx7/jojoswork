@@ -59,8 +59,9 @@
 		<param-value>
 			classpath*:/applicationContext-quartz.xml,
 			classpath*:/applicationContext-service.xml,
+			classpath*:/applicationContext-process.xml,
 			<!-- classpath*:/applicationContext-dao-mongoDB.xml, -->
-
+			classpath*:/applicationContext-tx.xml,
 			<!-- oracle classpath*:applicationContext-dao.xml, classpath*:applicationContext-resources-jdbc.xml, classpath*:applicationContext-resources-jndi.xml, -->
 			/WEB-INF/application-servlet.xml,
 			/WEB-INF/applicationContext.xml,

@@ -75,6 +75,13 @@ public class MenuServiceImpl implements MenuService
             mo2.setLevel(3);
             mo2.setAction("demo/toList");
             list.add(mo2);
+
+            MenuMO mo90 = new MenuMO();
+            mo90.setTheId("090");
+            mo90.setTheName("已部署的流程定义");
+            mo90.setLevel(3);
+            mo90.setAction("workflow/toList");
+            list.add(mo90);
         }
 
 

@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jojo.biz.model.UserBO;
-import com.jojo.web.common.gird.DataRequest;
-import com.jojo.web.common.gird.DataResponse;
+import com.jojo.util.pojo.DataRequest;
+import com.jojo.util.pojo.DataResponse;
 import com.jojo.webapp.form.IndexForm;
 
 /**

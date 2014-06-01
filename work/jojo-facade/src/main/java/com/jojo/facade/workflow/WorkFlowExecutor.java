@@ -2,6 +2,7 @@ package com.jojo.facade.workflow;
 
 import java.util.List;
 
+import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.ProcessTaskForm;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 
@@ -27,7 +28,7 @@ public interface WorkFlowExecutor
      *
      * @return
      */
-    public List<WorkFlowDefine> queryFlowDefines();
+    public List<WorkFlowDefine> queryFlowDefines(DataRequest request);
 
     /**
      *

@@ -33,6 +33,13 @@ public class BasePOJO implements Serializable
   //17位定长,精确到毫秒
     private String updTime;
 
+    private String key;
+    private String category;
+    private int version = 0;
+    //页面数据行的操作
+    private String act;
+
+
     public String getTheId()
     {
         return theId;
@@ -173,5 +180,37 @@ public class BasePOJO implements Serializable
     public void setStatus(String status)
     {
         this.status = status;
+    }
+    public String getKey()
+    {
+        return key;
+    }
+    public void setKey(String key)
+    {
+        this.key = key;
+    }
+    public String getCategory()
+    {
+        return category;
+    }
+    public void setCategory(String category)
+    {
+        this.category = category;
+    }
+    public int getVersion()
+    {
+        return version;
+    }
+    public void setVersion(int version)
+    {
+        this.version = version;
+    }
+    public String getAct()
+    {
+        return act;
+    }
+    public void setAct(String act)
+    {
+        this.act = act;
     }
 }
