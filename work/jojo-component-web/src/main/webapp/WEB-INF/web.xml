@@ -62,6 +62,8 @@
 			classpath*:/applicationContext-process.xml,
 			<!-- classpath*:/applicationContext-dao-mongoDB.xml, -->
 			classpath*:/applicationContext-tx.xml,
+
+			classpath*:/applicationContext-resources-jdbc.xml,
 			<!-- oracle classpath*:applicationContext-dao.xml, classpath*:applicationContext-resources-jdbc.xml, classpath*:applicationContext-resources-jndi.xml, -->
 			/WEB-INF/application-servlet.xml,
 			/WEB-INF/applicationContext.xml,

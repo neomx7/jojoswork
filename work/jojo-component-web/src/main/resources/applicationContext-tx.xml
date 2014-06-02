@@ -36,9 +36,37 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<!-- SqlSessionFactory for MyBatis -->
-	<!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> <property name="dataSource" ref="dataSource" 
+	<!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> <property name="dataSource" ref="dataSource"
 		/> <property name="configLocation" value="mybatis-config.xml" /> </bean> -->
+	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager">
+			<ref local="transactionManager" />
+		</property>
+	</bean>
+	<!-- Activates scanning of @Autowired -->
+	<context:annotation-config />
+	<!-- Activates scanning of @Service -->
+	<context:component-scan base-package="com.jojo.process.dal.postgre" />
+	<!-- define the SqlSessionFactory -->
+	<bean id="sqlSessionFactory1" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="com.jojo.dal.common.postgre.domain" />
+<!-- 		<property name="plugins">
+			<list>
+				<ref bean="mybatisCommonInterceptor" />
+			</list>
+		</property> -->
+	</bean>
 
+<!-- 	<bean name="mybatisCommonInterceptor" class="com.huifu.saturn.common.log.MybatisCommonInterceptor">
+	</bean> -->
+
+	<!-- scan for mappers and let them be autowired -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.jojo.process.dal.postgre" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory1" />
+	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 

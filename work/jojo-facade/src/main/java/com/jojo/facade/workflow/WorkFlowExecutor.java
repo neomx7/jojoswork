@@ -1,10 +1,12 @@
 package com.jojo.facade.workflow;
 
+import java.awt.Point;
 import java.util.List;
 
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.ProcessTaskForm;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
+import com.jojo.util.ui.vo.workflow.WorkFlowDefineGraph;
 
 /**
  * <summary>
@@ -105,5 +107,33 @@ public interface WorkFlowExecutor
      * @return
      */
     public ProcessTaskForm getTaskForm(String taskId);
+
+    /**
+     *
+     * <summary>
+     * [得到流程图片]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param defineId
+     * @return
+     */
+    public WorkFlowDefineGraph getProcessGraph(String proDefId);
+
+    /**
+     *
+     * <summary>
+     * [得到流程图片的位置]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param proDefId
+     * @return
+     */
+    public Point locationWorkFlowGraph(String proDefId);
 
 }

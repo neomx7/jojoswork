@@ -582,7 +582,7 @@ function initLayout()
  * @param caption
  *            表格标题
  */
-function initJqGird(tblId, listAction, colNames, colModel, sortname, caption,btns,editUrl)
+function initJqGird(tblId, listAction, colNames, colModel, sortname, caption,btns,editUrl, clickEl)
 {
 
     $('#' + tblId)
@@ -649,11 +649,48 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption,btn
                                     $('#' + tblId).jqGrid('setRowData', ids[i],
                                             {
                                         act : be
-                                        //+ se + ce
+                                        // + se + ce
                                             });
                                 }
                             }
                         }
+                        ,ondblClickRow: function(rowid)
+                        {
+                            // 双击行
+                            alert("You double click row with id: "+rowid);
+                        }
+                        ,onSelectRow: function(rowid)
+                        { // 单击选择行
+                            var rowdata = $("#"+tblId).jqGrid('getRowData',rowid);
+                            var key=rowdata.theId;
+                            var datajson = {};
+                            datajson['proDefId']=(key);
+                            datajson = $.toJSON(datajson);
+//                            alert(datajson);
+                            //得到流程图片
+                            if (clickEl)
+                            {
+                                  $.ajax( {
+                                  type : 'POST',
+                                  contentType : 'application/json',
+                                  url : 'workflow/locationWorkFlowGraph',
+                                  data : datajson ,
+                                  dataType : 'json',
+                                  success : function(data) {
+//                                      alert(appRelPath);
+                                    //在流程列表下面放置图片
+                                    var graphHTML = '<h2>流程图x='+data.x+',y='+data.y+'</h2><div style="position: relative;background:url(\"'
+                                        +appRelPath
+                                        +'/workflow/getWorkFlowGraph?proDefId='+key+'\")  no-repeat;width:'+data.x+'px;height:'+data.y+'px;"></div>';
+                                    $("#extraDiv").html(graphHTML);
+                                  },
+                                  error : function(XMLHttpRequest, textStatus, errorThrown) {
+                                      alert("error info :" + errorThrown)
+                                  }
+                                });
+                            }
+                        }
+
                         ,editurl: editUrl
                     });
     // 定义默认按键的显示

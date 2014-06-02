@@ -60,6 +60,8 @@
             classpath*:/applicationContext-quartz.xml,
             classpath*:/applicationContext-service.xml,
             classpath*:/application-servlet.xml,
+
+            classpath*:/applicationContext-resources-jdbc.xml,
             <!-- classpath*:/applicationContext-dao-mongoDB.xml, -->
 
             <!-- oracle
