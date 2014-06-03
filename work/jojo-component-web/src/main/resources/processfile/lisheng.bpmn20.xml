@@ -1,46 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions id="definitions" targetNamespace="http://activiti.org/bpmn20" xmlns:activiti="http://activiti.org/bpmn"
-	xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
-
-	<!-- id：这个属性是必须的， 它对应着Activiti ProcessDefinition对象的key属性。 ‘id可以用来启动流程定义的流程实例， 通过RuntimeService的startProcessInstanceByKey方法。
-		这个方法会一直使用最新发布版本的流程定义(译者注：实际中一般都使用这种方式启动流程) -->
-	<process id="lishengProcess1" name="Material management process">
-
-		<startEvent id="theStart" />
-
-		<!-- 启动流程，进入轮机长申请船舶备件Task -->
-		<sequenceFlow id='startFlow' sourceRef='theStart' targetRef='applyShipSparePartsTask' />
-
-		<!-- 轮机长申请船舶备件 -->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
+	expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20">
+	<process id="lishengProcess1" name="Material management process" isExecutable="true">
+		<startEvent id="theStart"></startEvent>
+		<sequenceFlow id="startFlow" sourceRef="theStart" targetRef="applyShipSparePartsTask"></sequenceFlow>
 		<userTask id="applyShipSparePartsTask" name="apply for ship spare parts">
-			<documentation>
-				The chief engineer will apply for ship spare parts.
-			</documentation>
+			<documentation>The chief engineer will apply for ship spare parts.</documentation>
 			<extensionElements>
 				<activiti:taskListener event="assignment"
-					class="com.jojo.service.process.usertask.listener.TaskAssignmentHandler" />
+					class="com.jojo.service.process.usertask.listener.TaskAssignmentHandler"></activiti:taskListener>
 			</extensionElements>
 		</userTask>
-
-		<!-- 分派给管理公司主管审核 -->
-		<sequenceFlow id='assgin2MgtCompanyDirector' sourceRef='applyShipSparePartsTask' targetRef='checkShipSparePartsTask' />
-
-		<!-- 管理公司主管审核船舶备件的申请 -->
+		<sequenceFlow id="assgin2MgtCompanyDirector" sourceRef="applyShipSparePartsTask" targetRef="checkShipSparePartsTask"></sequenceFlow>
 		<userTask id="checkShipSparePartsTask" name="check for ship spare parts">
-			<documentation>
-				The Management Company Director will check for ship spare parts.
-			</documentation>
+			<documentation>The Management Company Director will check for ship spare parts.</documentation>
 			<extensionElements>
 				<activiti:taskListener event="assignment"
-					class="com.jojo.service.process.usertask.listener.TaskAssignmentHandler" />
+					class="com.jojo.service.process.usertask.listener.TaskAssignmentHandler"></activiti:taskListener>
 			</extensionElements>
 		</userTask>
-
-
-		<!-- 结束流程 -->
-		<sequenceFlow id='endFlow' sourceRef='checkShipSparePartsTask' targetRef='theEnd' />
-		<endEvent id="theEnd" />
-
+		<sequenceFlow id="endFlow" sourceRef="checkShipSparePartsTask" targetRef="theEnd"></sequenceFlow>
+		<endEvent id="theEnd"></endEvent>
 	</process>
-
+	<bpmndi:BPMNDiagram id="BPMNDiagram_lishengProcess1">
+		<bpmndi:BPMNPlane bpmnElement="lishengProcess1" id="BPMNPlane_lishengProcess1">
+			<bpmndi:BPMNShape bpmnElement="theStart" id="BPMNShape_theStart">
+				<omgdc:Bounds height="35.0" width="35.0" x="160.0" y="185.0"></omgdc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="applyShipSparePartsTask" id="BPMNShape_applyShipSparePartsTask">
+				<omgdc:Bounds height="60.0" width="100.0" x="240.0" y="170.0"></omgdc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="checkShipSparePartsTask" id="BPMNShape_checkShipSparePartsTask">
+				<omgdc:Bounds height="60.0" width="100.0" x="390.0" y="170.0"></omgdc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="theEnd" id="BPMNShape_theEnd">
+				<omgdc:Bounds height="35.0" width="35.0" x="540.0" y="185.0"></omgdc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge bpmnElement="startFlow" id="BPMNEdge_startFlow">
+				<omgdi:waypoint x="195.0" y="202.0"></omgdi:waypoint>
+				<omgdi:waypoint x="202.0" y="200.0"></omgdi:waypoint>
+				<omgdi:waypoint x="202.0" y="200.0"></omgdi:waypoint>
+				<omgdi:waypoint x="240.0" y="200.0"></omgdi:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="assgin2MgtCompanyDirector" id="BPMNEdge_assgin2MgtCompanyDirector">
+				<omgdi:waypoint x="340.0" y="200.0"></omgdi:waypoint>
+				<omgdi:waypoint x="352.0" y="200.0"></omgdi:waypoint>
+				<omgdi:waypoint x="352.0" y="200.0"></omgdi:waypoint>
+				<omgdi:waypoint x="390.0" y="200.0"></omgdi:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="endFlow" id="BPMNEdge_endFlow">
+				<omgdi:waypoint x="490.0" y="200.0"></omgdi:waypoint>
+				<omgdi:waypoint x="502.0" y="200.0"></omgdi:waypoint>
+				<omgdi:waypoint x="502.0" y="200.0"></omgdi:waypoint>
+				<omgdi:waypoint x="540.0" y="202.0"></omgdi:waypoint>
+			</bpmndi:BPMNEdge>
+		</bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>
 </definitions>

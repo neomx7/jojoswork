@@ -19,6 +19,9 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
+import org.activiti.engine.impl.pvm.ReadOnlyProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.lang.StringUtils;
@@ -71,6 +74,38 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     {
         // setDeploymentId(repositoryService.createDeployment().addClasspathResource("classpath*:/processfile/*.bpmn20.xml").deploy().getId());
         // setServiceURL(serviceURL);
+    }
+
+    @Override
+    public void genProcessGraph()
+    {
+        List<ProcessDefinition> definitions = repositoryService.createProcessDefinitionQuery().list();
+        for (ProcessDefinition processDefinition : definitions)
+        {
+            if (!processDefinition.getId().contains("lishengProcess1"))
+            {
+                continue;
+            }
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("attachId", processDefinition.getId().replaceAll(":", "_"));
+            long count = attachMgrMapper.count(params);
+            if (count <= 0)
+            {
+                try
+                {
+                    // 生成流程图片
+                    generateProcessGraph(processDefinition.getId());
+                }
+                catch (IOException e)
+                {
+                    logger.error("genProcessGraph failed.I/O exception info : [{}]", e);
+                }
+                catch (Exception e)
+                {
+                    logger.error("genProcessGraph failed. exception info : [{}]", e);
+                }
+            }
+        }
     }
 
     /*
@@ -202,30 +237,55 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     {
         WorkFlowDefineGraph workFlowDefineGraph = new WorkFlowDefineGraph();
 
+        StringBuilder graphFilePath = new StringBuilder();
+        graphFilePath.append(proDefId.replaceAll(":", "_"));
+        workFlowDefineGraph.setGraphKey(graphFilePath.toString());
 
+        return workFlowDefineGraph;
+    }
+
+    private void generateProcessGraph(String proDefId) throws IOException
+    {
         if (StringUtils.isNotEmpty(proDefId))
         {
-            // BpmnModel bpmnModel = repositoryService.getBpmnModel(proDefId);
-             ProcessDefinition processDefinition =
-             repositoryService.createProcessDefinitionQuery()
-             .processDefinitionId(proDefId)
-             .singleResult();
-             String resourceName = processDefinition.getResourceName();
-             InputStream imageStream =
-             repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
-             resourceName);
+//            BpmnModel bpmnModel = repositoryService.getBpmnModel(proDefId);
+//            InputStream imageStream = ProcessDiagramGenerator.generatePngDiagram(bpmnModel);
+            // ReadOnlyProcessDefinition define =
+            // ((RepositoryServiceImpl)repositoryService).getDeployedProcessDefinition(proDefId);
+            // ProcessDefinition processDefinition =
+            // repositoryService.createProcessDefinitionQuery()
+            // .processDefinitionId(proDefId).singleResult();
+            // String resourceName = processDefinition.getResourceName();
+            // InputStream imageStream =
+            // repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
+            // resourceName);
 
-//            InputStream imageStream = repositoryService.getProcessDiagram(proDefId);
+            // InputStream imageStream =
+            // repositoryService.getProcessDiagram(proDefId);
+
+            // InputStream imageStream =
+            // ProcessDiagramGenerator.generateDiagram(bpmnModel, "png", null);
+
+            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                     .processDefinitionId(proDefId).singleResult();
+            String diagramResourceName = processDefinition.getDiagramResourceName();
+            if (diagramResourceName == null)
+            {
+                logger.warn("no valid diagramResource set for this process definition Id.[{}]",proDefId);
+                return;
+            }
+            InputStream imageStream = repositoryService
+                    .getResourceAsStream(processDefinition.getDeploymentId(), diagramResourceName);
+
             StringBuilder graphFilePath = new StringBuilder();
             graphFilePath.append(proDefId.replaceAll(":", "_"));
-            workFlowDefineGraph.setGraphKey(graphFilePath.toString());
             byte[] b = null;
             try
             {
                 b = FileCopyUtils.copyToByteArray(imageStream);
                 if (b == null || b.length == 0)
                 {
-                    return workFlowDefineGraph;
+                    return;
                 }
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("attachContent", b);// 此处所用的参数类型为 byte[]
@@ -234,11 +294,15 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
             }
             catch (IOException e)
             {
-               logger.error("Save ProcessGraph failed. exception info : [{}]",e);
+                logger.error("Save ProcessGraph failed. exception info : [{}]", e);
+            }finally
+            {
+                if (imageStream != null)
+                {
+                    imageStream.close();
+                }
             }
         }
-
-        return workFlowDefineGraph;
     }
 
     @Override

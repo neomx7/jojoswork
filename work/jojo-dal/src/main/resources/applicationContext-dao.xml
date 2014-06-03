@@ -23,7 +23,7 @@
 
 	<!-- define the SqlSessionFactory -->
 	<bean id="sqlSessionFactory1" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="configLocation" value="classpath*:/MyBatis-Configuration.xml" />
+		<property name="configLocation" value="classpath:MyBatis-Configuration.xml" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="typeAliasesPackage" value="com.jojo.dal.common.postgre.domain" />
 <!-- 		<property name="plugins">

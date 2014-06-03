@@ -1,62 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jojo.dal.common.postgre.AttachMgrMapper">
-<!-- 	<resultMap type="com.huifu.esper.scp.model.ScpRuleTag" id="RuleTagResultMap">
-		<result column="ID" property="id"/>
-		<result column="BIZ_TYPE" property="bizType" />
-		<result column="CREATE_TIME" property="createTime" />
-		<result column="CREATE_OPER_ID" property="createOperId" />
-		<result column="LIMIT_DESC" property="limitDesc" />
-		<result column="STATUS" property="status" />
-		<result column="UPDATE_TIME" property="updateTime" />
-		<result column="LAST_UPDATE_OPER_ID" property="lastUpdateOperId" />
-	</resultMap> -->
+	<!-- <resultMap type="com.huifu.esper.scp.model.ScpRuleTag" id="RuleTagResultMap"> <result column="ID" property="id"/> <result
+		column="BIZ_TYPE" property="bizType" /> <result column="CREATE_TIME" property="createTime" /> <result column="CREATE_OPER_ID"
+		property="createOperId" /> <result column="LIMIT_DESC" property="limitDesc" /> <result column="STATUS" property="status"
+		/> <result column="UPDATE_TIME" property="updateTime" /> <result column="LAST_UPDATE_OPER_ID" property="lastUpdateOperId"
+		/> </resultMap> -->
+		<!-- javaType="String" jdbcType="VARCHAR"  javaType="byte[]" jdbcType="BLOB"  typeHandler="org.apache.ibatis.type.BlobTypeHandler" /> -->
+	<resultMap type="com.jojo.dal.common.postgre.domain.AttachDO" id="attachResultMap">
+		<id property="attachId" column="ATTACH_ID" />
+		<result property="attachContent" column="ATTACH_CONTENT" />
 
-	 <select id="getDemoCount" resultType="java.lang.Long">
-        select count(*) as countTarget from JOJO_ATTACH
-    </select>
-
- <!-- --此处需要加上jdbcType=BLOB -->
-	 <insert id="upload" parameterType="java.util.Map">
-        INSERT INTO JOJO_ATTACH
-        (ATTACH_ID,ATTACH_CONTENT)
-        VALUES
-        (#{attachId}, #{attachContent,jdbcType=BLOB})
-    </insert>
-
-
-<!-- 	<select id="getPageRuleTag" resultMap="RuleTagResultMap" parameterType="java.util.Map">
-		select * from (
-		select rownum as rn, SCP.SCP_RULE_TAG.* from SCP.SCP_RULE_TAG where 1 = 1
-		<if test="bizType != null and bizType != ''">
-		AND BIZ_TYPE = #{bizType}
-		</if>
-		<if test="ruleCategory != null and ruleCategory != ''">
-		AND RULE_CATEGORY = #{ruleCategory}
-		</if>
-		<if test="ruleWay != null">
-		AND RULE_WAY = #{ruleWay}
-		</if>
-		<if test="limitDesc != null and limitDesc != ''">
-		AND LIMIT_DESC = #{limitDesc}
-		</if>
-		<if test="tagTitle != null and tagTitle != ''">
-		AND TAG_TITLE = #{tagTitle}
-		</if>
-		ORDER by CREATE_TIME DESC
-		)
-		where rn &gt;= #{startRow}
-		and rn &lt;= #{endRow}
+	</resultMap>
+	<!-- , ATTACH_CONTENT  -->
+	<select id="download" parameterType="java.util.Map" resultMap="attachResultMap">
+		SELECT ATTACH_ID , ATTACH_CONTENT    FROM JOJO_ATTACH
+		WHERE ATTACH_ID = #{attachId}
 	</select>
 
-	<delete id="delRuleTag">
-		delete from SCP.SCP_RULE_TAG where ID = #{id}
-	</delete>
-
-	<update id="updateRuleTagStatus" parameterType="java.util.Map">
-		update SCP.SCP_RULE_TAG set STATUS = #{status}
-		, UPDATE_TIME = #{updateTime,jdbcType=VARCHAR}
-		, LAST_UPDATE_OPER_ID = #{lastUpdateOperId,jdbcType=VARCHAR}
-		where ID = #{id}
-	</update> -->
 </mapper>

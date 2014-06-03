@@ -14,12 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.jojo.biz.CommonBiz;
+import com.jojo.dal.common.postgre.domain.AttachDO;
 import com.jojo.facade.workflow.WorkFlowExecutor;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
@@ -42,6 +45,9 @@ import com.jojo.web.common.context.ContextHolder;
 @Controller
 public class WorkFlowController extends BaseController
 {
+
+    @Autowired
+    private CommonBiz commonBiz;
 
     /**
      *
@@ -124,26 +130,23 @@ public class WorkFlowController extends BaseController
     // ,@RequestBody WorkFlowDefineGraph graph
     ) throws IOException
     {
-        // 生成图片
-        InputStream is = null;
+        // 得到流程定义图片
         if (StringUtils.isBlank(proDefId))
         {
             logger.error("no proDefId set 4 getWorkFlowGraph.");
             return;
         }
-        WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
-        WorkFlowDefineGraph workFlowDefineGraph = null;
+//        InputStream is = null;
+        AttachDO attachDO = null;
         try
         {
-            workFlowDefineGraph = workFlowExecutor.getProcessGraph(proDefId);
-//            is = workFlowDefineGraph.getInputStream();
+            attachDO = commonBiz.download(proDefId.replaceAll(":", "_"));
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             logger.error("getWorkFlowGraph failed, excepton info : [{}]",e);
         }
-        if (is != null)
+        if (attachDO != null)
         {
             // graph.setInputStream(is);
             // graph.setPoint(workFlowDefineGraph.getPoint());
@@ -152,25 +155,27 @@ public class WorkFlowController extends BaseController
             try
             {
                 out = httpServletResponse.getOutputStream();
-                byte[] bs = new byte[1024];
-                int n = 0;
-                while ((n = is.read(bs)) != -1)
-                {
-                    out.write(bs, 0, n);
-                }
+//                byte[] bs = new byte[1024];
+//                int n = 0;
+//                while ((n = is.read(bs)) != -1)
+//                {
+//                    out.write(bs, 0, n);
+//                }
+
+                out.write(attachDO.getAttachContent());
                 out.flush();
             }
             catch (Exception ex)
             {
-                ex.printStackTrace();
+                logger.error("write into httpServletResponse failed, excepton info : [{}]",ex);
             }
             finally
             {
-                if (is != null)
-                {
-                    is.close();
-                }
-                if (is != null)
+//                if (is != null)
+//                {
+//                    is.close();
+//                }
+                if (out != null)
                 {
                     out.close();
                 }

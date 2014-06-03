@@ -17,7 +17,7 @@
         ">
 
 	<!-- <import resource="classpath*:/applicationContext-dao-mongoDB.xml" /> -->
-	<!-- <import resource="classpath*:/applicationContext-service.xml" /> -->
+	<import resource="classpath*:/applicationContext-service.xml" />
 	<!-- 默认注解映射支持 -->
 	<mvc:annotation-driven />
 	<!-- Scans the classpath of this application for @Components to deploy as beans -->

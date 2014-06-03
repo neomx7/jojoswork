@@ -48,4 +48,18 @@ public interface AttachMgrMapper
 
 
     public Long getDemoCount();
+
+    /**
+     *
+     * <summary>
+     * [获取工作流程图的个数]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param params
+     * @return
+     */
+    public Long count(Map<String, Object> params);
 }

@@ -10,18 +10,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <summary>
- * 
+ *
  * </summary>
- * 
+ *
  * @author jojo
- * 
+ *
  */
 public class SchedulingJob
 {
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     public void work()
     {
-        logger.info("scheduling job work...");
+//        logger.info("scheduling job work...");
     }
 }

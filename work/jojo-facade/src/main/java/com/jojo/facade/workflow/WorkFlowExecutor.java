@@ -22,6 +22,18 @@ public interface WorkFlowExecutor
     /**
      *
      * <summary>
+     * [检视并生成流程图片]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     */
+    public void genProcessGraph();
+
+    /**
+     *
+     * <summary>
      * [获取流程定义的列表]<br>
      * <br>
      * </summary>

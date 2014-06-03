@@ -3,36 +3,32 @@
  *
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
-package com.jojo.dal.common.postgre;
-
-import java.util.List;
-import java.util.Map;
+package com.jojo.biz;
 
 import com.jojo.dal.common.postgre.domain.AttachDO;
 
+
 /**
  * <summary>
- * []<br>
- * <br>
+ *
  * </summary>
  *
  * @author jojo
  *
  */
-public interface AttachMgrMapper
+public interface CommonBiz
 {
-
     /**
      *
      * <summary>
-     * [从服务器下载文件]<br>
+     * [根据附件id得到附件内容]<br>
      * <br>
      * </summary>
      *
      * @author jojo
      *
+     * @param attchId
      * @return
      */
-    public List<AttachDO> download(Map<String, Object> params);
-
+    public AttachDO download(String attchId);
 }
