@@ -36,7 +36,7 @@ $(function()
     }
     ];
     //var treedata = $("#jqgrid").jqGrid('getRowData',rowid);
-    var btnsEl = "<input style='height:22px;width:60px;' type='button' value='编辑' onClick='startWorkFlow(\"jqGirdList\",\"#rowid\")'/>";
+    var btnsEl = "<input style='height:22px;width:60px;' type='button' value='启动流程' onClick='startWorkFlow(\"jqGirdList\",\"#rowid\")'/>";
     var clickEl = '/workflow/getWorkFlowGraph';
     initJqGird('jqGirdList', 'workflow/queryDefines', colNames, colModel, 'theId', '已经部署的流程定义'
             ,btnsEl,""

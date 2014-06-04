@@ -678,11 +678,13 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption,btn
                                   dataType : 'json',
                                   success : function(data) {
 //                                      alert(appRelPath);
+                                      $("#extraDiv").empty();
                                     //在流程列表下面放置图片
-                                    var graphHTML = '<h2>流程图x='+data.x+',y='+data.y+'</h2><div style="position: relative;background:url(\"'
+                                    var graphHTML = '<h2>流程图 <span style=\"display:hidden;\">x='+data.x+',y='+data.y+'</span>' +'</h2><img style=\"border:1px solid #dddddd\" src=\"'
                                         +appRelPath
-                                        +'/workflow/getWorkFlowGraph?proDefId='+key+'\")  no-repeat;width:'+data.x+'px;height:'+data.y+'px;"></div>';
-                                    $("#extraDiv").html(graphHTML);
+                                        +'/workflow/getWorkFlowGraph?proDefId='+key
+                                        +'\"/>';
+                                    $("#extraDiv").append(graphHTML);
                                   },
                                   error : function(XMLHttpRequest, textStatus, errorThrown) {
                                       alert("error info :" + errorThrown)

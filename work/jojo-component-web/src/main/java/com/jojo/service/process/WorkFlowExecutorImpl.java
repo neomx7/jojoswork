@@ -79,7 +79,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     @Override
     public void genProcessGraph()
     {
-        List<ProcessDefinition> definitions = repositoryService.createProcessDefinitionQuery().list();
+        List<ProcessDefinition> definitions = repositoryService.createProcessDefinitionQuery().latestVersion().active().list();
         for (ProcessDefinition processDefinition : definitions)
         {
             if (!processDefinition.getId().contains("lishengProcess1"))
@@ -203,8 +203,10 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
          * asc：升序
          * listPage：分页查询 0:表示起始位置，4：表示查询长度 .listPage(0, 4)
          */
-        List<ProcessDefinition> definitions = repositoryService.createProcessDefinitionQuery().orderByDeploymentId()
-                .desc().list();
+        List<ProcessDefinition> definitions = repositoryService.createProcessDefinitionQuery().latestVersion()
+//                .active().orderByDeploymentId()
+//                .desc()
+                .list();
         list = new ArrayList<WorkFlowDefine>(definitions.size());
         for (ProcessDefinition definition : definitions)
         {
