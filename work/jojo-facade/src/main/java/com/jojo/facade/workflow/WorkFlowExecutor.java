@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.List;
 
 import com.jojo.util.pojo.DataRequest;
+import com.jojo.util.pojo.ProcessTask;
 import com.jojo.util.pojo.ProcessTaskForm;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefineGraph;
@@ -148,4 +149,31 @@ public interface WorkFlowExecutor
      */
     public Point locationWorkFlowGraph(String proDefId);
 
+    /**
+     * 获取未签收的任务查询对象
+     * @param userId    用户ID
+     */
+    public List<ProcessTask> createUnsignedTaskQuery(String userId,String processDefKey);
+
+    /**
+     * 获取正在处理的任务查询对象
+     * @param userId    用户ID
+     */
+    public List<ProcessTask> createTodoTaskQuery(String userId, String processDefKey) ;
+
+//    /**
+//     * 获取未经完成的流程实例查询对象
+//     * @param userId    用户ID
+//     */
+//    public List<ProcessTask> createUnFinishedProcessInstanceQuery(String userId, String processDefKey);
+//    /**
+//     * 获取已经完成的流程实例查询对象
+//     * @param userId    用户ID
+//     */
+//    public List<ProcessTask> createFinishedProcessInstanceQuery(String userId, String processDefKey);
+
 }
+
+
+
+

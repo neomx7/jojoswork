@@ -15,25 +15,30 @@ import java.util.Map;
 
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.GraphicInfo;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.impl.RepositoryServiceImpl;
-import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
-import org.activiti.engine.impl.pvm.ReadOnlyProcessDefinition;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
+import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 
 import com.jojo.facade.workflow.WorkFlowExecutor;
 import com.jojo.process.dal.postgre.AttachMgrMapper;
 import com.jojo.util.pojo.DataRequest;
+import com.jojo.util.pojo.ProcessTask;
 import com.jojo.util.pojo.ProcessTaskForm;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefineGraph;
@@ -54,6 +59,12 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     // private String deploymentId = null;
     // 改成jmx配置形式
     private String serviceURL;
+
+    @Autowired
+    private IdentityService identityService;
+
+    @Autowired
+    private HistoryService historyService;
 
     @Autowired
     private ProcessEngine processEngine;
@@ -133,6 +144,13 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     {
         logger.info("startProcessInstanceByKey [{}] and operId [{}]", new Object[] { processKey, operId });
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey);
+        //调用该方法，自动把当前任务给oeprId用户
+        identityService.setAuthenticatedUserId(operId);
+        //将创建者分配给任务
+//        Map<String, Object> variables = new HashMap<String, Object>();
+//        variables.put("hrUserId", hrUserId);
+//        taskService.complete(taskId, variables);
+
     }
 
     /*
@@ -145,6 +163,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     @Override
     public void claimTask(String taskId, String operId)
     {
+//        taskService.getVariables(taskId)
         taskService.claim(taskId, operId);
     }
 
@@ -355,6 +374,120 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         return point;
     }
 
+
+    /**
+     * 获取未签收的任务查询对象
+     * @param userId    用户ID
+     */
+    @Transactional(readOnly = true)
+    public List<ProcessTask> createUnsignedTaskQuery(String userId,String processDefKey) {
+        TaskQuery taskCandidateUserQuery = taskService.createTaskQuery().processDefinitionKey(processDefKey)
+                .taskCandidateUser(userId);
+        if (taskCandidateUserQuery != null)
+        {
+            List<Task> tasks = taskCandidateUserQuery.list() ;
+            return getProcessTaskList(tasks);
+        }
+        return null;
+    }
+
+    /**
+     * 获取正在处理的任务查询对象
+     * @param userId    用户ID
+     */
+    @Transactional(readOnly = true)
+    public List<ProcessTask> createTodoTaskQuery(String userId, String processDefKey) {
+        TaskQuery taskAssigneeQuery = taskService.createTaskQuery().processDefinitionKey(processDefKey).taskAssignee(userId);
+        if (taskAssigneeQuery != null)
+        {
+            List<Task> tasks = taskAssigneeQuery.list() ;
+            return getProcessTaskList(tasks);
+        }
+        return null;
+    }
+
+    /**
+     * <summary>
+     * []<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param tasks
+     * @return
+     */
+    private List<ProcessTask> getProcessTaskList(List<Task> tasks)
+    {
+        List<ProcessTask> processTasks = null;
+        if (tasks != null && !tasks.isEmpty())
+        {
+            processTasks = new ArrayList<ProcessTask>(tasks.size());
+            for (Task task : tasks)
+            {
+                ProcessTask processTask = tranferTask(task);
+                processTasks.add(processTask);
+            }
+
+        }
+        return processTasks;
+    }
+
+    /**
+     * <summary>
+     * []<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param task
+     */
+    private ProcessTask tranferTask(Task task)
+    {
+        ProcessTask processTask = new ProcessTask();
+        processTask.setCategory(task.getCategory());
+        processTask.setCreateTime(task.getCreateTime());
+        processTask.setDescription(task.getDescription());
+        processTask.setDueDate(task.getDueDate());
+        processTask.setExecutionId(task.getExecutionId());
+        processTask.setTheName(task.getName());
+        processTask.setOwner(task.getOwner());
+        processTask.setParentTaskId(task.getParentTaskId());
+        processTask.setPriority(task.getPriority());
+        processTask.setProcessInstanceId(task.getProcessDefinitionId());
+        processTask.setProcessInstanceId(task.getProcessInstanceId());
+        processTask.setTenantId(task.getTenantId());
+        return processTask;
+    }
+
+//    /**
+//     * 获取未经完成的流程实例查询对象
+//     * @param userId    用户ID
+//     */
+//    @Transactional(readOnly = true)
+//    public List<ProcessTask> createUnFinishedProcessInstanceQuery(String userId, String processDefKey) {
+//        ProcessInstanceQuery unfinishedQuery = runtimeService.createProcessInstanceQuery().processDefinitionKey(processDefKey)
+//                .active();
+//        if (unfinishedQuery != null)
+//        {
+//            List<ProcessInstance> tasks = unfinishedQuery.list();
+//            return getProcessTaskList(tasks);
+//        }
+//        return null;
+//    }
+
+//    /**
+//     * 获取已经完成的流程实例查询对象
+//     * @param userId    用户ID
+//     */
+//    @Transactional(readOnly = true)
+//    public List<ProcessTask> createFinishedProcessInstanceQuery(String userId, String processDefKey) {
+//        HistoricProcessInstanceQuery finishedQuery = historyService.createHistoricProcessInstanceQuery()
+//                .processDefinitionKey(processDefKey).finished();
+//        return finishedQuery.;
+//    }
+
     public String getServiceURL()
     {
         return serviceURL;
@@ -366,3 +499,4 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     }
 
 }
+

@@ -26,6 +26,7 @@ import com.jojo.dal.common.postgre.domain.AttachDO;
 import com.jojo.facade.workflow.WorkFlowExecutor;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
+import com.jojo.util.pojo.ResultInfo;
 import com.jojo.util.ui.vo.workflow.LocationGraph;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefineGraph;
@@ -203,4 +204,27 @@ public class WorkFlowController extends BaseController
         return location;
     }
 
+
+    @RequestMapping(value = "/workflow/startProcessInstance")
+    @ResponseBody
+    public ResultInfo startProcessInstance(
+//            @RequestParam(required = true, value = "proDefId")
+//            String proDefKey, HttpServletResponse httpServletResponse
+            @RequestBody WorkFlowQuery query
+    )
+    {
+        ResultInfo resultInfo = new ResultInfo();
+        if (StringUtils.isBlank(query.getProDefKey()))
+        {
+            logger.error("can not start process instance cause proDefKey is null");
+            resultInfo.setResultCode(-1);
+            return resultInfo;
+        }
+        WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
+        //从session中获取operId
+        String operId = "jojo";
+        workFlowExecutor.startProcessInstanceByKey(query.getProDefKey(), operId);
+        resultInfo.setResultCode(0);
+        return resultInfo;
+    }
 }

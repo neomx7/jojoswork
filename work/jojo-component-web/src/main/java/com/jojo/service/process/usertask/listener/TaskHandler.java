@@ -1,0 +1,60 @@
+/**
+ * JOJO
+ *
+ * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
+ */
+package com.jojo.service.process.usertask.listener;
+
+import org.activiti.engine.delegate.TaskListener;
+import org.activiti.engine.impl.el.FixedValue;
+
+/**
+ * <summary>
+ * [分派下一个节点的任务负责人]<br>
+ * <br>
+ * </summary>
+ *
+ * @author jojo
+ *
+ */
+public abstract class TaskHandler implements TaskListener
+{
+
+    /**   */
+    private static final long serialVersionUID = 5603774273648788216L;
+
+    private FixedValue formDivId;
+    private FixedValue qryDataBeanId;
+    private FixedValue qryDataBeanMethod;
+
+    public FixedValue getFormDivId()
+    {
+        return formDivId;
+    }
+
+    public void setFormDivId(FixedValue formDivId)
+    {
+        this.formDivId = formDivId;
+    }
+
+    public FixedValue getQryDataBeanId()
+    {
+        return qryDataBeanId;
+    }
+
+    public void setQryDataBeanId(FixedValue qryDataBeanId)
+    {
+        this.qryDataBeanId = qryDataBeanId;
+    }
+
+    public FixedValue getQryDataBeanMethod()
+    {
+        return qryDataBeanMethod;
+    }
+
+    public void setQryDataBeanMethod(FixedValue qryDataBeanMethod)
+    {
+        this.qryDataBeanMethod = qryDataBeanMethod;
+    }
+
+}

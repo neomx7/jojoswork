@@ -6,7 +6,6 @@
 package com.jojo.service.process.usertask.listener;
 
 import org.activiti.engine.delegate.DelegateTask;
-import org.activiti.engine.delegate.TaskListener;
 
 /**
  * <summary>
@@ -17,21 +16,21 @@ import org.activiti.engine.delegate.TaskListener;
  * @author jojo
  *
  */
-public class TaskAssignmentHandler implements TaskListener
+public class TaskAssignmentHandler extends TaskHandler
 {
-
     /**   */
-    private static final long serialVersionUID = -2436247344095303654L;
-
+    private static final long serialVersionUID = 6504653808165347949L;
 
     @Override
-    public void notify(DelegateTask arg0)
+    public void notify(DelegateTask delegateTask)
     {
         // Execute custom identity lookups here
         // and then for example call following methods:
         //在这里设置之前form中设定好的分派人
 
-
+        delegateTask.setVariable("formDivId", getFormDivId());
+        delegateTask.setVariable("qryDataBeanId", getQryDataBeanId());
+        delegateTask.setVariable("qryDataBeanMethod", getQryDataBeanMethod());
     }
 
 }

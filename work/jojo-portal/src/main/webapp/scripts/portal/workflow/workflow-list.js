@@ -61,6 +61,21 @@ function startWorkFlow(tblId,rowid)
     //json格式的对象，可以按照rowdata.属性名依次获取需要的属性
     var rowdata = $("#"+tblId).jqGrid('getRowData',rowid);
 //    alert(rowdata.theName);
-
+    var datajson = {};
+    datajson['proDefKey']=(rowdata.key);
+    datajson = $.toJSON(datajson);
+    $.ajax( {
+        type : 'POST',
+        contentType : 'application/json',
+        url : 'workflow/startProcessInstance',
+        data : datajson ,
+        dataType : 'json',
+        success : function(data) {
+            alert("流程已经启动！ data: [" +data+"]");
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("error info :" + errorThrown)
+        }
+      });
 }
 
