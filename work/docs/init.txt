@@ -1,0 +1,315 @@
+-- Table: "JOJO_DEPRT"
+
+-- DROP TABLE "JOJO_DEPRT";
+
+CREATE TABLE "JOJO_DEPRT"
+(
+  "T_ID" character varying(64) NOT NULL, -- 逻辑主键
+  "T_NAME" character varying(64), -- 部门名称
+  "T_LEVEL" smallint, -- 树形结构，级别
+  "T_CODE" character varying(64), -- 按级别编号，字典排序
+  "PARENT_ID" character varying(64), -- 冗余字段，使用字典序时不需要
+  "T_REMARK" character varying(128), -- 备注
+  "CRT_USR" character varying(64), -- CRT_USR
+  "CRT_TIME" timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "CRT_USR_NAME" character varying(64), -- 创建者姓名
+  "UPD_USR" character varying(64), -- 更新者id
+  "UPD_TIME" timestamp without time zone, -- 更新时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "UPD_USR_NAME" character varying(64), -- 更新者姓名
+  CONSTRAINT "JOJO_DEPRT_pkey" PRIMARY KEY ("T_ID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "JOJO_DEPRT"
+  OWNER TO postgres;
+COMMENT ON COLUMN "JOJO_DEPRT"."T_ID" IS '逻辑主键';
+COMMENT ON COLUMN "JOJO_DEPRT"."T_NAME" IS '部门名称';
+COMMENT ON COLUMN "JOJO_DEPRT"."T_LEVEL" IS '树形结构，级别';
+COMMENT ON COLUMN "JOJO_DEPRT"."T_CODE" IS '按级别编号，字典排序';
+COMMENT ON COLUMN "JOJO_DEPRT"."PARENT_ID" IS '冗余字段，使用字典序时不需要';
+COMMENT ON COLUMN "JOJO_DEPRT"."T_REMARK" IS '备注';
+COMMENT ON COLUMN "JOJO_DEPRT"."CRT_USR" IS 'CRT_USR';
+COMMENT ON COLUMN "JOJO_DEPRT"."CRT_TIME" IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_DEPRT"."CRT_USR_NAME" IS '创建者姓名';
+COMMENT ON COLUMN "JOJO_DEPRT"."UPD_USR" IS '更新者id';
+COMMENT ON COLUMN "JOJO_DEPRT"."UPD_TIME" IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_DEPRT"."UPD_USR_NAME" IS '更新者姓名';
+
+-- Table: "JOJO_DEPRT_USR"
+
+-- DROP TABLE "JOJO_DEPRT_USR";
+
+CREATE TABLE "JOJO_DEPRT_USR"
+(
+  "T_ID" character varying(64) NOT NULL, -- 逻辑主键
+  "T_DEPRT_ID" character varying(64), -- 部门表ID,对应JOJO_DEPRT.T_ID
+  "T_USR_ID" character varying(64), -- 用户表ID,对应JOJO_USR.T_ID
+  CONSTRAINT "JOJO_DEPRT_USR_pkey" PRIMARY KEY ("T_ID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "JOJO_DEPRT_USR"
+  OWNER TO postgres;
+COMMENT ON TABLE "JOJO_DEPRT_USR"
+  IS '部门、用户关系表';
+COMMENT ON COLUMN "JOJO_DEPRT_USR"."T_ID" IS '逻辑主键';
+COMMENT ON COLUMN "JOJO_DEPRT_USR"."T_DEPRT_ID" IS '部门表ID,对应JOJO_DEPRT.T_ID';
+COMMENT ON COLUMN "JOJO_DEPRT_USR"."T_USR_ID" IS '用户表ID,对应JOJO_USR.T_ID';
+
+
+-- Table: "JOJO_ORG"
+
+-- DROP TABLE "JOJO_ORG";
+
+CREATE TABLE "JOJO_ORG"
+(
+  "T_ID" character varying(64) NOT NULL, -- 逻辑主键
+  "T_TARGET_ID" character varying(64), -- 目标ID，为 JOJO_USR.T_ID 或 JOJO_DEPRT_USR_.T_ID
+  "TARGET_TYPE" smallint, -- 目标类型  1全局用户  2部门用户
+  "T_REMARK" character varying(128), -- 备注
+  "CRT_USR" character varying(64), -- CRT_USR
+  "CRT_TIME" timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "CRT_USR_NAME" character varying(64), -- 创建者姓名
+  "UPD_USR" character varying(64), -- 更新者id
+  "UPD_TIME" timestamp without time zone, -- 更新时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "UPD_USR_NAME" character varying(64), -- 更新者姓名
+  CONSTRAINT "JOJO_ORG_pkey" PRIMARY KEY ("T_ID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "JOJO_ORG"
+  OWNER TO postgres;
+COMMENT ON COLUMN "JOJO_ORG"."T_ID" IS '逻辑主键';
+COMMENT ON COLUMN "JOJO_ORG"."T_TARGET_ID" IS '目标ID，为 JOJO_USR.T_ID 或 JOJO_DEPRT_USR_.T_ID';
+COMMENT ON COLUMN "JOJO_ORG"."TARGET_TYPE" IS '目标类型  1全局用户  2部门用户';
+COMMENT ON COLUMN "JOJO_ORG"."T_REMARK" IS '备注';
+COMMENT ON COLUMN "JOJO_ORG"."CRT_USR" IS 'CRT_USR';
+COMMENT ON COLUMN "JOJO_ORG"."CRT_TIME" IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_ORG"."CRT_USR_NAME" IS '创建者姓名';
+COMMENT ON COLUMN "JOJO_ORG"."UPD_USR" IS '更新者id';
+COMMENT ON COLUMN "JOJO_ORG"."UPD_TIME" IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_ORG"."UPD_USR_NAME" IS '更新者姓名';
+
+-- Table: "JOJO_ORG_ROLE"
+
+-- DROP TABLE "JOJO_ORG_ROLE";
+
+CREATE TABLE "JOJO_ORG_ROLE"
+(
+  "T_ID" character varying(64) NOT NULL, -- 逻辑主键
+  "T_ORG_ID" character varying(64), -- 职务表ID,对应JOJO_ORG.T_ID
+  "T_ROLE_ID" character varying(64), -- 角色表ID,对应JOJO_ROLE.T_ID
+  CONSTRAINT "JOJO_ORG_ROLE_pkey" PRIMARY KEY ("T_ID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "JOJO_ORG_ROLE"
+  OWNER TO postgres;
+COMMENT ON TABLE "JOJO_ORG_ROLE"
+  IS '职务、角色关系表';
+COMMENT ON COLUMN "JOJO_ORG_ROLE"."T_ID" IS '逻辑主键';
+COMMENT ON COLUMN "JOJO_ORG_ROLE"."T_ORG_ID" IS '职务表ID,对应JOJO_ORG.T_ID';
+COMMENT ON COLUMN "JOJO_ORG_ROLE"."T_ROLE_ID" IS '角色表ID,对应JOJO_ROLE.T_ID';
+
+-- Table: "JOJO_PRV"
+
+-- DROP TABLE "JOJO_PRV";
+
+CREATE TABLE "JOJO_PRV"
+(
+  "T_ID" character varying(64) NOT NULL, -- 逻辑主键
+  "T_TARGET_ID" character varying(64), -- 目标ID，为JOJO_RESOURCE.T_ID
+  "TARGET_TYPE" smallint, -- 目标类型  1菜单 2按钮
+  "T_FLAG" character varying(16), -- 对应当前目标资源的权限flag，每个用012..表示具体权限，如读写等
+  "T_REMARK" character varying(128), -- 备注
+  "CRT_USR" character varying(64), -- CRT_USR
+  "CRT_TIME" timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "CRT_USR_NAME" character varying(64), -- 创建者姓名
+  "UPD_USR" character varying(64), -- 更新者id
+  "UPD_TIME" timestamp without time zone, -- 更新时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "UPD_USR_NAME" character varying(64), -- 更新者姓名
+  CONSTRAINT "JOJO_PRV_pkey" PRIMARY KEY ("T_ID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "JOJO_PRV"
+  OWNER TO postgres;
+COMMENT ON COLUMN "JOJO_PRV"."T_ID" IS '逻辑主键';
+COMMENT ON COLUMN "JOJO_PRV"."T_TARGET_ID" IS '目标ID，为JOJO_RESOURCE.T_ID';
+COMMENT ON COLUMN "JOJO_PRV"."TARGET_TYPE" IS '目标类型  1菜单 2按钮';
+COMMENT ON COLUMN "JOJO_PRV"."T_FLAG" IS '对应当前目标资源的权限flag，每个用012..表示具体权限，如读写等';
+COMMENT ON COLUMN "JOJO_PRV"."T_REMARK" IS '备注';
+COMMENT ON COLUMN "JOJO_PRV"."CRT_USR" IS 'CRT_USR';
+COMMENT ON COLUMN "JOJO_PRV"."CRT_TIME" IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_PRV"."CRT_USR_NAME" IS '创建者姓名';
+COMMENT ON COLUMN "JOJO_PRV"."UPD_USR" IS '更新者id';
+COMMENT ON COLUMN "JOJO_PRV"."UPD_TIME" IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_PRV"."UPD_USR_NAME" IS '更新者姓名';
+
+-- Table: "JOJO_RESOURCE"
+
+-- DROP TABLE "JOJO_RESOURCE";
+
+CREATE TABLE "JOJO_RESOURCE"
+(
+  "T_ID" character varying(64) NOT NULL, -- 逻辑主键
+  "T_NAME" character varying(64), -- 资源名称
+  "T_TYPE" smallint, -- 资源类型  1菜单  2按钮
+  "T_ACTION" character varying(256), -- 资源action
+  "T_LEVEL" smallint, -- 树形结构，级别
+  "T_CODE" character varying(64), -- 按级别编号，字典排序
+  "T_PARENT_ID" character varying(64), -- 冗余字段，使用字典序时不需要
+  "T_REMARK" character varying(128), -- 备注
+  "CRT_USR" character varying(64), -- CRT_USR
+  "CRT_TIME" timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "CRT_USR_NAME" character varying(64), -- 创建者姓名
+  "UPD_USR" character varying(64), -- 更新者id
+  "UPD_TIME" timestamp without time zone, -- 更新时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "UPD_USR_NAME" character varying(64), -- 更新者姓名
+  CONSTRAINT "JOJO_RESOURCE_pkey" PRIMARY KEY ("T_ID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "JOJO_RESOURCE"
+  OWNER TO postgres;
+COMMENT ON COLUMN "JOJO_RESOURCE"."T_ID" IS '逻辑主键';
+COMMENT ON COLUMN "JOJO_RESOURCE"."T_NAME" IS '资源名称';
+COMMENT ON COLUMN "JOJO_RESOURCE"."T_TYPE" IS '资源类型  1菜单  2按钮';
+COMMENT ON COLUMN "JOJO_RESOURCE"."T_ACTION" IS '资源action';
+COMMENT ON COLUMN "JOJO_RESOURCE"."T_LEVEL" IS '树形结构，级别';
+COMMENT ON COLUMN "JOJO_RESOURCE"."T_CODE" IS '按级别编号，字典排序';
+COMMENT ON COLUMN "JOJO_RESOURCE"."T_PARENT_ID" IS '冗余字段，使用字典序时不需要';
+COMMENT ON COLUMN "JOJO_RESOURCE"."T_REMARK" IS '备注';
+COMMENT ON COLUMN "JOJO_RESOURCE"."CRT_USR" IS 'CRT_USR';
+COMMENT ON COLUMN "JOJO_RESOURCE"."CRT_TIME" IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_RESOURCE"."CRT_USR_NAME" IS '创建者姓名';
+COMMENT ON COLUMN "JOJO_RESOURCE"."UPD_USR" IS '更新者id';
+COMMENT ON COLUMN "JOJO_RESOURCE"."UPD_TIME" IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_RESOURCE"."UPD_USR_NAME" IS '更新者姓名';
+
+-- Table: "JOJO_ROLE"
+
+-- DROP TABLE "JOJO_ROLE";
+
+CREATE TABLE "JOJO_ROLE"
+(
+  "T_ID" character varying(64) NOT NULL, -- 逻辑主键
+  "T_NAME" character varying(64), -- 角色名称
+  "T_STATUS" smallint, -- 状态 0无效 1有效
+  "T_REMARK" character varying(128), -- 备注
+  "CRT_USR" character varying(64), -- CRT_USR
+  "CRT_TIME" timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "CRT_USR_NAME" character varying(64), -- 创建者姓名
+  "UPD_USR" character varying(64), -- 更新者id
+  "UPD_TIME" timestamp without time zone, -- 更新时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "UPD_USR_NAME" character varying(64), -- 更新者姓名
+  CONSTRAINT "JOJO_ROLE_pkey" PRIMARY KEY ("T_ID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "JOJO_ROLE"
+  OWNER TO postgres;
+COMMENT ON COLUMN "JOJO_ROLE"."T_ID" IS '逻辑主键';
+COMMENT ON COLUMN "JOJO_ROLE"."T_NAME" IS '角色名称';
+COMMENT ON COLUMN "JOJO_ROLE"."T_STATUS" IS '状态 0无效 1有效';
+COMMENT ON COLUMN "JOJO_ROLE"."T_REMARK" IS '备注';
+COMMENT ON COLUMN "JOJO_ROLE"."CRT_USR" IS 'CRT_USR';
+COMMENT ON COLUMN "JOJO_ROLE"."CRT_TIME" IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_ROLE"."CRT_USR_NAME" IS '创建者姓名';
+COMMENT ON COLUMN "JOJO_ROLE"."UPD_USR" IS '更新者id';
+COMMENT ON COLUMN "JOJO_ROLE"."UPD_TIME" IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_ROLE"."UPD_USR_NAME" IS '更新者姓名';
+
+-- Table: "JOJO_ROLE_PRV"
+
+-- DROP TABLE "JOJO_ROLE_PRV";
+
+CREATE TABLE "JOJO_ROLE_PRV"
+(
+  "T_ID" character varying(64) NOT NULL, -- 逻辑主键
+  "T_PRV_ID" character varying(64), -- 权限表ID,对应JOJO_PRV.T_ID
+  "T_ROLE_ID" character varying(64), -- 角色表ID,对应JOJO_ROLE.T_ID
+  CONSTRAINT "JOJO_ROLE_PRV_pkey" PRIMARY KEY ("T_ID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "JOJO_ROLE_PRV"
+  OWNER TO postgres;
+COMMENT ON TABLE "JOJO_ROLE_PRV"
+  IS '角色、权限关系表';
+COMMENT ON COLUMN "JOJO_ROLE_PRV"."T_ID" IS '逻辑主键';
+COMMENT ON COLUMN "JOJO_ROLE_PRV"."T_PRV_ID" IS '权限表ID,对应JOJO_PRV.T_ID';
+COMMENT ON COLUMN "JOJO_ROLE_PRV"."T_ROLE_ID" IS '角色表ID,对应JOJO_ROLE.T_ID';
+
+-- Table: "JOJO_USR"
+
+-- DROP TABLE "JOJO_USR";
+
+CREATE TABLE "JOJO_USR"
+(
+  "T_ID" character varying(64) NOT NULL, -- 逻辑主键
+  "T_NAME" character varying(64), -- 用户姓名
+  "T_STATUS" smallint, -- 状态 0无效 1有效
+  "T_SEX" smallint, -- 性别  1 男 ; 2 女
+  "T_EMAIL" character varying(256), -- 邮件
+  "T_TEL" character varying(256), -- 电话
+  "T_MOBILE" character varying(256), -- 手机
+  "T_REMARK" character varying(128), -- 备注
+  "CRT_USR" character varying(64), -- CRT_USR
+  "CRT_TIME" timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "CRT_USR_NAME" character varying(64), -- 创建者姓名
+  "UPD_USR" character varying(64), -- 更新者id
+  "UPD_TIME" timestamp without time zone, -- 更新时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  "UPD_USR_NAME" character varying(64), -- 更新者姓名
+  CONSTRAINT "JOJO_USR_pkey" PRIMARY KEY ("T_ID")
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "JOJO_USR"
+  OWNER TO postgres;
+COMMENT ON COLUMN "JOJO_USR"."T_ID" IS '逻辑主键';
+COMMENT ON COLUMN "JOJO_USR"."T_NAME" IS '用户姓名';
+COMMENT ON COLUMN "JOJO_USR"."T_STATUS" IS '状态 0无效 1有效';
+COMMENT ON COLUMN "JOJO_USR"."T_SEX" IS '性别  1 男 ; 2 女';
+COMMENT ON COLUMN "JOJO_USR"."T_EMAIL" IS '邮件';
+COMMENT ON COLUMN "JOJO_USR"."T_TEL" IS '电话';
+COMMENT ON COLUMN "JOJO_USR"."T_MOBILE" IS '手机';
+COMMENT ON COLUMN "JOJO_USR"."T_REMARK" IS '备注';
+COMMENT ON COLUMN "JOJO_USR"."CRT_USR" IS 'CRT_USR';
+COMMENT ON COLUMN "JOJO_USR"."CRT_TIME" IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_USR"."CRT_USR_NAME" IS '创建者姓名';
+COMMENT ON COLUMN "JOJO_USR"."UPD_USR" IS '更新者id';
+COMMENT ON COLUMN "JOJO_USR"."UPD_TIME" IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN "JOJO_USR"."UPD_USR_NAME" IS '更新者姓名';
+
+---附件表，存储流程图片等。
+-- Table: jojo_attach
+
+-- DROP TABLE jojo_attach;
+
+CREATE TABLE jojo_attach
+(
+  attach_id character varying(32) NOT NULL, -- 附件文件的指纹
+  attach_content bytea, -- 附件内容，二进制流
+  CONSTRAINT pk_attcah_id PRIMARY KEY (attach_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE jojo_attach
+  OWNER TO postgres;
+COMMENT ON TABLE jojo_attach
+  IS '附件表，存储流程图片';
+COMMENT ON COLUMN jojo_attach.attach_id IS '附件文件的指纹';
+COMMENT ON COLUMN jojo_attach.attach_content IS '附件内容，二进制流';
+
+
