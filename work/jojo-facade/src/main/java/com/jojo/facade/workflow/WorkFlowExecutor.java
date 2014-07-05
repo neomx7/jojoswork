@@ -2,12 +2,16 @@ package com.jojo.facade.workflow;
 
 import java.awt.Point;
 import java.util.List;
+import java.util.Map;
 
+import com.jojo.util.biz.bo.PageResultBO;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.ProcessTask;
 import com.jojo.util.pojo.ProcessTaskForm;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefineGraph;
+import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
+import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
 
 /**
  * <summary>
@@ -45,6 +49,10 @@ public interface WorkFlowExecutor
      */
     public List<WorkFlowDefine> queryFlowDefines(DataRequest request);
 
+
+    public PageResultBO queryWorkFlowTask(WorkFlowQuery query);
+
+
     /**
      *
      * <summary>
@@ -58,18 +66,23 @@ public interface WorkFlowExecutor
      * @param operId  工作流的相关者 id
      * @return
      */
-    public List<?> queryList(int status,String operId);
+    public List<WorkFlowTaskDTO> queryList(int status,String operId);
 
     /**
      *
      * <summary>
-     * <p>启动工作流流程</p>
+     * [启动工作流流程]<br>
+     * <br>
      * </summary>
      *
      * @author jojo
      *
+     * @param processKey
+     * @param operId
+     * @param buinessKey  这里填写业务entry的数据库id
+     * @param variables
      */
-    public void startProcessInstanceByKey(String processKey,String operId);
+    public String startProcessInstanceByKey(String processKey,String operId,String buinessKey, Map<String, Object> variables);
 
     /**
      *

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jojo.biz.model.UserBO;
+import com.jojo.util.biz.bo.UserBO;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
 import com.jojo.webapp.form.IndexForm;
@@ -159,6 +159,10 @@ public class IndexController
         // }
 
     }
+
+
+
+
 
     public <T> DataResponse<T> findResult(DataRequest request, Class<T> cls)
     {

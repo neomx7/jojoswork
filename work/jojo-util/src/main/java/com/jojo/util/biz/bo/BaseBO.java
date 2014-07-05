@@ -3,28 +3,30 @@
  *
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
-package com.jojo.biz.model;
+package com.jojo.util.biz.bo;
 
-import java.io.Serializable;
+import com.jojo.util.pojo.BasePOJO;
 
 /**
  * <summary>
- * 
+ *
  * </summary>
- * 
+ *
  * @author jojo
- * 
+ *
  */
-public class BaseBO implements Serializable
+public class BaseBO extends BasePOJO
 {
 
     /**   */
     private static final long serialVersionUID = 5477205619023388101L;
 
-    
+
     private String id;
     private String status;
-    
+
+    private int number;
+
     public String getId()
     {
         return id;
@@ -40,5 +42,13 @@ public class BaseBO implements Serializable
     public void setStatus(String status)
     {
         this.status = status;
+    }
+    public int getNumber()
+    {
+        return number;
+    }
+    public void setNumber(int number)
+    {
+        this.number = number;
     }
 }

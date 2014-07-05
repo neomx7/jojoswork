@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jojo.biz.MenuBiz;
-import com.jojo.biz.model.MenuBO;
+import com.jojo.util.biz.bo.MenuBO;
 
 /**
  * <summary>

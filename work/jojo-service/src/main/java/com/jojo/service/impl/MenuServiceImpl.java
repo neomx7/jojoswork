@@ -60,6 +60,7 @@ public class MenuServiceImpl implements MenuService
             list.add(mo2);
 
         }
+        //管理
         else  if (parentId.trim().equals("002") || parentId.trim().equals("020"))
         {
             MenuMO mo = new MenuMO();
@@ -83,8 +84,46 @@ public class MenuServiceImpl implements MenuService
             mo90.setAction("workflow/toList");
             list.add(mo90);
         }
+        //流程
+        else  if (parentId.trim().equals("003"))
+        {
+            MenuMO mo = new MenuMO();
+            mo.setTheId("0030");
+            mo.setTheName("发起物料申请");
+            mo.setLevel(2);
+            mo.setAction("demo/toCreateApplyList");
+            list.add(mo);
 
+            MenuMO mo2 = new MenuMO();
+            mo2.setTheId("0031");
+            mo2.setTheName("需要我处理的任务");
+            mo2.setLevel(2);
+            mo2.setAction("demo/toMyTaskList");
+            list.add(mo2);
 
+        }
+        //发起物料申请
+        else  if (parentId.trim().equals("0030"))
+        {
+            MenuMO mo = new MenuMO();
+            mo.setTheId("003030");
+            mo.setTheName("发起物料申请");
+            mo.setLevel(3);
+            mo.setAction("demo/toCreateApplyList");
+            list.add(mo);
+
+        }
+        //需要我处理的任务
+        else  if (parentId.trim().equals("0031"))
+        {
+            MenuMO mo = new MenuMO();
+            mo.setTheId("003131");
+            mo.setTheName("需要我处理的任务");
+            mo.setLevel(3);
+            mo.setAction("demo/toMyTaskList");
+            list.add(mo);
+
+        }
 
         return list;
     }

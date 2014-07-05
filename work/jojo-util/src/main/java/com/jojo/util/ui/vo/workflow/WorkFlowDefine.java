@@ -2,6 +2,16 @@ package com.jojo.util.ui.vo.workflow;
 
 import com.jojo.util.pojo.BasePOJO;
 
+/**
+ *
+ * <summary>
+ * [li流程定义]<br>
+ * <br>
+ * </summary>
+ *
+ * @author jojo
+ *
+ */
 public class WorkFlowDefine extends BasePOJO
 {
 

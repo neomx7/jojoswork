@@ -1,4 +1,4 @@
-package com.jojo.biz.model;
+package com.jojo.util.biz.bo;
 
 public class UserBO extends BaseBO
 {

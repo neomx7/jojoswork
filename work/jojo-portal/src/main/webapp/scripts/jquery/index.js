@@ -625,7 +625,7 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption,btn
                         autoWidth : true,
                         // rownumbers : true, // 是否显示列数
                         viewrecords : true, // 是否显示行数
-                        rowNum : 10, // 每页默认显示记录数
+                        rowNum : 20, // 每页默认显示记录数
                         rowList : [ 10, 20, 30
                         ], // 可调整每页显示的记录数
                         multiselect : false, // 是否支持多选
@@ -640,7 +640,7 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption,btn
                         ,gridComplete : function()
                         {
                             var ids =  $('#' + tblId).jqGrid('getDataIDs');
-                            if (ids)
+                            if (ids && btns)
                             {
                                 for (var i = 0; i < ids.length; i++)
                                 {

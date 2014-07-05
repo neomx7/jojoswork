@@ -39,7 +39,7 @@ public class ProcessTask extends BasePOJO
     private String processInstanceId;
     private String tenantId;
     private String taskDefinitionKey;
-
+    private String taskId;
 
     public int getRevision()
     {
@@ -176,6 +176,14 @@ public class ProcessTask extends BasePOJO
     public void setTaskDefinitionKey(String taskDefinitionKey)
     {
         this.taskDefinitionKey = taskDefinitionKey;
+    }
+    public String getTaskId()
+    {
+        return taskId;
+    }
+    public void setTaskId(String taskId)
+    {
+        this.taskId = taskId;
     }
 
 }

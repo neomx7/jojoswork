@@ -21,10 +21,8 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.lang.StringUtils;
@@ -37,11 +35,14 @@ import org.springframework.util.FileCopyUtils;
 
 import com.jojo.facade.workflow.WorkFlowExecutor;
 import com.jojo.process.dal.postgre.AttachMgrMapper;
+import com.jojo.util.biz.bo.PageResultBO;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.ProcessTask;
 import com.jojo.util.pojo.ProcessTaskForm;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefineGraph;
+import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
+import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
 
 /**
  * <summary>
@@ -90,7 +91,8 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     @Override
     public void genProcessGraph()
     {
-        List<ProcessDefinition> definitions = repositoryService.createProcessDefinitionQuery().latestVersion().active().list();
+        List<ProcessDefinition> definitions = repositoryService.createProcessDefinitionQuery().latestVersion().active()
+                .list();
         for (ProcessDefinition processDefinition : definitions)
         {
             if (!processDefinition.getId().contains("lishengProcess1"))
@@ -126,9 +128,19 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * java.lang.String)
      */
     @Override
-    public List<?> queryList(int status, String operId)
+    public List<WorkFlowTaskDTO> queryList(int status, String operId)
     {
-        // TODO Auto-generated method stub
+
+        if (status == 1)
+        {
+            // 待办
+
+        }
+        else
+        {
+
+        }
+
         return null;
     }
 
@@ -140,17 +152,31 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * .lang.String, java.lang.String)
      */
     @Override
-    public void startProcessInstanceByKey(String processKey, String operId)
+    public String startProcessInstanceByKey(String processKey, String operId, String businessKey,
+            Map<String, Object> variables)
     {
         logger.info("startProcessInstanceByKey [{}] and operId [{}]", new Object[] { processKey, operId });
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey);
-        //调用该方法，自动把当前任务给oeprId用户
-        identityService.setAuthenticatedUserId(operId);
-        //将创建者分配给任务
-//        Map<String, Object> variables = new HashMap<String, Object>();
-//        variables.put("hrUserId", hrUserId);
-//        taskService.complete(taskId, variables);
-
+        ProcessInstance processInstance = null;
+        try
+        {
+            // 调用该方法，自动把当前任务给oeprId用户
+            identityService.setAuthenticatedUserId(operId);
+            processInstance = runtimeService.startProcessInstanceByKey(processKey, businessKey,
+                    variables);
+        }
+        finally
+        {
+            identityService.setAuthenticatedUserId(null);
+        }
+        // 将创建者分配给任务
+        // Map<String, Object> variables = new HashMap<String, Object>();
+        // variables.put("hrUserId", hrUserId);
+        // taskService.complete(taskId, variables);
+        if (processInstance != null)
+        {
+            return processInstance.getId();
+        }
+        return null;
     }
 
     /*
@@ -163,7 +189,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     @Override
     public void claimTask(String taskId, String operId)
     {
-//        taskService.getVariables(taskId)
+        // taskService.getVariables(taskId)
         taskService.claim(taskId, operId);
     }
 
@@ -223,8 +249,8 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
          * listPage：分页查询 0:表示起始位置，4：表示查询长度 .listPage(0, 4)
          */
         List<ProcessDefinition> definitions = repositoryService.createProcessDefinitionQuery().latestVersion()
-//                .active().orderByDeploymentId()
-//                .desc()
+        // .active().orderByDeploymentId()
+        // .desc()
                 .list();
         list = new ArrayList<WorkFlowDefine>(definitions.size());
         for (ProcessDefinition definition : definitions)
@@ -269,8 +295,9 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     {
         if (StringUtils.isNotEmpty(proDefId))
         {
-//            BpmnModel bpmnModel = repositoryService.getBpmnModel(proDefId);
-//            InputStream imageStream = ProcessDiagramGenerator.generatePngDiagram(bpmnModel);
+            // BpmnModel bpmnModel = repositoryService.getBpmnModel(proDefId);
+            // InputStream imageStream =
+            // ProcessDiagramGenerator.generatePngDiagram(bpmnModel);
             // ReadOnlyProcessDefinition define =
             // ((RepositoryServiceImpl)repositoryService).getDeployedProcessDefinition(proDefId);
             // ProcessDefinition processDefinition =
@@ -288,15 +315,15 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
             // ProcessDiagramGenerator.generateDiagram(bpmnModel, "png", null);
 
             ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                     .processDefinitionId(proDefId).singleResult();
+                    .processDefinitionId(proDefId).singleResult();
             String diagramResourceName = processDefinition.getDiagramResourceName();
             if (diagramResourceName == null)
             {
-                logger.warn("no valid diagramResource set for this process definition Id.[{}]",proDefId);
+                logger.warn("no valid diagramResource set for this process definition Id.[{}]", proDefId);
                 return;
             }
-            InputStream imageStream = repositoryService
-                    .getResourceAsStream(processDefinition.getDeploymentId(), diagramResourceName);
+            InputStream imageStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
+                    diagramResourceName);
 
             StringBuilder graphFilePath = new StringBuilder();
             graphFilePath.append(proDefId.replaceAll(":", "_"));
@@ -316,7 +343,8 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
             catch (IOException e)
             {
                 logger.error("Save ProcessGraph failed. exception info : [{}]", e);
-            }finally
+            }
+            finally
             {
                 if (imageStream != null)
                 {
@@ -374,18 +402,20 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         return point;
     }
 
-
     /**
      * 获取未签收的任务查询对象
-     * @param userId    用户ID
+     *
+     * @param userId
+     *            用户ID
      */
     @Transactional(readOnly = true)
-    public List<ProcessTask> createUnsignedTaskQuery(String userId,String processDefKey) {
+    public List<ProcessTask> createUnsignedTaskQuery(String userId, String processDefKey)
+    {
         TaskQuery taskCandidateUserQuery = taskService.createTaskQuery().processDefinitionKey(processDefKey)
                 .taskCandidateUser(userId);
         if (taskCandidateUserQuery != null)
         {
-            List<Task> tasks = taskCandidateUserQuery.list() ;
+            List<Task> tasks = taskCandidateUserQuery.list();
             return getProcessTaskList(tasks);
         }
         return null;
@@ -393,14 +423,18 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
 
     /**
      * 获取正在处理的任务查询对象
-     * @param userId    用户ID
+     *
+     * @param userId
+     *            用户ID
      */
     @Transactional(readOnly = true)
-    public List<ProcessTask> createTodoTaskQuery(String userId, String processDefKey) {
-        TaskQuery taskAssigneeQuery = taskService.createTaskQuery().processDefinitionKey(processDefKey).taskAssignee(userId);
+    public List<ProcessTask> createTodoTaskQuery(String userId, String processDefKey)
+    {
+        TaskQuery taskAssigneeQuery = taskService.createTaskQuery().processDefinitionKey(processDefKey)
+                .taskAssignee(userId);
         if (taskAssigneeQuery != null)
         {
-            List<Task> tasks = taskAssigneeQuery.list() ;
+            List<Task> tasks = taskAssigneeQuery.list();
             return getProcessTaskList(tasks);
         }
         return null;
@@ -461,32 +495,36 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         return processTask;
     }
 
-//    /**
-//     * 获取未经完成的流程实例查询对象
-//     * @param userId    用户ID
-//     */
-//    @Transactional(readOnly = true)
-//    public List<ProcessTask> createUnFinishedProcessInstanceQuery(String userId, String processDefKey) {
-//        ProcessInstanceQuery unfinishedQuery = runtimeService.createProcessInstanceQuery().processDefinitionKey(processDefKey)
-//                .active();
-//        if (unfinishedQuery != null)
-//        {
-//            List<ProcessInstance> tasks = unfinishedQuery.list();
-//            return getProcessTaskList(tasks);
-//        }
-//        return null;
-//    }
+    // /**
+    // * 获取未经完成的流程实例查询对象
+    // * @param userId 用户ID
+    // */
+    // @Transactional(readOnly = true)
+    // public List<ProcessTask> createUnFinishedProcessInstanceQuery(String
+    // userId, String processDefKey) {
+    // ProcessInstanceQuery unfinishedQuery =
+    // runtimeService.createProcessInstanceQuery().processDefinitionKey(processDefKey)
+    // .active();
+    // if (unfinishedQuery != null)
+    // {
+    // List<ProcessInstance> tasks = unfinishedQuery.list();
+    // return getProcessTaskList(tasks);
+    // }
+    // return null;
+    // }
 
-//    /**
-//     * 获取已经完成的流程实例查询对象
-//     * @param userId    用户ID
-//     */
-//    @Transactional(readOnly = true)
-//    public List<ProcessTask> createFinishedProcessInstanceQuery(String userId, String processDefKey) {
-//        HistoricProcessInstanceQuery finishedQuery = historyService.createHistoricProcessInstanceQuery()
-//                .processDefinitionKey(processDefKey).finished();
-//        return finishedQuery.;
-//    }
+    // /**
+    // * 获取已经完成的流程实例查询对象
+    // * @param userId 用户ID
+    // */
+    // @Transactional(readOnly = true)
+    // public List<ProcessTask> createFinishedProcessInstanceQuery(String
+    // userId, String processDefKey) {
+    // HistoricProcessInstanceQuery finishedQuery =
+    // historyService.createHistoricProcessInstanceQuery()
+    // .processDefinitionKey(processDefKey).finished();
+    // return finishedQuery.;
+    // }
 
     public String getServiceURL()
     {
@@ -498,5 +536,11 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         this.serviceURL = serviceURL;
     }
 
-}
+    @Override
+    public PageResultBO queryWorkFlowTask(WorkFlowQuery query)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
+}

@@ -7,7 +7,7 @@ package com.jojo.biz;
 
 import java.util.List;
 
-import com.jojo.biz.model.MenuBO;
+import com.jojo.util.biz.bo.MenuBO;
 
 /**
  * <summary>

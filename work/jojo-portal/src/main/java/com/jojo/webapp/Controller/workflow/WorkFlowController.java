@@ -9,6 +9,8 @@ import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -126,7 +128,7 @@ public class WorkFlowController extends BaseController
      */
     @RequestMapping(value = "/workflow/getWorkFlowGraph")
     public void getWorkFlowGraph(
-//     @RequestParam(required = true, value = "proDefId")
+    // @RequestParam(required = true, value = "proDefId")
             String proDefId, HttpServletResponse httpServletResponse
     // ,@RequestBody WorkFlowDefineGraph graph
     ) throws IOException
@@ -137,7 +139,7 @@ public class WorkFlowController extends BaseController
             logger.error("no proDefId set 4 getWorkFlowGraph.");
             return;
         }
-//        InputStream is = null;
+        // InputStream is = null;
         AttachDO attachDO = null;
         try
         {
@@ -145,7 +147,7 @@ public class WorkFlowController extends BaseController
         }
         catch (Exception e)
         {
-            logger.error("getWorkFlowGraph failed, excepton info : [{}]",e);
+            logger.error("getWorkFlowGraph failed, excepton info : [{}]", e);
         }
         if (attachDO != null)
         {
@@ -156,26 +158,26 @@ public class WorkFlowController extends BaseController
             try
             {
                 out = httpServletResponse.getOutputStream();
-//                byte[] bs = new byte[1024];
-//                int n = 0;
-//                while ((n = is.read(bs)) != -1)
-//                {
-//                    out.write(bs, 0, n);
-//                }
+                // byte[] bs = new byte[1024];
+                // int n = 0;
+                // while ((n = is.read(bs)) != -1)
+                // {
+                // out.write(bs, 0, n);
+                // }
 
                 out.write(attachDO.getAttachContent());
                 out.flush();
             }
             catch (Exception ex)
             {
-                logger.error("write into httpServletResponse failed, excepton info : [{}]",ex);
+                logger.error("write into httpServletResponse failed, excepton info : [{}]", ex);
             }
             finally
             {
-//                if (is != null)
-//                {
-//                    is.close();
-//                }
+                // if (is != null)
+                // {
+                // is.close();
+                // }
                 if (out != null)
                 {
                     out.close();
@@ -187,9 +189,8 @@ public class WorkFlowController extends BaseController
     @RequestMapping(value = "/workflow/locationWorkFlowGraph")
     @ResponseBody
     public LocationGraph locationWorkFlowGraph(
-//            @RequestParam(required = true, value = "proDefId")
-            @RequestBody WorkFlowQuery query
-    )
+    // @RequestParam(required = true, value = "proDefId")
+            @RequestBody WorkFlowQuery query)
     {
         LocationGraph location = new LocationGraph();
         if (StringUtils.isBlank(query.getProDefId()))
@@ -204,14 +205,12 @@ public class WorkFlowController extends BaseController
         return location;
     }
 
-
     @RequestMapping(value = "/workflow/startProcessInstance")
     @ResponseBody
     public ResultInfo startProcessInstance(
-//            @RequestParam(required = true, value = "proDefId")
-//            String proDefKey, HttpServletResponse httpServletResponse
-            @RequestBody WorkFlowQuery query
-    )
+    // @RequestParam(required = true, value = "proDefId")
+    // String proDefKey, HttpServletResponse httpServletResponse
+            @RequestBody WorkFlowQuery query)
     {
         ResultInfo resultInfo = new ResultInfo();
         if (StringUtils.isBlank(query.getProDefKey()))
@@ -220,10 +219,16 @@ public class WorkFlowController extends BaseController
             resultInfo.setResultCode(-1);
             return resultInfo;
         }
+        // TODO 生成业务对象的唯一索引，返回数据库id（可用sequence完成），作为businessKey
+        String businessKey = "1";
         WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
-        //从session中获取operId
+        // 从session中获取operId
         String operId = "jojo";
-        workFlowExecutor.startProcessInstanceByKey(query.getProDefKey(), operId);
+        Map<String, Object> variables = new HashMap<String, Object>(0);
+        String processInstanceId = workFlowExecutor.startProcessInstanceByKey(query.getProDefKey(), operId, businessKey, variables);
+
+        //TODO 把流程实例id保存到业务对象
+
         resultInfo.setResultCode(0);
         return resultInfo;
     }

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
-package com.jojo.biz.model;
+package com.jojo.util.biz.bo;
 
 import com.jojo.util.pojo.BasePOJO;
 

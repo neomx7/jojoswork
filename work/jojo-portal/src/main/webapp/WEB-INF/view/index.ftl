@@ -23,17 +23,19 @@
 														<div class="v-label v-label-h1 h1 v-label-logo " style="width: 100%;"></div>
 													</div>
 												</div>
-												<div id="menu_1#000" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
+												<!--
+												<div id="menu_1#001" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 0px;">
 														<div tabindex="0" class="v-button v-button-main-menu-button main-menu-button v-button-link link v-button-active active" role="button" style="height: 54px; width: 80px;">
 															<span class="v-button-wrap">
 																<img alt="" class="v-icon" src="${rc.contextPath}/styles/activiti/img/mm-tasks.png">
-																<span class="v-button-caption">任务</span>
+																<span class="v-button-caption">工作提醒</span>
 															</span>
 														</div>
 													</div>
 												</div>
-												<div id="menu_1#001" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
+												-->
+												<div id="menu_1#002" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 0px;">
 														<div tabindex="0" class="v-button v-button-main-menu-button main-menu-button v-button-link link" role="button" style="height: 54px; width: 90px;">
 															<span class="v-button-wrap">
@@ -43,12 +45,12 @@
 														</div>
 													</div>
 												</div>
-												<div id="menu_1#002" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
+												<div id="menu_1#003" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 0px;">
 														<div tabindex="0" class="v-button v-button-main-menu-button main-menu-button v-button-link link" role="button" style="height: 54px; width: 90px;">
 															<span class="v-button-wrap">
 																<img alt="" class="v-icon" src="${rc.contextPath}/styles/activiti/img/mm-process.png">
-																<span class="v-button-caption">流程</span>
+																<span class="v-button-caption">物料申请</span>
 															</span>
 														</div>
 													</div>

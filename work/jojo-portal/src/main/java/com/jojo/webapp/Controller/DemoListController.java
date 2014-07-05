@@ -45,4 +45,14 @@ public class DemoListController
     }
 
 
+
+    @RequestMapping(value = "/demo/toCreateApplyList")
+    public String toCreateApplyList()
+    {
+        logger.info("match url 4 '/demo/toCreateApplyList'");
+     // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
+        return "view/createApply-list";
+    }
+
+
 }

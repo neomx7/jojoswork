@@ -5,7 +5,7 @@
  */
 package com.jojo.util.ui.vo.workflow;
 
-import com.jojo.util.pojo.BasePOJO;
+import com.jojo.util.pojo.PageQuery;
 
 /**
  * <summary>
@@ -16,7 +16,7 @@ import com.jojo.util.pojo.BasePOJO;
  * @author jojo
  *
  */
-public class WorkFlowQuery extends BasePOJO
+public class WorkFlowQuery extends PageQuery
 {
 
     /**   */
@@ -25,6 +25,7 @@ public class WorkFlowQuery extends BasePOJO
     private String proDefId;
 
     private String proDefKey;
+
 
     public String getProDefId()
     {
@@ -71,5 +72,6 @@ public class WorkFlowQuery extends BasePOJO
         builder.append("]");
         return builder.toString();
     }
+
 
 }
