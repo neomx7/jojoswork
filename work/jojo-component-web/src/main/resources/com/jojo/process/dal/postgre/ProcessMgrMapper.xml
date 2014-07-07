@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jojo.process.dal.postgre.ProcessMgrMapper">
+
+<!-- 	<resultMap type="com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO" id="ProcessTaskResultMap">
+		<result column="ID" property="id" />
+		<result column="BIZ_TYPE" property="bizType" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="CREATE_OPER_ID" property="createOperId" />
+		<result column="LIMIT_DESC" property="limitDesc" />
+		<result column="STATUS" property="status" />
+		<result column="UPDATE_TIME" property="updateTime" />
+		<result column="LAST_UPDATE_OPER_ID" property="lastUpdateOperId" />
+	</resultMap> -->
+	<!-- left join provider v on v.id = e.business_key_ -->
+	<select id="getTODOCount" resultType="java.lang.Long" parameterType="java.util.Map">
+		select count(*) as countTarget from
+		(
+		select
+		t.id_ as taskid
+		from
+		act_ru_task t
+		inner join
+		act_ru_execution e on
+		t.proc_inst_id_ = e.proc_inst_id_
+		inner join
+		act_re_procdef p on e.proc_def_id_ = p.id_
+
+		where 1=1
+		and e.parent_id_ is null
+		and e.business_key_ is not null
+		<if test="operId != null and operId != ''">
+			and t.assignee_ = #{operId}
+		</if>
+		) tt
+	</select>
+
+
+	<select id="qryTODOList" resultType="com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO" parameterType="java.util.Map">
+		select * from (
+
+		select
+		t.id_ as taskId,
+		t.name_ as taskName,
+		t.description_ as taskRemark,
+		t.task_def_key_ as taskDefinitionKey,
+		t.owner_ as owner,
+		t.assignee_ as assignee,
+		i.user_id_ as initialAssignee,
+		t.priority_ as priority,
+		t.create_time_ as createTime,
+		t.proc_inst_id_ as processInstanceId,
+		p.id_ as processDefinitionId,
+		p.name_ as processName,
+		p.key_ as processKey,
+		p.version_ as processVersion,
+		p.deployment_id_ as deploymentId,
+		p.resource_name_ as resourceName,
+		e.business_key_ as businessKey
+		from act_ru_task t
+
+		inner join act_ru_execution e
+		on t.proc_inst_id_ = e.proc_inst_id_
+
+		inner join act_re_procdef p
+		on e.proc_def_id_ = p.id_
+
+		inner join act_ru_identitylink i
+		on i.proc_inst_id_ = t.proc_inst_id_
+		and i.type_='starter'
+
+		where 1=1
+		and e.parent_id_ is null
+		and e.business_key_ is not null
+
+		<if test="operId != null and operId != ''">
+			and t.assignee_ = #{operId}
+		</if>
+		order by t.id_ desc
+		) tt
+		limit #{limit} offset #{start}
+	</select>
+
+</mapper>
