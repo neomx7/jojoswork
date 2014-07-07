@@ -5,9 +5,9 @@
  */
 package com.jojo.webapp.Controller;
 
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jojo.facade.workflow.WorkFlowExecutor;
 import com.jojo.util.CommonUtils;
 import com.jojo.util.biz.bo.ApplyBO;
 import com.jojo.util.biz.bo.PageResultBO;
-import com.jojo.util.biz.bo.UserBO;
+import com.jojo.util.constants.JOJOConstants;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
 import com.jojo.util.pojo.PageQuery;
+import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
 import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
 import com.jojo.web.common.context.ContextHolder;
 
@@ -70,13 +70,11 @@ public class ApplyController
             @RequestParam(defaultValue = "20", value = "rows") String rows,
             @RequestParam("sidx") String sidx,
             @RequestParam("sord") String sord,
-//            @RequestParam("_search") boolean search,
+            // @RequestParam("_search") boolean search,
             @RequestParam(required = false, value = "searchField") String searchField,
             @RequestParam(required = false, value = "searchOper") String searchOper,
             @RequestParam(required = false, value = "searchString") String searchString,
-            @RequestParam(required = false, value = "filters") String filters,
-            HttpServletRequest httpServletRequest
-     )
+            @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest)
     {
         try
         {
@@ -97,21 +95,38 @@ public class ApplyController
         return null;
     }
 
-
-    @RequestMapping(value = "/demo/toMyTaskList")
+    /**
+     *
+     * <summary>
+     * [访问待办列表]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param page
+     * @param rows
+     * @param sidx
+     * @param sord
+     * @param searchField
+     * @param searchOper
+     * @param searchString
+     * @param filters
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/demo/qryMyTaskList")
     @ResponseBody
     public DataResponse<WorkFlowTaskDTO> queryMyTaskList(
             @RequestParam(defaultValue = "1", value = "page") String page,
             @RequestParam(defaultValue = "20", value = "rows") String rows,
             @RequestParam("sidx") String sidx,
             @RequestParam("sord") String sord,
-//            @RequestParam("_search") boolean search,
+            // @RequestParam("_search") boolean search,
             @RequestParam(required = false, value = "searchField") String searchField,
             @RequestParam(required = false, value = "searchOper") String searchOper,
             @RequestParam(required = false, value = "searchString") String searchString,
-            @RequestParam(required = false, value = "filters") String filters,
-            HttpServletRequest httpServletRequest
-     )
+            @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest)
     {
         try
         {
@@ -124,9 +139,15 @@ public class ApplyController
             request.setSearchOper(searchOper);
             request.setSearchString(searchString);
 
+            WorkFlowQuery query = new WorkFlowQuery();
+            query.setTaskMode(JOJOConstants.WORKFLOW_TASKMODE_TODO);
+            //TODO 从session中得到当前用户
+            query.setOperId("jojo");
 
 
-            return null;
+            return findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowTask",
+                    query,WorkFlowQuery.class);
+
         }
         catch (Exception e)
         {
@@ -135,49 +156,70 @@ public class ApplyController
         return null;
     }
 
-
-
-    public <T> DataResponse<T> findWorkFlowResult(DataRequest request, String wfQryBean, String wfQryMethod,PageQuery wfQryParamObj)
+    public <T> DataResponse<T> findWorkFlowResult(DataRequest request, String qryBean, String qryMethodName,
+            PageQuery qryParamObj
+//            ,Class<T> cls
+            ,Class<?> cls
+            )
     {
-       Object workFlowExecutor =  (ContextHolder.getBean(wfQryBean));//"workFlowServiceProxy"
-
+//        Class<?> cls = WorkFlowQuery.class.getClass();
         DataResponse<T> response = new DataResponse<T>();
-        int count = 0;// 总记录数
-        int limit = request.getRows() <= 0 ? 20 : request.getRows();// 每页显示数量
-        int totalPages = 0;// 总页数
-        int page = request.getPage() <= 0 ? 1 : request.getPage();// 当前显示页码
-        List<T> list = new ArrayList<T>(20);
+        try
+        {
+            Object wfService = (ContextHolder.getBean(qryBean));// "workFlowServiceProxy"
 
+            int count = 0;// 总记录数
+            int limit = request.getRows() <= 0 ? 20 : request.getRows();// 每页显示数量
+            int totalPages = 0;// 总页数
+            int page = request.getPage() <= 0 ? 1 : request.getPage();// 当前显示页码
 
+            qryParamObj.setPageLimit(limit);
+            qryParamObj.setCurPage(page);
+            //从session中得到公用户
+            qryParamObj.setOperId("jojo");
 
-        //反射通过查询方法得到对象
-        PageResultBO resultBO = null;
+            // 反射通过查询方法得到对象
+            PageResultBO resultBO = null;
 
-        count = resultBO.getTotalCount();
-        totalPages =  (int)Math.ceil( (double)count / limit );
-//        if (count % limit != 0)
-//        {
-//            totalPages++;
-//        }
-        int currPage = Math.min(totalPages, page);
+            Class clazz = wfService.getClass();
+            Method qryMethod = null;
+            qryMethod = clazz.getDeclaredMethod(qryMethodName, cls);
+            resultBO =  (PageResultBO)(qryMethod.invoke(wfService, qryParamObj));
 
-        int start = currPage * limit - limit;
-        start = start < 0 ? 0 : start;
+            int currPage = resultBO.getCurPage();
+//            count = resultBO.getTotalCount();
+//            totalPages = (int) Math.ceil((double) count / limit);
+//            int currPage = Math.min(totalPages, page);
+//            qryParamObj.setCurPage(currPage);
+//
+//            int start = currPage * limit - limit;
+//            start = start < 0 ? 0 : start;
 
-//        int curLimit = start+page*limit >= count ? count:start+page*limit;
-//        for (int i = start; i < curLimit; i++)
-//        {
-//            list.add((T) createOne(String.valueOf(i), "applyName" + i, "备注神马的...",i));
-//        }
-        response.setRecords(count);
-        response.setTotal(totalPages);
-        response.setPage(currPage);
-        response.setRows(resultBO.getResults());
+            response.setRecords(count);
+            response.setTotal(totalPages);
+            response.setPage(currPage);
+            response.setRows(resultBO.getResults());
+        }
+        catch (NoSuchMethodException | SecurityException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
 
         return response;
     }
 
-    private ApplyBO createOne(String id, String applyName, String remark,int number)
+    private ApplyBO createOne(String id, String applyName, String remark, int number)
     {
         ApplyBO bo = new ApplyBO();
         bo.setId(id);

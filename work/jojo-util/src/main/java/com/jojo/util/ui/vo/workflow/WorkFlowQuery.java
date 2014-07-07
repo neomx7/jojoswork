@@ -26,6 +26,9 @@ public class WorkFlowQuery extends PageQuery
 
     private String proDefKey;
 
+    //查询流程任务列表时使用， 1 待办任务；2 在办任务； 3已完成任务
+    private int taskMode = 0;
+
 
     public String getProDefId()
     {
@@ -71,6 +74,16 @@ public class WorkFlowQuery extends PageQuery
         }
         builder.append("]");
         return builder.toString();
+    }
+
+    public int getTaskMode()
+    {
+        return taskMode;
+    }
+
+    public void setTaskMode(int taskMode)
+    {
+        this.taskMode = taskMode;
     }
 
 

@@ -35,6 +35,7 @@ import org.springframework.util.FileCopyUtils;
 
 import com.jojo.facade.workflow.WorkFlowExecutor;
 import com.jojo.process.dal.postgre.AttachMgrMapper;
+import com.jojo.process.dal.postgre.ProcessMgrMapper;
 import com.jojo.util.biz.bo.PageResultBO;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.ProcessTask;
@@ -81,6 +82,9 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
 
     @Autowired
     private AttachMgrMapper attachMgrMapper;
+
+    @Autowired
+    private ProcessMgrMapper processMgrMapper;
 
     public void initialize() throws Exception
     {
@@ -539,8 +543,33 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     @Override
     public PageResultBO queryWorkFlowTask(WorkFlowQuery query)
     {
-        // TODO Auto-generated method stub
-        return null;
+        PageResultBO<WorkFlowTaskDTO> resultBO = new PageResultBO<WorkFlowTaskDTO>();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("operId", query.getOperId());
+
+        int limit = query.getPageLimit();
+        Long count = processMgrMapper.getTODOCount(params);
+
+        if (count == null || count ==0)
+        {
+            return resultBO;
+        }
+        resultBO.setTotalCount(count.intValue());
+        int totalPages = (int) Math.ceil((double) count / limit);
+        int currPage = Math.min(totalPages, query.getCurPage());
+//        query.setCurPage(currPage);
+
+        int start = currPage * limit - limit;
+        start = start < 0 ? 0 : start;
+
+        params.put("limit", limit);
+        params.put("start", start);
+        //翻页查找
+        List<WorkFlowTaskDTO> dtos = processMgrMapper.qryTODOList(params);
+        resultBO.setResults(dtos);
+        resultBO.setCurPage(currPage);
+
+        return resultBO;
     }
 
 }

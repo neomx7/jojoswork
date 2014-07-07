@@ -54,5 +54,12 @@ public class DemoListController
         return "view/createApply-list";
     }
 
+    @RequestMapping(value = "/demo/toMyTaskList")
+    public String toMyTaskList()
+    {
+        logger.info("match url 4 '/demo/toMyTaskList'");
+     // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
+        return "view/todoTaskList-list";
+    }
 
 }
