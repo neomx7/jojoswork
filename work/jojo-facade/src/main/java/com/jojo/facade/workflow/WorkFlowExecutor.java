@@ -50,7 +50,7 @@ public interface WorkFlowExecutor
     public List<WorkFlowDefine> queryFlowDefines(DataRequest request);
 
 
-    public PageResultBO queryWorkFlowTask(WorkFlowQuery query);
+    public PageResultBO queryWorkFlowTODOTask(WorkFlowQuery query);
 
 
     /**

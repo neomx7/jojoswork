@@ -27,7 +27,7 @@ public class ProcessTask extends BasePOJO
     private String initialAssignee;
     private String parentTaskId;
 
-    private String name;
+    private String taskName;
     private String description;
     private int priority = 0;
     private Date createTime; // The time when the task has been created
@@ -80,14 +80,6 @@ public class ProcessTask extends BasePOJO
     public void setParentTaskId(String parentTaskId)
     {
         this.parentTaskId = parentTaskId;
-    }
-    public String getName()
-    {
-        return name;
-    }
-    public void setName(String name)
-    {
-        this.name = name;
     }
     public String getDescription()
     {
@@ -184,6 +176,14 @@ public class ProcessTask extends BasePOJO
     public void setTaskId(String taskId)
     {
         this.taskId = taskId;
+    }
+    public String getTaskName()
+    {
+        return taskName;
+    }
+    public void setTaskName(String taskName)
+    {
+        this.taskName = taskName;
     }
 
 }

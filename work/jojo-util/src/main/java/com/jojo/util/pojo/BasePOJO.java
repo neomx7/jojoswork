@@ -39,6 +39,7 @@ public class BasePOJO implements Serializable
     //页面数据行的操作
     private String act;
     private String operId;
+    private int number = 0;
 
 
     public String getTheId()
@@ -221,5 +222,13 @@ public class BasePOJO implements Serializable
     public void setOperId(String operId)
     {
         this.operId = operId;
+    }
+    public int getNumber()
+    {
+        return number;
+    }
+    public void setNumber(int number)
+    {
+        this.number = number;
     }
 }

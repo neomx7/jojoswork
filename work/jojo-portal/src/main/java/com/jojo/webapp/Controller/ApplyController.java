@@ -145,7 +145,7 @@ public class ApplyController
             query.setOperId("jojo");
 
 
-            return findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowTask",
+            return findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowTODOTask",
                     query,WorkFlowQuery.class);
 
         }
