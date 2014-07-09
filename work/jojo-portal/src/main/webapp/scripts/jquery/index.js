@@ -17,8 +17,9 @@ $.fn.selectTabByIndex = function(tabIndex)
 {
     $(this).tabs("option", "active", tabIndex);
 };
-String.prototype.replaceAll = function(regexp,replaceSTR) {
-    return this.replace(new RegExp(regexp,"gm"),replaceSTR);
+String.prototype.replaceAll = function(regexp, replaceSTR)
+{
+    return this.replace(new RegExp(regexp, "gm"), replaceSTR);
 }
 // ### 页面布局排版 部分 ### //
 var myLayout = null;
@@ -172,7 +173,18 @@ $(document).ready(function()
 
         bindMenuEvents();
 
-        // alert("-------[Done]-------");
+        // 配置模态对话框
+        $("#consoleDlg").dialog(
+        {
+            autoOpen : false, // 是否自动弹出窗口
+            modal : true, // 设置为模态对话框
+            resizable : true,
+            width : 800,
+            height : 660,
+            position : "center" // 窗口显示的位置
+        });
+
+     //    alert("-------[Done]-------");
     }
     catch (e)
     {
@@ -582,119 +594,122 @@ function initLayout()
  * @param caption
  *            表格标题
  */
-function initJqGird(tblId, listAction, colNames, colModel, sortname, caption,btns,editUrl, clickEl)
+function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, btns, editUrl, clickEl)
 {
 
-    $('#' + tblId)
-            .jqGrid(
-                    { // jqGrid固定的写法:$("#list").jqGrid({参数})
-                        contentType : 'application/json',
-                        datatype : "json", // 将这里改为使用JSON数据
-                        url : listAction, // 这是Action的请求地址，注意相对路径需要去掉最前面的一个'/'
-                        mtype : "post", // 提交类型
-                        prmNames :
-                        {
-                            search : "search"
-                        },
-                        jsonReader :
-                        {
-                            id : "0", // repeatitems为 false 时,给'0'
-                            root : "rows",// json中代表实际模型数据的入口,即列表对象list<xxx>
-                            page : "page",// json中代表当前页码的数据
-                            total : "total",// json中代表页码总数的数据
-                            records : "records", // json中代表数据行总数的数据
-                            repeatitems : false, // 为 false 时传值不区分次序,只根据 name 获取,而所使用的name是来自于colModel中的name设定。
-                            // id: "id", cell: "cell",
-                            // //注：id/cell在repeatitems为true时可以用到，即每一个记录是由一对id和cell组合而成，即可以适用另一种json结构。
-                            userdata : "userdata"
-                        // , subgrid: {
-                        // root:"rows",
-                        // repeatitems: true,
-                        // cell:"cell"
-                        // }
-                        },
+    $('#' + tblId).jqGrid(
+            { // jqGrid固定的写法:$("#list").jqGrid({参数})
+                contentType : 'application/json',
+                datatype : "json", // 将这里改为使用JSON数据
+                url : listAction, // 这是Action的请求地址，注意相对路径需要去掉最前面的一个'/'
+                mtype : "post", // 提交类型
+                prmNames :
+                {
+                    search : "search"
+                },
+                jsonReader :
+                {
+                    id : "0", // repeatitems为 false 时,给'0'
+                    root : "rows",// json中代表实际模型数据的入口,即列表对象list<xxx>
+                    page : "page",// json中代表当前页码的数据
+                    total : "total",// json中代表页码总数的数据
+                    records : "records", // json中代表数据行总数的数据
+                    repeatitems : false, // 为 false 时传值不区分次序,只根据 name 获取,而所使用的name是来自于colModel中的name设定。
+                    // id: "id", cell: "cell",
+                    // //注：id/cell在repeatitems为true时可以用到，即每一个记录是由一对id和cell组合而成，即可以适用另一种json结构。
+                    userdata : "userdata"
+                // , subgrid: {
+                // root:"rows",
+                // repeatitems: true,
+                // cell:"cell"
+                // }
+                },
 
-                        height : "auto", // 表格高度
-                        width : 900, // 表格宽度
-                        autowidth : true,
-                        // 表格结构定义
-                        colNames : colNames,
-                        colModel : colModel,
-                        pager : "#pager", // 分页工具栏
-                        // imgpath : "themes/redmond/images", // 图片路径
-                        autoWidth : true,
-                        // rownumbers : true, // 是否显示列数
-                        viewrecords : true, // 是否显示行数
-                        rowNum : 20, // 每页默认显示记录数
-                        rowList : [ 10, 20, 30
-                        ], // 可调整每页显示的记录数
-                        multiselect : false, // 是否支持多选
-                        sortname : sortname,// 根据哪个字段排序,如'id'
-                        caption : caption, // 表格标题
-                        recordtext : "记录 {0} - {1} 总记录数 {2}",// 显示记录数的格式
-                        emptyrecords : "无数据",// 空记录时的提示信息
-                        loadtext : "获取数据中...",// 获得数据时的提示信息
-                        pgtext : "跳转第几页 {0} 总页数 {1}"// 页数显示格式
+                height : "auto", // 表格高度
+                width : 900, // 表格宽度
+                autowidth : true,
+                // 表格结构定义
+                colNames : colNames,
+                colModel : colModel,
+                pager : "#pager", // 分页工具栏
+                // imgpath : "themes/redmond/images", // 图片路径
+                autoWidth : true,
+                // rownumbers : true, // 是否显示列数
+                viewrecords : true, // 是否显示行数
+                rowNum : 20, // 每页默认显示记录数
+                rowList : [ 10, 20, 30
+                ], // 可调整每页显示的记录数
+                multiselect : false, // 是否支持多选
+                sortname : sortname,// 根据哪个字段排序,如'id'
+                caption : caption, // 表格标题
+                recordtext : "记录 {0} - {1} 总记录数 {2}",// 显示记录数的格式
+                emptyrecords : "无数据",// 空记录时的提示信息
+                loadtext : "获取数据中...",// 获得数据时的提示信息
+                pgtext : "跳转第几页 {0} 总页数 {1}"// 页数显示格式
 
-                        /** 增加数据行的操作按钮 */
-                        ,gridComplete : function()
+                /** 增加数据行的操作按钮 */
+                ,
+                gridComplete : function()
+                {
+                    var ids = $('#' + tblId).jqGrid('getDataIDs');
+                    if (ids && btns)
+                    {
+                        for (var i = 0; i < ids.length; i++)
                         {
-                            var ids =  $('#' + tblId).jqGrid('getDataIDs');
-                            if (ids && btns)
+                            var cl = ids[i];
+                            var be = btns.replaceAll("#rowid", cl);
+                            $('#' + tblId).jqGrid('setRowData', ids[i],
                             {
-                                for (var i = 0; i < ids.length; i++)
-                                {
-                                    var cl = ids[i];
-                                    var be = btns.replaceAll("#rowid",cl);
-                                    $('#' + tblId).jqGrid('setRowData', ids[i],
-                                            {
-                                        act : be
-                                        // + se + ce
-                                            });
-                                }
-                            }
+                                act : be
+                            // + se + ce
+                            });
                         }
-                        ,ondblClickRow: function(rowid)
+                    }
+                },
+                ondblClickRow : function(rowid)
+                {
+                    // 双击行
+                    alert("You double click row with id: " + rowid);
+                },
+                onSelectRow : function(rowid)
+                { // 单击选择行
+                    var rowdata = $("#" + tblId).jqGrid('getRowData', rowid);
+                    var key = rowdata.theId;
+                    var datajson = {};
+                    datajson['proDefId'] = (key);
+                    datajson = $.toJSON(datajson);
+                    // alert(datajson);
+                    // 得到流程图片
+                    if (clickEl)
+                    {
+                        $.ajax(
                         {
-                            // 双击行
-                            alert("You double click row with id: "+rowid);
-                        }
-                        ,onSelectRow: function(rowid)
-                        { // 单击选择行
-                            var rowdata = $("#"+tblId).jqGrid('getRowData',rowid);
-                            var key=rowdata.theId;
-                            var datajson = {};
-                            datajson['proDefId']=(key);
-                            datajson = $.toJSON(datajson);
-//                            alert(datajson);
-                            //得到流程图片
-                            if (clickEl)
+                            type : 'POST',
+                            contentType : 'application/json',
+                            url : 'workflow/locationWorkFlowGraph',
+                            data : datajson,
+                            dataType : 'json',
+                            success : function(data)
                             {
-                                  $.ajax( {
-                                  type : 'POST',
-                                  contentType : 'application/json',
-                                  url : 'workflow/locationWorkFlowGraph',
-                                  data : datajson ,
-                                  dataType : 'json',
-                                  success : function(data) {
-//                                      alert(appRelPath);
-                                      $("#extraDiv").empty();
-                                    //在流程列表下面放置图片
-                                    var graphHTML = '<h2>流程图 <span style=\"display:hidden;\">x='+data.x+',y='+data.y+'</span>' +'</h2><img style=\"border:1px solid #dddddd\" src=\"'
-                                        +appRelPath
-                                        +'/workflow/getWorkFlowGraph?proDefId='+key
-                                        +'\"/>';
-                                    $("#extraDiv").append(graphHTML);
-                                  },
-                                  error : function(XMLHttpRequest, textStatus, errorThrown) {
-                                      alert("error info :" + errorThrown)
-                                  }
-                                });
+                                // alert(appRelPath);
+                                $("#extraDiv").empty();
+                                // 在流程列表下面放置图片
+                                var graphHTML = '<h2>流程图 <span style=\"display:hidden;\">x=' + data.x + ',y=' + data.y
+                                        + '</span>' + '</h2><img style=\"border:1px solid #dddddd\" src=\"'
+                                        + appRelPath + '/workflow/getWorkFlowGraph?proDefId=' + key + '\"/>';
+                                $("#extraDiv").append(graphHTML);
+                            },
+                            error : function(XMLHttpRequest, textStatus, errorThrown)
+                            {
+                                alert("error info :" + errorThrown)
                             }
-                        }
+                        });
+                    }
+                }
 
-                        ,editurl: editUrl
-                    });
+                ,
+                editurl : editUrl
+            });
     // 定义默认按键的显示
     // ,refresh刷新按钮是否显示、edit编辑按钮是否显示、add添加按钮是否显示、del删除按钮是否显示、refreshtitle刷新按钮提示信息
     $('#' + tblId).jqGrid('navGrid', '#pager',

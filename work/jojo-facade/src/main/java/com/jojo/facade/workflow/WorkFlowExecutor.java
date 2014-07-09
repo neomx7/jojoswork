@@ -184,6 +184,19 @@ public interface WorkFlowExecutor
 //     * @param userId    用户ID
 //     */
 //    public List<ProcessTask> createFinishedProcessInstanceQuery(String userId, String processDefKey);
+    /**
+     *
+     * <summary>
+     * [获取流程跟踪图]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param processInstanceId
+     * @return
+     */
+    public Map<String, Object> traceProcess(String processInstanceId);
 
 }
 

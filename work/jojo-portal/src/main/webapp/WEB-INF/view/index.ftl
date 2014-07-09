@@ -199,6 +199,8 @@
 
 </div>
 
+<!--hidden pane-->
+<div id="consoleDlg" ></div>
 
 <!-- #RightPane -->
 <div id="RightPane" class="ui-layout-east">

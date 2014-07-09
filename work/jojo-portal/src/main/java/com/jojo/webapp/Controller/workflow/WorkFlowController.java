@@ -225,11 +225,59 @@ public class WorkFlowController extends BaseController
         // 从session中获取operId
         String operId = "jojo";
         Map<String, Object> variables = new HashMap<String, Object>(0);
-        String processInstanceId = workFlowExecutor.startProcessInstanceByKey(query.getProDefKey(), operId, businessKey, variables);
+        String processInstanceId = workFlowExecutor.startProcessInstanceByKey(query.getProDefKey(), operId,
+                businessKey, variables);
 
-        //TODO 把流程实例id保存到业务对象
+        // TODO 把流程实例id保存到业务对象
 
         resultInfo.setResultCode(0);
         return resultInfo;
+    }
+
+    /**
+     *
+     * <summary>
+     * [获取流程跟踪图]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/workflow/traceProcess")
+    @ResponseBody
+    public LocationGraph traceProcess(@RequestBody WorkFlowQuery query)
+    {
+        LocationGraph location = new LocationGraph();
+
+        if (StringUtils.isBlank(query.getProDefId()))
+        {
+            logger.error("can not start process instance cause proDefId is null");
+            return location;
+        }
+        if (StringUtils.isBlank(query.getProInsId()))
+        {
+            logger.error("can not start process instance cause proInsId is null");
+            return location;
+        }
+
+        WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
+
+        Point pointNow = workFlowExecutor.locationWorkFlowGraph(query.getProDefId());
+        Map<String, Object> result = workFlowExecutor.traceProcess(query.getProInsId());
+
+        if (result != null && result.get("height") != null)
+        {
+            location.setHeight(Integer.valueOf(result.get("height").toString()) );
+            location.setWidth(Integer.valueOf(result.get("width").toString()));
+            location.setX(Integer.valueOf(result.get("x").toString()));
+            location.setY(Integer.valueOf(result.get("y").toString()));
+            location.setDefX(pointNow.getX());
+            location.setDefY(pointNow.getY());
+        }
+
+        return location;
     }
 }

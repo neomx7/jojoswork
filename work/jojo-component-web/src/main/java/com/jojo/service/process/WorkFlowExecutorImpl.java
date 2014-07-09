@@ -21,10 +21,15 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,6 +128,86 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
                 }
             }
         }
+    }
+
+
+    /**
+     * 读取资源
+     *
+     * @return
+     */
+    public void loadResource(String processInstanceId,String proDefId) {
+        try {
+            InputStream resourceAsStream = null;
+            if (StringUtils.isNotBlank(processInstanceId)) {
+                ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+                ProcessDefinition singleResult = repositoryService.createProcessDefinitionQuery()
+                        .processDefinitionId(processInstance.getProcessDefinitionId()).singleResult();
+                String resourceName = "";
+                resourceName = singleResult.getDiagramResourceName();
+//                if (resourceType.equals("image")) {
+//                    resourceName = singleResult.getDiagramResourceName();
+//                } else if (resourceType.equals("xml")) {
+//                    resourceName = singleResult.getResourceName();
+//                }
+                resourceAsStream = repositoryService.getResourceAsStream(singleResult.getDeploymentId(), resourceName);
+            }
+//            else {
+//                resourceAsStream = repositoryService.getResourceAsStream(deploymentId, resourceName);
+//            }
+            StringBuilder graphFilePath = new StringBuilder();
+            graphFilePath.append(proDefId.replaceAll(":", "_"));
+            byte[] b = null;
+                b = FileCopyUtils.copyToByteArray(resourceAsStream);
+                if (b == null || b.length == 0)
+                {
+                    return;
+                }
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("attachContent", b);// 此处所用的参数类型为 byte[]
+                params.put("attachId", graphFilePath.toString());
+                attachMgrMapper.upload(params);
+        } catch (Exception e) {
+            logger.error("读取资源出错：[{}]", e);
+        }
+    }
+
+    /**
+     * 流程跟踪图
+     * @return
+     */
+    @Override
+    public Map<String, Object> traceProcess(String processInstanceId) {
+        try {
+            Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
+            Object property = PropertyUtils.getProperty(execution, "activityId");
+            String activityId = "";
+            if (property != null) {
+                activityId = property.toString();
+            }
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+            ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+                    .getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
+            List<ActivityImpl> activitiList = processDefinition.getActivities();//获得当前任务的所有节点
+            ActivityImpl activity = null;
+            for (ActivityImpl activityImpl : activitiList) {
+                String id = activityImpl.getId();
+                if (id.equals(activityId)) {//获得执行到那个节点
+                    activity = activityImpl;
+                    break;
+                }
+            }
+            Map<String, Object> activityImageInfo = new HashMap<String, Object>();
+            activityImageInfo.put("x", activity.getX());
+            activityImageInfo.put("y", activity.getY());
+            activityImageInfo.put("width", activity.getWidth());
+            activityImageInfo.put("height", activity.getHeight());
+            return activityImageInfo;
+//            Struts2Utils.renderJson(activityImageInfo);
+        } catch (Exception e) {
+            logger.error("查看流程跟踪图出错：[{}]",e);
+        }
+        return null;
     }
 
     /*

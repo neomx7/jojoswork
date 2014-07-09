@@ -1,6 +1,6 @@
 $(function()
 {
-    var colNames = [ "编号", "任务名称", "任务备注", "发起人", "创建时间", "流程名称", "操作"
+    var colNames = [ "编号", "任务名称", "任务备注", "发起人", "创建时间", "流程名称", "操作", "流程定义ID", "流程实例ID"
     ];
     var colModel = [
     {
@@ -46,6 +46,23 @@ $(function()
         sortable : false,
         align : "center",
         width : "35%"
+    },
+    {
+        name : "processDefinitionId",
+        index : "processDefinitionId",
+        sortable : false,
+        hidden : true,
+        align : "center",
+        width : 1
+    }
+    ,
+    {
+        name : "processInstanceId",
+        index : "processInstanceId",
+        sortable : false,
+        hidden : true,
+        align : "center",
+        width : 1
     }
     ];
     try
@@ -55,39 +72,43 @@ $(function()
         var currGrid = $('#todoTaskGrid');
         // 重载jqGrid的事件，单击事件
         // var jqgridId = currGrid.attr('id'); // jqgrid 的 id
-        currGrid.jqGrid('setGridParam',
-        {
-
-            /** 增加数据行的操作按钮 */
-            gridComplete : function()
-            {
-                var ids = $('#todoTaskGrid').jqGrid('getDataIDs');
-                if (ids)
-                {
-                    var btnHtml = "<input style='height:22px;width:120px;' type='button' value='处理' onClick='processTODOTask(\"todoTaskGrid\",\"#rowid\")'/>";
-                    for (var i = 0; i < ids.length; i++)
-                    {
-                        var cl = ids[i];
-                        //按钮的html内容
-                        btnHtml = btnHtml.replaceAll("#rowid",cl);
-                        $('#todoTaskGrid').jqGrid('setRowData', ids[i],
+        currGrid
+                .jqGrid(
+                        'setGridParam',
                         {
-                            act : btnHtml
+
+                            /** 增加数据行的操作按钮 */
+                            gridComplete : function()
+                            {
+                                var ids = $('#todoTaskGrid').jqGrid('getDataIDs');
+                                if (ids)
+                                {
+                                    var btnHtml = "<input style='height:22px;width:120px;' type='button' value='处理' onClick='processTODOTask(\"todoTaskGrid\",\"#rowid\")'/>"
+                                            + ""
+                                            + "<input style='height:22px;width:120px;' type='button' value='查看流程' onClick='viewProcessInfo(\"todoTaskGrid\",\"#rowid\")'/>";
+                                    for (var i = 0; i < ids.length; i++)
+                                    {
+                                        var cl = ids[i];
+                                        // 按钮的html内容
+                                        btnHtml = btnHtml.replaceAll("#rowid", cl);
+                                        $('#todoTaskGrid').jqGrid('setRowData', ids[i],
+                                        {
+                                            act : btnHtml
+                                        });
+                                    }
+                                }
+                            },
+                            onSelectRow : function(id)
+                            {
+                                // 重载 ondblClickRow 事件
+                                var rowdata = currGrid.jqGrid('getRowData', id);// 行数据
+                                var key = rowdata.taskName;
+                                // var datajson = {};
+                                // datajson['proDefId']=(key);
+                                // datajson = $.toJSON(datajson);
+
+                            }
                         });
-                    }
-                }
-            },
-            onSelectRow : function(id)
-            {
-                // 重载 ondblClickRow 事件
-                var rowdata = currGrid.jqGrid('getRowData', id);// 行数据
-                var key = rowdata.taskName;
-                // var datajson = {};
-                // datajson['proDefId']=(key);
-                // datajson = $.toJSON(datajson);
-                alert(key);
-            }
-        });
 
     }
     catch (e)
@@ -106,24 +127,75 @@ function processTODOTask(tblId, rowid)
 {
     // json格式的对象，可以按照rowdata.属性名依次获取需要的属性
     var rowdata = $("#" + tblId).jqGrid('getRowData', rowid);
-     alert(rowdata.processName);
-//    var datajson = {};
-//    datajson['proDefKey'] = (rowdata.key);
-//    datajson = $.toJSON(datajson);
-//    $.ajax(
-//    {
-//        type : 'POST',
-//        contentType : 'application/json',
-//        url : 'workflow/startProcessInstance',
-//        data : datajson,
-//        dataType : 'json',
-//        success : function(data)
-//        {
-//            alert("流程已经启动！ data: [" + data + "]");
-//        },
-//        error : function(XMLHttpRequest, textStatus, errorThrown)
-//        {
-//            alert("error info :" + errorThrown)
-//        }
-//    });
+    alert(rowdata.processName);
+    // var datajson = {};
+    // datajson['proDefKey'] = (rowdata.key);
+    // datajson = $.toJSON(datajson);
+    // $.ajax(
+    // {
+    // type : 'POST',
+    // contentType : 'application/json',
+    // url : 'workflow/startProcessInstance',
+    // data : datajson,
+    // dataType : 'json',
+    // success : function(data)
+    // {
+    // alert("流程已经启动！ data: [" + data + "]");
+    // },
+    // error : function(XMLHttpRequest, textStatus, errorThrown)
+    // {
+    // alert("error info :" + errorThrown)
+    // }
+    // });
 }
+
+function viewProcessInfo(tblId, rowid)
+{
+    var rowdata = $("#" + tblId).jqGrid('getRowData', rowid);
+    var proDefId = rowdata.processDefinitionId;
+    var proInsId = rowdata.processInstanceId;
+    var jsonData = {};
+    jsonData["proDefId"]=proDefId;
+    jsonData["proInsId"]=proInsId;
+    jsonData = $.toJSON(jsonData);
+    // 弹出页面显示流程信息
+    $.ajax(
+            {
+                type : 'POST',
+                contentType : 'application/json',
+                url : 'workflow/traceProcess',
+                data : jsonData,
+                dataType : 'json',
+                success : function(dataResult)
+                {
+                    var consoleDlg = $("#consoleDlg");
+                    consoleDlg.empty();
+                    var infoV = '<img  src=\"' + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
+                    + proDefId + '\" style="border:1px solid #dddddd ;position:absolute; left:'
+//                    +dataResult.defX
+                    +'0'
+                    +'px; top:'
+//                    +dataResult.defY
+                    +'0'
+                    +'px;" />'
+                    +'<div style="position:absolute; border:2px solid red;left:'
+                    +(dataResult.x - 1)
+                    +'px;top:'
+                    +(dataResult.y - 1)
+                    +'px;width:'
+                    +(dataResult.width - 2)
+                    +'px;height:'
+                    +(dataResult.height - 2)
+                    +'px;"></div>'
+                    +'';
+//                    alert(infoV);
+                    consoleDlg.append(infoV);
+                    consoleDlg.dialog("option", "title", "查看流程信息").dialog("open");
+                }
+            });
+
+
+
+}
+
+
