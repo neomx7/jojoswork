@@ -170,8 +170,12 @@ function viewProcessInfo(tblId, rowid)
                 {
                     var consoleDlg = $("#consoleDlg");
                     consoleDlg.empty();
-                    var infoV = '<img  src=\"' + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
-                    + proDefId + '\" style="border:1px solid #dddddd ;position:absolute; left:'
+                    var infoV = '<img  src=\"'
+//                        + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
+//                    + proDefId
+                        + appRelPath+'/styles/workflow/imgs/lisheng.png'
+
+                    + '\" style="border:1px solid #dddddd ;position:absolute; left:'
 //                    +dataResult.defX
                     +'0'
                     +'px; top:'
