@@ -42,6 +42,7 @@ import com.jojo.facade.workflow.WorkFlowExecutor;
 import com.jojo.process.dal.postgre.AttachMgrMapper;
 import com.jojo.process.dal.postgre.ProcessMgrMapper;
 import com.jojo.util.biz.bo.PageResultBO;
+import com.jojo.util.constants.JOJOConstants;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.ProcessTask;
 import com.jojo.util.pojo.ProcessTaskForm;
@@ -61,6 +62,8 @@ import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
 @Repository
 public class WorkFlowExecutorImpl implements WorkFlowExecutor
 {
+
+
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // private String deploymentId = null;
@@ -290,9 +293,21 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * java.lang.String)
      */
     @Override
-    public void completeTask(String taskId, String operId)
+    public void completeTask(ProcessTask processTask)
     {
-        taskService.complete(taskId);
+
+
+
+     // 设置下个节点审批人
+        Map<String, Object> variables = new HashMap<String, Object>();
+        if (StringUtils.isNotBlank(processTask.getNextAssignee()))
+        {
+            variables.put(JOJOConstants.NEXT_ASSIGNEE, processTask.getNextAssignee());
+        }
+//        runtimeService.setVariable(processTask.getExecutionId(),
+//                JOJOConstants.NEXT_ASSIGNEE, processTask.getNextAssignee());
+
+        taskService.complete(processTask.getTaskId(),variables);
     }
 
     /*

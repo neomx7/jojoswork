@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -219,8 +220,8 @@ public class WorkFlowController extends BaseController
             resultInfo.setResultCode(-1);
             return resultInfo;
         }
-        // TODO 生成业务对象的唯一索引，返回数据库id（可用sequence完成），作为businessKey
-        String businessKey = "1";
+        // TODO 生成业务对象的唯一索引，作为businessKey,每个业务对象都放置一个businesKey
+        String businessKey = UUID.randomUUID().toString();
         WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
         // 从session中获取operId
         String operId = "jojo";

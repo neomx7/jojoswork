@@ -20,10 +20,12 @@
       </extensionElements>
     </userTask>
     <sequenceFlow id="assgin2MgtCompanyDirector" sourceRef="applyShipSparePartsTask" targetRef="checkShipSparePartsTask"></sequenceFlow>
-    <userTask id="checkShipSparePartsTask" name="check for ship spare parts">
+    <userTask id="checkShipSparePartsTask" name="check for ship spare parts" activiti:assignee="${nextAssignee}">
       <documentation>The Management Company Director will check for ship spare parts.</documentation>
       <extensionElements>
-        <activiti:taskListener event="assignment" class="com.jojo.service.process.usertask.listener.TaskAssignmentHandler"></activiti:taskListener>
+        <activiti:taskListener event="assignment" class="com.jojo.service.process.usertask.listener.TaskAssignmentHandler">
+
+        </activiti:taskListener>
       </extensionElements>
     </userTask>
     <sequenceFlow id="endFlow" sourceRef="checkShipSparePartsTask" targetRef="theEnd"></sequenceFlow>

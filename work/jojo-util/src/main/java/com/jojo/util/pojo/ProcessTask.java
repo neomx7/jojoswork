@@ -41,6 +41,9 @@ public class ProcessTask extends BasePOJO
     private String taskDefinitionKey;
     private String taskId;
 
+    //下个节点审批人
+    private String nextAssignee;
+
     public int getRevision()
     {
         return revision;
@@ -184,6 +187,14 @@ public class ProcessTask extends BasePOJO
     public void setTaskName(String taskName)
     {
         this.taskName = taskName;
+    }
+    public String getNextAssignee()
+    {
+        return nextAssignee;
+    }
+    public void setNextAssignee(String nextAssignee)
+    {
+        this.nextAssignee = nextAssignee;
     }
 
 }

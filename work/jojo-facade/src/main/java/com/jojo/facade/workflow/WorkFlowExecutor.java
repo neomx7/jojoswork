@@ -104,9 +104,9 @@ public interface WorkFlowExecutor
      *
      * @author jojo
      *
-     * @param taskId
+     * @param processTask
      */
-    public void completeTask(String taskId,String operId);
+    public void completeTask(ProcessTask processTask);
 
     /**
      *
