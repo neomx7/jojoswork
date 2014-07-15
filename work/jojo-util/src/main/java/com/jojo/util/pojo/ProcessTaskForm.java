@@ -13,7 +13,7 @@ package com.jojo.util.pojo;
  * @author jojo
  *
  */
-public class ProcessTaskForm extends BasePOJO
+public class ProcessTaskForm extends ProcessTask
 {
 
     /**   */

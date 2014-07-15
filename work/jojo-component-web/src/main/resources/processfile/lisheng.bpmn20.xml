@@ -23,8 +23,7 @@
     <userTask id="checkShipSparePartsTask" name="check for ship spare parts" activiti:assignee="${nextAssignee}">
       <documentation>The Management Company Director will check for ship spare parts.</documentation>
       <extensionElements>
-        <activiti:taskListener event="assignment" class="com.jojo.service.process.usertask.listener.TaskAssignmentHandler">
-
+        <activiti:taskListener event="create" class="com.jojo.service.process.usertask.listener.TaskAssignmentHandler">
         </activiti:taskListener>
       </extensionElements>
     </userTask>

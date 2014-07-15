@@ -59,11 +59,20 @@
 	</logger>
 
 
+	<logger name="logger.java.sql">
+		<level value="DEBUG" />
+	</logger>
+
+
+	<logger name="com.jojo">
+		<level value="INFO" />
+		<appender-ref ref="JOJO_Daily_LOG" />
+	</logger>
 
 	<root>
 		<level value="INFO" />
 		<appender-ref ref="terminal" />
-		<appender-ref ref="JOJO_Daily_LOG2File" />
+<!-- 		<appender-ref ref="JOJO_Daily_LOG2File" /> -->
 		<!-- <appender-ref ref="asynch-file" /> -->
 
 		<!-- Comment-in this line to output to a log file instead of the terminal. Comment out "terminal" above as well. <appender-ref

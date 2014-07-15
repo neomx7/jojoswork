@@ -19,7 +19,7 @@ public class ResultInfo extends BasePOJO
     /**   */
     private static final long serialVersionUID = 2027023019344847391L;
 
-    private int resultCode = 0;
+    private int resultCode = -1;
     private String resultDesc;
 
     public int getResultCode()

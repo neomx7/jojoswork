@@ -7,7 +7,6 @@ package com.jojo.webapp.Controller.workflow;
 
 import java.awt.Point;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +28,11 @@ import com.jojo.dal.common.postgre.domain.AttachDO;
 import com.jojo.facade.workflow.WorkFlowExecutor;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
+import com.jojo.util.pojo.ProcessTask;
+import com.jojo.util.pojo.ProcessTaskForm;
 import com.jojo.util.pojo.ResultInfo;
 import com.jojo.util.ui.vo.workflow.LocationGraph;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
-import com.jojo.util.ui.vo.workflow.WorkFlowDefineGraph;
 import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
 import com.jojo.web.common.context.ContextHolder;
 
@@ -280,5 +280,46 @@ public class WorkFlowController extends BaseController
         }
 
         return location;
+    }
+
+
+    /**
+     *
+     * <summary>
+     * [结束当前task]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param query
+     * @return
+     */
+
+    @RequestMapping(value = "/workflow/processTODOTask")
+    @ResponseBody
+    public ResultInfo processTODOTask(@RequestBody ProcessTaskForm form)
+    {
+        ResultInfo  resultInfo = new ResultInfo();
+        if (StringUtils.isBlank(form.getTaskId()))
+        {
+            logger.error("can not processTODOTask cause taskId is null");
+            return resultInfo;
+        }
+        if (StringUtils.isBlank(form.getNextAssignee()))
+        {
+            logger.error("can not processTODOTask cause nextAssignee is null");
+            return resultInfo;
+        }
+
+        WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
+
+        ProcessTask processTask = new ProcessTask();
+        processTask.setNextAssignee(form.getNextAssignee());
+        processTask.setTaskId(form.getTaskId());
+        workFlowExecutor.completeTask(processTask);
+
+        resultInfo.setResultCode(0);
+        return resultInfo;
     }
 }

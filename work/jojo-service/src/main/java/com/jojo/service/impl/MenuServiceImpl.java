@@ -84,6 +84,16 @@ public class MenuServiceImpl implements MenuService
             mo90.setAction("workflow/toList");
             list.add(mo90);
         }
+        else if(parentId.trim().equals("090"))
+        {
+            MenuMO mo90 = new MenuMO();
+            mo90.setTheId("0901");
+            mo90.setTheName("已部署的流程定义");
+            mo90.setLevel(3);
+            mo90.setAction("workflow/toList");
+            list.add(mo90);
+        }
+
         //流程
         else  if (parentId.trim().equals("003"))
         {
