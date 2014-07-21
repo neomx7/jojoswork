@@ -7,13 +7,13 @@ package com.jojo.webapp.form;
 
 /**
  * <summary>
- * 
+ *
  * </summary>
- * 
+ *
  * @author jojo
- * 
+ *
  */
-public class IndexForm
+public class IndexForm extends BaseForm
 {
 
 }
