@@ -31,6 +31,7 @@ public class LogInOutController
     @RequestMapping(value = "/login")
     public String toLogin(@ModelAttribute("form") LogInOutForm form)
     {
+        logger.info("redirect to login...");
         return "view/loginout/login";
     }
 

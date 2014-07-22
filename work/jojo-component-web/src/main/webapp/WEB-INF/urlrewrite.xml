@@ -45,10 +45,10 @@
         <from>/favicon.ico</from>
         <to>/favicon.ico</to>
     </rule>
-    <rule>
+<!--     <rule>
         <from>/login*</from>
         <to>/login.jsp</to>
-    </rule>
+    </rule> -->
 
     <!-- Spring MVC -->
     <rule>

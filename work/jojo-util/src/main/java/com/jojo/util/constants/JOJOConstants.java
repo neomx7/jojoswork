@@ -31,4 +31,9 @@ public class JOJOConstants
     public static final Integer WORKFLOW_TASKMODE_TDONE = 1;
 
     public static final String SESSION_KEY_LOGINUSER = "loginUser";
+
+    public static final String COMMA = ",";
+
+    public static final int NUM_ONE = 1;
+
 }
