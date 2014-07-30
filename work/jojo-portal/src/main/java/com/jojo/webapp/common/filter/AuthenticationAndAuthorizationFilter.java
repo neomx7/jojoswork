@@ -109,7 +109,7 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
             String encodeURL = URLEncoder.encode((redirectURL + (StringUtils.isBlank(request.getQueryString()) ? ""
                     : "?" + request.getQueryString())), "UTF-8");
 //
-            response.sendRedirect(isLogin() ?  "/tip/auth" : request.getContextPath() + "/login?redirectURL=" + encodeURL);
+            response.sendRedirect(isLogin() ?  "/index" : request.getContextPath() + "/login?redirectURL=" + encodeURL);
             return;
         }
         catch (Exception e)

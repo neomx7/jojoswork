@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jojo.dal.common.postgre.AttachMgrMapper">
+	<resultMap type="com.jojo.dal.common.postgre.domain.UserDO" id="userResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="theName" column="T_NAME" />
+		<result property="status" column="T_STATUS" />
+		<result property="sex" column="T_SEX" />
+		<result property="email" column="T_EMAIL" />
+		<result property="tel" column="T_TEL" />
+		<result property="mobile" column="T_MOBILE" />
+		<result property="pwd" column="T_PWD" />
+
+<result property="theRemark" column="T_REMARK" />
+<result property="crtUserId" column="CRT_USR" />
+<result property="crtUserName" column="CRT_USR_NAME" />
+<result property="crtTime" column="CRT_TIME" />
+<result property="updUserId" column="UPD_USR" />
+<result property="updUserName" column="UPD_USR_NAME" />
+<result property="updTime" column="UPD_TIME" />
+
+	</resultMap>
+	<!-- , ATTACH_CONTENT -->
+	<select id="queryAll" parameterType="java.util.Map" resultMap="userResultMap">
+
+	</select>
+
+</mapper>

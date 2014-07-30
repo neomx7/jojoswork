@@ -58,6 +58,17 @@ public class DemoListController
         return "view/createApply-list";
     }
 
+    /**
+     *
+     * <summary>
+     * [进入我的待办列表]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @return
+     */
     @RequestMapping(value = "/demo/toMyTaskList")
     public String toMyTaskList()
     {
@@ -66,6 +77,19 @@ public class DemoListController
         return "view/todoTaskList-list";
     }
 
+    /**
+     *
+     * <summary>
+     * [进入流程任务节点编辑页面]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param form
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/demo/toProcessTask")
     public String toProcessTaskList(@RequestBody ProcessTaskForm form,@ModelAttribute("form") ProcessTaskForm model)
     {
