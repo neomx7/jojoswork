@@ -26,7 +26,8 @@ public class UserDO extends BasePOJO
     private String mobile;
     private String pwd;
 
-    private List<DutyDO> dutyDOs = new ArrayList<DutyDO>(2);
+    private List<OrgUserDO> orgUserDOs = new ArrayList<OrgUserDO>(10);
+
 
     public int getSex()
     {
@@ -68,15 +69,14 @@ public class UserDO extends BasePOJO
     {
         this.pwd = pwd;
     }
-    public List<DutyDO> getDutyDOs()
+    public List<OrgUserDO> getOrgUserDOs()
     {
-        return dutyDOs;
+        return orgUserDOs;
     }
-    public void setDutyDOs(List<DutyDO> dutyDOs)
+    public void setOrgUserDOs(List<OrgUserDO> orgUserDOs)
     {
-        this.dutyDOs = dutyDOs;
+        this.orgUserDOs = orgUserDOs;
     }
-
 
 
 }
