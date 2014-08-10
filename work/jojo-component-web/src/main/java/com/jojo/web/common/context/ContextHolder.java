@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * JOJO
  *
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
@@ -11,11 +11,18 @@ import javax.servlet.ServletContext;
 import org.springframework.context.ApplicationContext;
 
 /**
- * 
+ *
  * @author finley.yao
  * @version $Id: ContextHolder.java, v 0.1 2013-7-31 下午3:06:20 finley.yao Exp $
  */
 public class ContextHolder {
+
+    /**
+     * 防止实例化
+     */
+    private ContextHolder(){
+
+    }
 
     public static ApplicationContext applicationContext;
 

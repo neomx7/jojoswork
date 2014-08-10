@@ -62,6 +62,25 @@ public class ResourceDO extends BasePOJO
     {
         this.parentId = parentId;
     }
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ResourceDO [type=");
+        builder.append(type);
+        builder.append(", uri=");
+        builder.append(uri);
+        builder.append(", level=");
+        builder.append(level);
+        builder.append(", code=");
+        builder.append(code);
+        builder.append(", parentId=");
+        builder.append(parentId);
+        builder.append(", toString()=");
+        builder.append(super.toString());
+        builder.append("]");
+        return builder.toString();
+    }
 
 
 

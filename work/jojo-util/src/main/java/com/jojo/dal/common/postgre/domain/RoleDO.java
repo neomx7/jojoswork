@@ -20,6 +20,7 @@ public class RoleDO extends BasePOJO
     /**   */
     private static final long serialVersionUID = 1102479682285182713L;
 
+
     private List<PrivilegeDO> privilegeDOs = new ArrayList<PrivilegeDO>(200);
 
     public List<PrivilegeDO> getPrivilegeDOs()
@@ -31,6 +32,19 @@ public class RoleDO extends BasePOJO
     {
         this.privilegeDOs = privilegeDOs;
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("RoleDO [privilegeDOs=");
+        builder.append(privilegeDOs);
+        builder.append(", toString()=");
+        builder.append(super.toString());
+        builder.append("]");
+        return builder.toString();
+    }
+
 
 
 }

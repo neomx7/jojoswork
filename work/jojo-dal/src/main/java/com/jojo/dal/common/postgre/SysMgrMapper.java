@@ -11,18 +11,10 @@ import java.util.Map;
 import com.jojo.dal.common.postgre.domain.OrgUserDO;
 import com.jojo.dal.common.postgre.domain.RoleDO;
 import com.jojo.dal.common.postgre.domain.UserDO;
+import com.jojo.dal.common.postgre.domain.UserResourcesDO;
 
 /**
  * <summary>
- * [系统启动时，首先生成好3个map对象：]<br>
- * 1 用户id : List<部门用户> 部门用户list <br>
- * 2.部门用户id : List<Role> roles <br>
- * 3.roleId: List<Privalige> prvs <br>
- *
- * [注意]<br>
- * 只有超级管理员可以进行用户的维护和菜单及权限分配<br>
- * 角色菜单权限等修改后，要在内存中的map对象也跟着修改，相当于内存map作为缓存使用<br>
- * 对于有些部门用户是全部门通用的情况，此时可以考虑加入一个特别的'通用部门'的部门概念<br>
  * <br>
  * </summary>
  *
@@ -69,7 +61,7 @@ public interface SysMgrMapper
      *
      * @return
      */
-    public List<RoleDO> queryRoles();
+    public List<RoleDO> queryRoles(Map<String, Object> params);
 
     /**
      *
@@ -85,5 +77,17 @@ public interface SysMgrMapper
      */
     public UserDO getUser(Map<String, Object> params);
 
-
+    /**
+     *
+     * <summary>
+     * [获取用户的资源列表，形式String: usrId - List<ResourceDO>]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param params
+     * @return
+     */
+    public List<UserResourcesDO> queryUsrResources(Map<String, Object> params);
 }

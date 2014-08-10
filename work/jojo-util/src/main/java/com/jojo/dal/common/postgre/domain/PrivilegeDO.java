@@ -67,4 +67,22 @@ public class PrivilegeDO extends BasePOJO
         this.resourceDO = resourceDO;
     }
 
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("PrivilegeDO [targetId=");
+        builder.append(targetId);
+        builder.append(", targetType=");
+        builder.append(targetType);
+        builder.append(", resourceDO=");
+        builder.append(resourceDO);
+        builder.append(", funFlag=");
+        builder.append(funFlag);
+        builder.append(", toString()=");
+        builder.append(super.toString());
+        builder.append("]");
+        return builder.toString();
+    }
+
 }

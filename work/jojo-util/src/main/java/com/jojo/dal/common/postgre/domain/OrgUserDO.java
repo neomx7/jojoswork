@@ -51,6 +51,21 @@ public class OrgUserDO extends BasePOJO
     {
         this.usrId = usrId;
     }
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("OrgUserDO [deprtId=");
+        builder.append(deprtId);
+        builder.append(", usrId=");
+        builder.append(usrId);
+        builder.append(", roleDOs=");
+        builder.append(roleDOs);
+        builder.append(", toString()=");
+        builder.append(super.toString());
+        builder.append("]");
+        return builder.toString();
+    }
 
 
 }

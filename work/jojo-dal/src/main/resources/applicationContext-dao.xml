@@ -21,6 +21,7 @@
 	<!-- Activates scanning of @Service -->
 	<context:component-scan base-package="com.jojo.dal.common.postgre" />
 
+
 	<!-- define the SqlSessionFactory -->
 	<bean id="sqlSessionFactory1" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="classpath:MyBatis-Configuration.xml" />

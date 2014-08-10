@@ -20,6 +20,7 @@ public class UserDO extends BasePOJO
     /**   */
     private static final long serialVersionUID = 2558434283338089842L;
 
+    private String usrId;
     private int sex;
     private String email;
     private String tel;
@@ -76,6 +77,38 @@ public class UserDO extends BasePOJO
     public void setOrgUserDOs(List<OrgUserDO> orgUserDOs)
     {
         this.orgUserDOs = orgUserDOs;
+    }
+
+    public String getUsrId()
+    {
+        return usrId;
+    }
+
+    public void setUsrId(String usrId)
+    {
+        this.usrId = usrId;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("UserDO [sex=");
+        builder.append(sex);
+        builder.append(", usrId=");
+        builder.append(usrId);
+        builder.append(", email=");
+        builder.append(email);
+        builder.append(", tel=");
+        builder.append(tel);
+        builder.append(", mobile=");
+        builder.append(mobile);
+        builder.append(", pwd=");
+        builder.append(pwd);
+        builder.append(", orgUserDOs=");
+        builder.append(orgUserDOs);
+        builder.append("]");
+        return builder.toString();
     }
 
 

@@ -1,25 +1,50 @@
 /**
- * 
+ *
  * JOJO
  *
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
 package com.jojo.web.common.context;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.ServletContext;
 
 import org.springframework.context.ApplicationContext;
 
+import com.jojo.dal.common.postgre.domain.OrgUserDO;
+import com.jojo.dal.common.postgre.domain.PrivilegeDO;
+import com.jojo.dal.common.postgre.domain.ResourceDO;
+import com.jojo.dal.common.postgre.domain.RoleDO;
+import com.jojo.dal.common.postgre.domain.UserDO;
+
 /**
- * 
- * @author finley.yao
- * @version $Id: ContextHolder.java, v 0.1 2013-7-31 下午3:06:20 finley.yao Exp $
+ * 系统的上下文保持类，包含了系统管理的实例内容.<br>
+ * 其中部门、用户、角色、权限、菜单这些作为内容对象存在，系统启动时，由 {@link SystemMgrCtxHolder#init()} 存入，<br>
+ * 在其被变更时，由 {@link SystemMgrCtxHolder#init()}  进行更新内存内容。<br>
+ *
+ * @author jojo
  */
 public class ContextHolder {
+
+    /**
+     * 防止实例化
+     */
+    private ContextHolder(){
+
+    }
 
     public static ApplicationContext applicationContext;
 
     public static ServletContext     servletContext;
+
+    private static final Map<String, UserDO> USER_MAP = new HashMap<String, UserDO>(200);
+//    private static final Map<String, List<OrgUserDO>> ORGUSER_MAP = new HashMap<String, List<OrgUserDO>>(200);
+    private static final Map<String, List<RoleDO>> USR2ROLE_MAP = new HashMap<String, List<RoleDO>>(200);
+    private static final Map<String, List<PrivilegeDO>> Role2PRV_MAP = new HashMap<String, List<PrivilegeDO>>(200);
+    private static final Map<String, List<ResourceDO>> Usr2RESOURCE_MAP = new HashMap<String, List<ResourceDO>>(200);
 
     public static Object getBean(String beanName) {
         return applicationContext.getBean(beanName);
@@ -52,5 +77,30 @@ public class ContextHolder {
 	{
 		ContextHolder.servletContext = servletContext;
 	}
+
+//    public static Map<String, List<OrgUserDO>> getOrguserMap()
+//    {
+//        return ORGUSER_MAP;
+//    }
+
+    public static Map<String, List<RoleDO>> getUsr2RoleMap()
+    {
+        return USR2ROLE_MAP;
+    }
+
+    public static Map<String, List<PrivilegeDO>> getRole2PrvMap()
+    {
+        return Role2PRV_MAP;
+    }
+
+    public static Map<String, List<ResourceDO>> getUsr2ResourceMap()
+    {
+        return Usr2RESOURCE_MAP;
+    }
+
+    public static Map<String, UserDO> getUserMap()
+    {
+        return USER_MAP;
+    }
 
 }

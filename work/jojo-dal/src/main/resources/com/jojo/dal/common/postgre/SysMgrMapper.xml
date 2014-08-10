@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jojo.dal.common.postgre.AttachMgrMapper">
+<mapper namespace="com.jojo.dal.common.postgre.SysMgrMapper">
 	<resultMap type="com.jojo.dal.common.postgre.domain.UserDO" id="userResultMap">
 		<id property="theId" column="T_ID" />
 		<result property="theName" column="T_NAME" />
+
+		<result property="usrId" column="T_USRID" />
 		<result property="status" column="T_STATUS" />
 		<result property="sex" column="T_SEX" />
 		<result property="email" column="T_EMAIL" />
@@ -11,18 +13,171 @@
 		<result property="mobile" column="T_MOBILE" />
 		<result property="pwd" column="T_PWD" />
 
-<result property="theRemark" column="T_REMARK" />
-<result property="crtUserId" column="CRT_USR" />
-<result property="crtUserName" column="CRT_USR_NAME" />
-<result property="crtTime" column="CRT_TIME" />
-<result property="updUserId" column="UPD_USR" />
-<result property="updUserName" column="UPD_USR_NAME" />
-<result property="updTime" column="UPD_TIME" />
+		<result property="theRemark" column="T_REMARK" />
+		<result property="crtUserId" column="CRT_USR" />
+		<result property="crtUserName" column="CRT_USR_NAME" />
+		<result property="crtTime" column="CRT_TIME" />
+		<result property="updUserId" column="UPD_USR" />
+		<result property="updUserName" column="UPD_USR_NAME" />
+		<result property="updTime" column="UPD_TIME" />
+
+		<!--collection元素映射主类中的子类集合的属性。resultMap 以命名空间名.resultMap的id的形式，引用s子类的ResultMap。 需要注意的是，select语句中子类的字段名/别名应与 子类ResultMap中的column属性一致 -->
+		<collection property="orgUserDOs" resultMap="simpleOrgUserResultMap" />
+	</resultMap>
+
+	<resultMap type="com.jojo.dal.common.postgre.domain.OrgUserDO" id="simpleOrgUserResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="deprtId" column="T_DEPRT_ID" />
+		<result property="usrId" column="T_USR_ID" />
+	</resultMap>
+
+
+	<resultMap type="com.jojo.dal.common.postgre.domain.OrgUserDO" id="orgUserResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="deprtId" column="T_DEPRT_ID" />
+		<result property="usrId" column="T_USR_ID" />
+		<collection property="roleDOs" resultMap="simpleRoleResultMap" />
+	</resultMap>
+
+	<resultMap type="com.jojo.dal.common.postgre.domain.RoleDO" id="simpleRoleResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="theName" column="T_NAME" />
+		<result property="status" column="T_STATUS" />
+
+		<result property="theRemark" column="T_REMARK" />
+		<result property="crtUserId" column="CRT_USR" />
+		<result property="crtUserName" column="CRT_USR_NAME" />
+		<result property="crtTime" column="CRT_TIME" />
+		<result property="updUserId" column="UPD_USR" />
+		<result property="updUserName" column="UPD_USR_NAME" />
+		<result property="updTime" column="UPD_TIME" />
+	</resultMap>
+
+
+	<resultMap type="com.jojo.dal.common.postgre.domain.RoleDO" id="roleResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="theName" column="T_NAME" />
+		<result property="status" column="T_STATUS" />
+
+		<result property="theRemark" column="T_REMARK" />
+		<result property="crtUserId" column="CRT_USR" />
+		<result property="crtUserName" column="CRT_USR_NAME" />
+		<result property="crtTime" column="CRT_TIME" />
+		<result property="updUserId" column="UPD_USR" />
+		<result property="updUserName" column="UPD_USR_NAME" />
+		<result property="updTime" column="UPD_TIME" />
+
+		<collection property="privilegeDOs" resultMap="privilegeResultMap" />
+	</resultMap>
+
+	<resultMap type="com.jojo.dal.common.postgre.domain.PrivilegeDO" id="privilegeResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="targetId" column="T_TARGET_ID" />
+		<result property="targetType" column="TARGET_TYPE" />
+		<result property="funFlag" column="T_FLAG" />
+
+		<result property="theRemark" column="T_REMARK" />
+		<result property="crtUserId" column="CRT_USR" />
+		<result property="crtUserName" column="CRT_USR_NAME" />
+		<result property="crtTime" column="CRT_TIME" />
+		<result property="updUserId" column="UPD_USR" />
+		<result property="updUserName" column="UPD_USR_NAME" />
+		<result property="updTime" column="UPD_TIME" />
+
+		<association property="resourceDO" column="T_TARGET_ID" javaType="com.jojo.dal.common.postgre.domain.ResourceDO"
+			select="getResourceById" />
+	</resultMap>
+
+
+	<resultMap type="com.jojo.dal.common.postgre.domain.ResourceDO" id="resourceResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="theName" column="T_NAME" />
+		<result property="type" column="T_TYPE" />
+		<result property="uri" column="T_URI" />
+		<result property="level" column="T_LEVEL" />
+		<result property="code" column="T_CODE" />
+		<result property="parentId" column="T_PARENT_ID" />
+
+		<result property="theRemark" column="T_REMARK" />
+		<result property="crtUserId" column="CRT_USR" />
+		<result property="crtUserName" column="CRT_USR_NAME" />
+		<result property="crtTime" column="CRT_TIME" />
+		<result property="updUserId" column="UPD_USR" />
+		<result property="updUserName" column="UPD_USR_NAME" />
+		<result property="updTime" column="UPD_TIME" />
 
 	</resultMap>
-	<!-- , ATTACH_CONTENT -->
-	<select id="queryAll" parameterType="java.util.Map" resultMap="userResultMap">
 
+	<resultMap type="com.jojo.dal.common.postgre.domain.UserResourcesDO" id="usrResourcesResultMap">
+		<result property="theUsrId" column="t_usrid" />
+		<collection property="resourceDOs" resultMap="resourceResultMap" />
+	</resultMap>
+
+	<!-- 部门用户列表查询 -->
+	<select id="queryUsers" parameterType="java.util.Map" resultMap="userResultMap">
+		SELECT
+		T.* ,D.*
+		FROM JOJO_USR T
+
+		LEFT JOIN
+		JOJO_DEPRT_USR D
+		ON T.T_ID = D.T_USR_ID
+	</select>
+
+	<select id="queryOrgUsers" parameterType="java.util.Map" resultMap="orgUserResultMap">
+		SELECT
+		T.*,DUR.*,R.*
+
+		FROM JOJO_DEPRT_USR
+		T,jojo_deprt_usr_role DUR, jojo_role R
+
+		WHERE
+		T.T_ID = DUR.t_deprt_usr_id
+		and R.T_ID = DUR.t_role_id
+	</select>
+
+
+	<select id="queryRoles" parameterType="java.util.Map" resultMap="roleResultMap">
+		SELECT
+		T.*,P.*,V.*
+
+		FROM jojo_role T, jojo_role_prv
+		P, jojo_prv v
+
+		WHERE
+		T.T_ID = P.t_role_id
+		and V.T_ID = P.t_prv_id
+	</select>
+
+	<select id="getResourceById" parameterType="java.lang.String" resultMap="resourceResultMap">
+  <![CDATA[
+  select r.* from jojo_prv t, jojo_resource r
+  where t.t_target_id = r.T_ID
+  and t.t_id = #{theId}
+  ]]>
+	</select>
+
+	<select id="queryUsrResources" parameterType="java.util.Map" resultMap="usrResourcesResultMap">
+		select  u.t_usrid as theUsrId,roleRes.* from
+		jojo_usr u ,jojo_deprt_usr du ,jojo_deprt_usr_role dur,
+		(
+		SELECT
+		res.*,P.t_role_id
+
+
+		FROM jojo_role_prv P,
+		jojo_prv v,jojo_resource res
+
+		WHERE P.t_prv_id = V.T_ID
+		and V.t_target_id = res.t_id
+
+		) roleRes
+		where u.t_id = du.t_usr_id
+		and du.t_id = dur.t_deprt_usr_id
+		and dur.t_role_id = roleRes.t_role_id
+	</select>
+
+	<select id="getUser" parameterType="java.util.Map" resultMap="userResultMap">
 	</select>
 
 </mapper>
