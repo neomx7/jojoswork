@@ -70,6 +70,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
+			classpath*:/applicationContext-portal.xml,
  			classpath*:/applicationContext-biz.xml,
             classpath*:/applicationContext-quartz.xml,
             classpath*:/applicationContext-service.xml,

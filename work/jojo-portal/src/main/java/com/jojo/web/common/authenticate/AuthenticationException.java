@@ -6,8 +6,7 @@ package com.jojo.web.common.authenticate;
 
 /**
  *
- * @author finley.yao
- * @version $Id: AuthenticationException.java, v 0.1 2013-6-13 下午4:58:36 finley.yao Exp $
+ * @author JOJO
  */
 public class AuthenticationException extends RuntimeException {
 

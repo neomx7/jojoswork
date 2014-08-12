@@ -1,35 +1,34 @@
 /**
  *
- *JOJO
+ * JOJO
  */
 package com.jojo.web.common.authenticate;
 
-import java.util.List;
+import com.jojo.web.common.context.ContextHolder;
 
 /**
  *
- * @author finley.yao
- * @version $Id: AuthenticationUtil.java, v 0.1 2013-7-30 下午1:42:11 finley.yao Exp $
+ * @author jojo
  */
-public class AuthenticationUtil {
+public class AuthenticationUtil
+{
 
     public static final String USER_ROLE_ADMINISTRATOR = "administrator";
-    public static final String SCPPUN_CID              = "scppun_cid";
+    public static final String USER_ID_ADMINISTRATOR = "administrator";
+    public static final String APP_CID = "app_cid";
 
-    public static boolean hasAuthentication(String uri, boolean isLogon, String userRole) {
-
-        AuthenticationDefinition authentication = AuthenticationDefinitionRegister.get(uri);
+    public static boolean hasAuthentication(String uri, boolean isLogon, String loginUsrId)
+    {
 
         // 管理员或则无权限配置，权限直接通过
-        if (USER_ROLE_ADMINISTRATOR.equals(userRole) || null == authentication) {
+        if (USER_ID_ADMINISTRATOR.equals(loginUsrId))
+        {
             return true;
         }
 
-        // 需要登录，登录并且角色合法，则权限通过，否则权限失败；不需要登录，角色合法，则权限通过，否则权限失败
-        return (authentication.isNeedLogin() ? isLogon : true)
-               && authentication.validRole(userRole);
+        // 需要登录，登录并且uri有权限合法，则鉴权通过，否则鉴权失败；
+        return (isLogon) && ContextHolder.isValidUri(loginUsrId, uri);
 
     }
-
 
 }

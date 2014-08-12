@@ -21,6 +21,7 @@ public class OrgUserDO extends BasePOJO
     private static final long serialVersionUID = -33491729851112009L;
 
     private String deprtId;
+    private String theUsrDbId;
     private String usrId;
 
     private List<RoleDO> roleDOs = new ArrayList<RoleDO>(20);
@@ -57,6 +58,8 @@ public class OrgUserDO extends BasePOJO
         StringBuilder builder = new StringBuilder();
         builder.append("OrgUserDO [deprtId=");
         builder.append(deprtId);
+        builder.append(", theUsrDbId=");
+        builder.append(theUsrDbId);
         builder.append(", usrId=");
         builder.append(usrId);
         builder.append(", roleDOs=");
@@ -65,6 +68,14 @@ public class OrgUserDO extends BasePOJO
         builder.append(super.toString());
         builder.append("]");
         return builder.toString();
+    }
+    public String getTheUsrDbId()
+    {
+        return theUsrDbId;
+    }
+    public void setTheUsrDbId(String theUsrDbId)
+    {
+        this.theUsrDbId = theUsrDbId;
     }
 
 

@@ -21,6 +21,8 @@ public class LogInOutForm extends BaseForm
 
     private String pwd;
 
+    private String redirectURL;
+
     public String getUserId()
     {
         return userId;
@@ -49,6 +51,32 @@ public class LogInOutForm extends BaseForm
     public void setPwd(String pwd)
     {
         this.pwd = pwd;
+    }
+
+    public String getRedirectURL()
+    {
+        return redirectURL;
+    }
+
+    public void setRedirectURL(String redirectURL)
+    {
+        this.redirectURL = redirectURL;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("LogInOutForm [userId=");
+        builder.append(userId);
+        builder.append(", userName=");
+        builder.append(userName);
+        builder.append(", pwd=");
+        builder.append(pwd);
+        builder.append(", redirectURL=");
+        builder.append(redirectURL);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

@@ -79,7 +79,7 @@ public class SystemMgrCtxHolder
         List<UserResourcesDO> userResourcesDOs = sysMgrBiz.queryUsrResources(params4UsrResources);
         for (UserResourcesDO userResourcesDO : userResourcesDOs)
         {
-            ContextHolder.getUsr2ResourceMap().put(userResourcesDO.getTheUsrId(), userResourcesDO.getResourceDOs());
+            ContextHolder.getUsr2ResourceMap().put(userResourcesDO.getUsrId(), userResourcesDO.getResourceDOs());
         }
 
     }

@@ -28,14 +28,16 @@
 	<resultMap type="com.jojo.dal.common.postgre.domain.OrgUserDO" id="simpleOrgUserResultMap">
 		<id property="theId" column="T_ID" />
 		<result property="deprtId" column="T_DEPRT_ID" />
-		<result property="usrId" column="T_USR_ID" />
+		<result property="theUsrDbId" column="T_USR_ID" />
+		<result property="usrId" column="T_LOGIN_USER" />
 	</resultMap>
 
 
 	<resultMap type="com.jojo.dal.common.postgre.domain.OrgUserDO" id="orgUserResultMap">
 		<id property="theId" column="T_ID" />
 		<result property="deprtId" column="T_DEPRT_ID" />
-		<result property="usrId" column="T_USR_ID" />
+		<result property="theUsrDbId" column="T_USR_ID" />
+		<result property="usrId" column="T_LOGIN_USER" />
 		<collection property="roleDOs" resultMap="simpleRoleResultMap" />
 	</resultMap>
 
@@ -98,6 +100,8 @@
 		<result property="code" column="T_CODE" />
 		<result property="parentId" column="T_PARENT_ID" />
 
+		<result property="status" column="T_STATUS" />
+
 		<result property="theRemark" column="T_REMARK" />
 		<result property="crtUserId" column="CRT_USR" />
 		<result property="crtUserName" column="CRT_USR_NAME" />
@@ -109,7 +113,7 @@
 	</resultMap>
 
 	<resultMap type="com.jojo.dal.common.postgre.domain.UserResourcesDO" id="usrResourcesResultMap">
-		<result property="theUsrId" column="t_usrid" />
+		<result property="usrId" column="t_usrid" />
 		<collection property="resourceDOs" resultMap="resourceResultMap" />
 	</resultMap>
 
@@ -128,8 +132,7 @@
 		SELECT
 		T.*,DUR.*,R.*
 
-		FROM JOJO_DEPRT_USR
-		T,jojo_deprt_usr_role DUR, jojo_role R
+		FROM JOJO_DEPRT_USR T,jojo_deprt_usr_role DUR, jojo_role R
 
 		WHERE
 		T.T_ID = DUR.t_deprt_usr_id
@@ -158,23 +161,17 @@
 	</select>
 
 	<select id="queryUsrResources" parameterType="java.util.Map" resultMap="usrResourcesResultMap">
-		select  u.t_usrid as theUsrId,roleRes.* from
+		select  u.t_usrid,res.* from
 		jojo_usr u ,jojo_deprt_usr du ,jojo_deprt_usr_role dur,
-		(
-		SELECT
-		res.*,P.t_role_id
 
-
-		FROM jojo_role_prv P,
+		jojo_role_prv P,
 		jojo_prv v,jojo_resource res
 
-		WHERE P.t_prv_id = V.T_ID
-		and V.t_target_id = res.t_id
-
-		) roleRes
 		where u.t_id = du.t_usr_id
 		and du.t_id = dur.t_deprt_usr_id
-		and dur.t_role_id = roleRes.t_role_id
+		and P.t_prv_id = V.T_ID
+		and V.t_target_id = res.t_id
+		and dur.t_role_id = P.t_role_id
 	</select>
 
 	<select id="getUser" parameterType="java.util.Map" resultMap="userResultMap">

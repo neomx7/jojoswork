@@ -47,6 +47,7 @@ CREATE TABLE JOJO_DEPRT_USR
   T_ID character varying(64) NOT NULL, -- 逻辑主键
   T_DEPRT_ID character varying(64), -- 部门表ID,对应JOJO_DEPRT.T_ID
   T_USR_ID character varying(64), -- 用户表ID,对应JOJO_USR.T_ID
+  t_login_user character varying(64), -- 用户登录名，对应JOJO_USR.T_USRID
   CONSTRAINT JOJO_DEPRT_USR_pkey PRIMARY KEY (T_ID)
 )
 WITH (
@@ -59,6 +60,7 @@ COMMENT ON TABLE JOJO_DEPRT_USR
 COMMENT ON COLUMN JOJO_DEPRT_USR.T_ID IS '逻辑主键';
 COMMENT ON COLUMN JOJO_DEPRT_USR.T_DEPRT_ID IS '部门表ID,对应JOJO_DEPRT.T_ID';
 COMMENT ON COLUMN JOJO_DEPRT_USR.T_USR_ID IS '用户表ID,对应JOJO_USR.T_ID';
+COMMENT ON COLUMN jojo_deprt_usr.t_login_user IS '用户登录名，对应JOJO_USR.T_USRID';
 ----------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE JOJO_DEPRT_USR_ROLE
@@ -126,6 +128,8 @@ CREATE TABLE JOJO_RESOURCE
   T_LEVEL smallint, -- 树形结构，级别
   T_CODE character varying(64), -- 按级别编号，字典排序
   T_PARENT_ID character varying(64), -- 冗余字段，使用字典序时不需要
+  t_status smallint, -- 状态 0无效 1有效
+
   T_REMARK character varying(128), -- 备注
   CRT_USR character varying(64), -- CRT_USR
   CRT_TIME timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
@@ -147,6 +151,8 @@ COMMENT ON COLUMN JOJO_RESOURCE.T_URI IS '资源action';
 COMMENT ON COLUMN JOJO_RESOURCE.T_LEVEL IS '树形结构，级别';
 COMMENT ON COLUMN JOJO_RESOURCE.T_CODE IS '按级别编号，字典排序';
 COMMENT ON COLUMN JOJO_RESOURCE.T_PARENT_ID IS '冗余字段，使用字典序时不需要';
+COMMENT ON COLUMN JOJO_RESOURCE.t_status IS '状态 0无效 1有效';
+
 COMMENT ON COLUMN JOJO_RESOURCE.T_REMARK IS '备注';
 COMMENT ON COLUMN JOJO_RESOURCE.CRT_USR IS 'CRT_USR';
 COMMENT ON COLUMN JOJO_RESOURCE.CRT_TIME IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';

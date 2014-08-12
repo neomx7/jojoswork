@@ -22,6 +22,12 @@ public class ResourceDO extends BasePOJO
     private int level;
     private String code;
     private String parentId;
+
+    /**
+     * 冗余字段，
+     */
+    private String roleId;
+
     public int getType()
     {
         return type;

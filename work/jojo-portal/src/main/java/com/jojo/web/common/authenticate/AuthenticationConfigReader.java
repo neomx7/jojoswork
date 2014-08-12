@@ -20,8 +20,7 @@
 //
 ///**
 // *
-// * @author finley.yao
-// * @version $Id: AuthenticationConfigReader.java, v 0.1 2013-6-13 下午3:59:38 finley.yao Exp $
+// * @author JOJO
 // */
 //public class AuthenticationConfigReader {
 //

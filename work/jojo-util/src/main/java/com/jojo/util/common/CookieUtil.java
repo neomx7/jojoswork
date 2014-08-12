@@ -1,7 +1,7 @@
 /**
  *
  *JOJO
- * 
+ *
  */
 package com.jojo.util.common;
 
@@ -13,8 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  *
- * @author finley.yao
- * @version $Id: CookieUtil.java, v 0.1 2013-6-9 下午3:39:07 finley.yao Exp $
+ * @author JOJO
  */
 public class CookieUtil {
 

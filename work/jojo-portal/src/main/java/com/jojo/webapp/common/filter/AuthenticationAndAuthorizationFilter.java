@@ -22,14 +22,21 @@ import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.jojo.dal.common.postgre.domain.UserDO;
+import com.jojo.util.common.CookieUtil;
 import com.jojo.util.common.ExceptionUtil;
+import com.jojo.util.common.IPUtil;
+import com.jojo.web.common.authenticate.AuthenticationUtil;
+import com.jojo.web.common.context.AppContext;
+import com.jojo.web.common.context.AppContextHolder;
+import com.jojo.web.common.context.ContextHolder;
 
 /**
- * 认证授权拦截器，主要解决登录认证、功能授权
+ * 认证授权拦截器，主要解决登录认证、功能授权 <br>
+ * cookieUtil的作用只是记录用户登录过，至于用户当前最新的role和菜单是否有权限，需要每次filter时重新确认。<br>
  *
- * @author finley.yao
- * @version $Id: AuthenticationAndAuthorizationFilter.java, v 0.1 2013-6-13
- *          下午3:15:13 finley.yao Exp $
+ *
+ * @author jojo
  */
 public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
 {
@@ -48,7 +55,6 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
             notFilters.add(string);
         }
     }
-
 
     /**
      * @see org.springframework.web.filter.GenericFilterBean#initFilterBean()
@@ -86,94 +92,106 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
                 break;
             }
         }
-
         if (!doFilter)
         {
             filterChain.doFilter(request, response);
             return;
         }
 
-        WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+        AppContext sc = AppContextHolder.get();
+        if (sc != null) {
+            return;
+        }
+
+        sc = getAppContext(request, response);
+        AppContextHolder.setScppunContext(sc);
+
+
+//        WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+//        webApplicationContext.getBean(arg0)
         try
         {
 
-            uri = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
             // TODO 通过验证
-            // if (AuthenticationUtil.hasAuthentication(uri, sc.isLogon(),
-            // sc.getUserRole())) {
-            // filterChain.doFilter(request, response);
-            // return;
-            // }
+            if (AuthenticationUtil.hasAuthentication(sc.getUri(), sc.hasLogined(), sc.getUserId())) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             String redirectURL = uri;
             String encodeURL = URLEncoder.encode((redirectURL + (StringUtils.isBlank(request.getQueryString()) ? ""
                     : "?" + request.getQueryString())), "UTF-8");
-//
-            response.sendRedirect(isLogin() ?  "/index" : request.getContextPath() + "/login?redirectURL=" + encodeURL);
+            //
+            response.sendRedirect(sc.hasLogined() ? request.getContextPath() + "/index" : request.getContextPath() + "/login?redirectURL=" + encodeURL);
             return;
         }
         catch (Exception e)
         {
             logger.warn(e.getMessage(), e);
 
-            response.sendRedirect(request.getContextPath() +"/exception?tip=" + URLEncoder.encode(e.getMessage(), "UTF-8")
-                    + "&tipDesc=" + URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
+            response.sendRedirect(request.getContextPath() + "/exception?tip="
+                    + URLEncoder.encode(e.getMessage(), "UTF-8") + "&tipDesc="
+                    + URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
 
         }
         finally
         {
+            AppContextHolder.removeScppunContext();
         }
     }
 
-    private boolean isLogin()
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
-    // private ScppunContext getScppunContext(HttpServletRequest request,
-    // HttpServletResponse response) {
-    // ScppunContext sc = new ScppunContext();
-    //
-    // CookieUtil cookieUtil = new CookieUtil(request, response);
-    // final JOJOCid scppunCid = new JOJOCid(StringUtils.trimToEmpty(cookieUtil
-    // .getCookie(AuthenticationUtil.SCPPUN_CID)));
-    //
-    // if (scppunCid.isValid()) {
-    // sc.setUserId(scppunCid.getUserId());
-    // sc.setUserRole(scppunCid.getUserRole());
-    //
-    // PunUserService punUserService = (PunUserService) ContextHolder
-    // .getBean("punUserServiceImpl");
-    // PunUser punUser =
-    // punUserService.queryPunUserByUserId(scppunCid.getUserId());
-    //
-    // if (punUser != null && punUser.isValidUser()) {
-    // sc.setLogon(true);
-    // sc.setUserStatus(punUser.getStatus());
-    // sc.setUserName(punUser.getUserName());
-    //
-    // // 非系统管理员，初始化角色权限
-    // if (!punUser.isAdministrator()) {
-    // MenuService menuService = (MenuService) ContextHolder
-    // .getBean("menuServiceImpl");
-    // sc.setUris(menuService.findMenuLinksByIds(punUser.getRole().getMenuIds()));
-    // }
-    // }
-    // }
-    // sc.setUri(request.getRequestURI());
-    // sc.setIp(IPUtil.getIpAddr(request));
-    //
-    // return sc;
-    // }
+    /**
+     *
+     * <summary>
+     * [登录的Controller已经设定cookie的格式为loginUsrId:usrRole(逗号分隔字符串)]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    private AppContext getAppContext(HttpServletRequest request, HttpServletResponse response)
+    {
+        AppContext sc = new AppContext();
+
+        CookieUtil cookieUtil = new CookieUtil(request, response);
+        final JOJOCid appCid = new JOJOCid(StringUtils.trimToEmpty(cookieUtil.getCookie(AuthenticationUtil.APP_CID)));
+
+        if (appCid.isValid())
+        {
+            String loginUsrId = appCid.getUserId();
+            sc.setUserId(appCid.getUserId());
+
+            //从内存中获取用户信息
+            UserDO user = ContextHolder.getUserMap().get(appCid.getUserId());
+
+            if (user != null && ContextHolder.isValidUsr(loginUsrId))
+            {
+                sc.setLogon(true);
+                sc.setUserStatus(user.getStatus());
+                sc.setUserName(user.getTheName());
+            }
+        }
+//        sc.setUri(request.getRequestURI());
+        String uri = request.getRequestURI();
+        uri = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
+        sc.setUri(uri.replaceFirst(request.getContextPath(), ""));
+        sc.setIp(IPUtil.getIpAddr(request));
+
+        return sc;
+    }
 
     public static class JOJOCid
     {
         private final String[] jojoCidSplits;
 
-        public JOJOCid(String scppunCid)
+        public JOJOCid(String cid)
         {
-            jojoCidSplits = scppunCid.split(":");
+            jojoCidSplits = cid.split(":");
         }
 
         public String getUserId()
@@ -188,7 +206,7 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
 
         public boolean isValid()
         {
-            return jojoCidSplits.length == 2;
+            return jojoCidSplits.length >= 2;
         }
 
     }
@@ -198,12 +216,10 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
         return notFilter;
     }
 
-
     public void setNotFilter(String notFilter)
     {
         this.notFilter = notFilter;
     }
-
 
     public static Set<String> getNotfilters()
     {

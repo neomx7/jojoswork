@@ -5,6 +5,12 @@
  */
 package com.jojo.webapp.form;
 
+import java.util.List;
+
+import com.jojo.web.common.authenticate.AuthenticationUtil;
+import com.jojo.web.common.context.AppContext;
+import com.jojo.web.common.context.AppContextHolder;
+
 /**
  * <summary>
  *
@@ -32,6 +38,55 @@ public class BaseForm
     private String key;
     private String category;
     private int version = 0;
+
+
+    /**
+     * 获取上下文信息
+     *
+     * @return
+     */
+    public AppContext getAppContext() {
+        AppContext sc = AppContextHolder.get();
+        return sc == null ? new AppContext() : sc;
+    }
+
+    public boolean hasLogined() {
+        return getAppContext().hasLogined();
+    }
+
+    public String getContextUserName() {
+        return getAppContext().getUserName();
+    }
+
+    public boolean hasAuthentication(String uri) {
+        return AuthenticationUtil.hasAuthentication(uri, hasLogined(), getContextUserId());
+    }
+
+//    public boolean getAuthenticationUri(String uri) {
+//        return AuthenticationUtil.hasAuthentication(uri, hasLogined(), getContextUserId(),
+//            getContextURIs());
+//    }
+
+    public String getContextIP() {
+        return getAppContext().getIp();
+    }
+
+    public String getContextURI() {
+        return getAppContext().getUri();
+    }
+
+    public List<String> getContextURIs() {
+        return getAppContext().getUris();
+    }
+
+    public String getContextUserId() {
+        return getAppContext().getUserId();
+    }
+
+    public boolean isAdministrator() {
+        return AuthenticationUtil.USER_ID_ADMINISTRATOR.equals(getContextUserId());
+    }
+
 
     public String getTheId()
     {

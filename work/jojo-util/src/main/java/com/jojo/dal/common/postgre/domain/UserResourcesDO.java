@@ -17,10 +17,11 @@ import com.jojo.util.pojo.BasePOJO;
 public class UserResourcesDO extends BasePOJO
 {
 
-    /**   */
-    private static final long serialVersionUID = 0L;
 
-    private String theUsrId;
+    /**   */
+    private static final long serialVersionUID = -3497450446864915700L;
+
+    private String usrId;
 
     private List<ResourceDO> resourceDOs = new ArrayList<ResourceDO>(100);
 
@@ -39,8 +40,8 @@ public class UserResourcesDO extends BasePOJO
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("UserResourcesDO [theUsrId=");
-        builder.append(theUsrId);
+        builder.append("UserResourcesDO [usrId=");
+        builder.append(usrId);
         builder.append(", resourceDOs=");
         builder.append(resourceDOs);
         builder.append(", toString()=");
@@ -49,15 +50,16 @@ public class UserResourcesDO extends BasePOJO
         return builder.toString();
     }
 
-    public String getTheUsrId()
+    public String getUsrId()
     {
-        return theUsrId;
+        return usrId;
     }
 
-    public void setTheUsrId(String theUsrId)
+    public void setUsrId(String usrId)
     {
-        this.theUsrId = theUsrId;
+        this.usrId = usrId;
     }
+
 
 
 
