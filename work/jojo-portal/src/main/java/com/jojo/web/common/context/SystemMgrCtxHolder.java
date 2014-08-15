@@ -5,18 +5,23 @@
  */
 package com.jojo.web.common.context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.jojo.biz.SysMgrBiz;
 import com.jojo.dal.common.postgre.domain.OrgUserDO;
+import com.jojo.dal.common.postgre.domain.ResourceDO;
 import com.jojo.dal.common.postgre.domain.RoleDO;
 import com.jojo.dal.common.postgre.domain.UserDO;
 import com.jojo.dal.common.postgre.domain.UserResourcesDO;
+import com.jojo.util.biz.bo.MenuBO;
+import com.jojo.util.service.model.MenuMO;
 
 /**
  * <summary>
@@ -36,6 +41,63 @@ public class SystemMgrCtxHolder
 {
     @Autowired
     private SysMgrBiz sysMgrBiz;
+
+    /**
+     *
+     * <summary>
+     * [得到登录用户某级菜单的下一级子菜单]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param parentId
+     * @param parentCode
+     * @return
+     */
+    public List<MenuBO> getSubMenus4NextLv(String parentId,String parentCode)
+    {
+        //AppContextHolder.get().getUserName()
+        List<ResourceDO> resourceDOs = ContextHolder.getUsr2ResourceMap().get("jojo");
+        List<MenuBO> subMenus = new ArrayList<MenuBO>(10);
+//String menuId = StringUtils.isBlank(parentId) ? "": parentId;
+String menuCode = StringUtils.isBlank(parentCode) ? "": parentCode;
+
+
+        if (resourceDOs != null)
+        {
+
+            for (ResourceDO resourceDO : resourceDOs)
+            {
+//                if (StringUtils.isBlank(resourceDO.getCode()) || StringUtils.isBlank(resourceDO.getParentId()))
+//                {
+//                    continue;
+//                }
+                //去掉当前菜单id
+//                if (resourceDO.getTheId().equals(parentId))
+//                {
+//                }
+                //只保留下一级的菜单列表，默认的菜单编号是01-99个，实在不够可以考虑使用Aa-Zz
+                if (resourceDO.getCode().length() ==  (menuCode.length() + 2) && resourceDO.getCode().startsWith(menuCode))
+                {
+                    MenuBO menuBO = new MenuBO();
+                    menuBO.setAction(resourceDO.getUri());
+                    menuBO.setDictCode(resourceDO.getCode());
+                    menuBO.setLevel(resourceDO.getLevel());
+                    menuBO.setParentId(parentId);
+//                    menuMO.setSortWay(resourceDO.get);
+                    menuBO.setStatus(resourceDO.getStatus());
+                    menuBO.setTheId(resourceDO.getTheId());
+                    menuBO.setTheName(resourceDO.getTheName());
+                    menuBO.setTheRemark(resourceDO.getTheRemark());
+                    subMenus.add(menuBO);
+                }
+            }
+
+        }
+        return subMenus;
+    }
+
 
     /**
      *

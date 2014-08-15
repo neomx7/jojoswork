@@ -23,45 +23,13 @@
 														<div class="v-label v-label-h1 h1 v-label-logo " style="width: 100%;"></div>
 													</div>
 												</div>
-												<!--
-												<div id="menu_1#001" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
-													<div style="float: left; margin-left: 0px;">
-														<div tabindex="0" class="v-button v-button-main-menu-button main-menu-button v-button-link link v-button-active active" role="button" style="height: 54px; width: 80px;">
-															<span class="v-button-wrap">
-																<img alt="" class="v-icon" src="${rc.contextPath}/styles/activiti/img/mm-tasks.png">
-																<span class="v-button-caption">工作提醒</span>
-															</span>
-														</div>
-													</div>
-												</div>
-												-->
-												<div id="menu_1#002" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
-													<div style="float: left; margin-left: 0px;">
-														<div tabindex="0" class="v-button v-button-main-menu-button main-menu-button v-button-link link" role="button" style="height: 54px; width: 90px;">
-															<span class="v-button-wrap">
-																<img alt="" class="v-icon" src="${rc.contextPath}/styles/activiti/img/mm-manage.png">
-																<span class="v-button-caption">管理</span>
-															</span>
-														</div>
-													</div>
-												</div>
-												<div id="menu_1#003" style="height: 54px; width: auto; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
-													<div style="float: left; margin-left: 0px;">
-														<div tabindex="0" class="v-button v-button-main-menu-button main-menu-button v-button-link link" role="button" style="height: 54px; width: 90px;">
-															<span class="v-button-wrap">
-																<img alt="" class="v-icon" src="${rc.contextPath}/styles/activiti/img/mm-process.png">
-																<span class="v-button-caption">物料申请</span>
-															</span>
-														</div>
-													</div>
-												</div>
 
+												<#-- 这里放置用户信息 -->
 												<div style="height: 54px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 649px;">
 														<div tabindex="0" class="v-menubar v-menubar-person person">
 															<span class="v-menubar-menuitem v-menubar-menuitem-person-menu">
-																<span class="v-menubar-submenu-indicator">►</span>
-																<span class="v-menubar-menuitem-caption">Kermit The Frog</span>
+																<span class="v-menubar-menuitem-caption">JOJO</span>
 															</span>
 														</div>
 													</div>
@@ -76,40 +44,6 @@
 					</div>
 
 					<#-- 快速导航菜单 -->
-					<div style="height: 36px; overflow: hidden; padding-left: 0px; padding-top: 0px; left: 0px; top: 0px; width: 100%;">
-						<div style="float: left; margin-left: 0px;width: 100%;">
-							<div class="v-horizontallayout v-horizontallayout-toolbar toolbar" style="overflow: hidden; height: 36px; width: 100%;">
-								<div style="overflow: hidden; margin: 0px 10px; width: 100%; height: 36px;">
-									<!-- #遍历每个2级菜单 -->
-									<div style="height: 27px; width: 100%; overflow: hidden; float: left; padding-left: 0px; padding-top: 9px;">
-										<div style="float: left; margin-left: 0px;width:100%;">
-											<div class="v-customcomponent v-customcomponent-clickable clickable" style="width: 100%; height: 18px;">
-												<div id="div_menu_2#parent" class="v-horizontallayout" style="overflow: hidden; width: 100%;; height: 18px;">
-													<div style="overflow: hidden; margin: 0px; width: 100%; height: 18px;">
-														<div style="height: 18px; width: 100%; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
-															<div style="float: left; margin-left: 0px; width:100%;" id="div_menu_2">
-																<div id="menu_2#000" tabindex="0" class="v-button v-button-link link" role="button" style="width: 69px;">
-																	<span class="v-button-wrap"><span class="v-button-caption">你赢了</span></span>
-																</div>
-															</div>
-														</div>
-														<div style="height: 9px; width: 0px; overflow: hidden; float: left; padding-left: 0px; padding-top: 9px;">
-															<div style="float: left; margin-left: 0px;">
-																<div tabindex="0" class="v-button" role="button" style="display: none;">
-																	<span class="v-button-wrap"><span class="v-button-caption"></span></span>
-																</div>
-															</div>
-														</div>
-														<div style="width: 0px; height: 0px; clear: both; overflow: hidden;"></div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -119,64 +53,12 @@
 <!-- #LeftPane -->
 <!-- allowOverflow auto-attached by option: west__showOverflowOnHover = true -->
 <div id="LeftPane" class="ui-layout-west">
-	<div style="height: auto; overflow: hidden; padding-left: 0px; padding-top: 0px; position: absolute; left: 0px; top: 36px; width: 100%;">
-		<div style="float: left; margin-left: 0px;">
-			<div class="v-table v-table-task-list task-list v-table-scrollable scrollable" style="height: 100%; width: 100%;">
-				<div class="v-table-header-wrap" style="width: 100%; display: none;">
-					<div class="v-table-header" style="overflow: hidden;">
-						<div style="width: 100%;">
-							<table>
-								<tbody>
-									<tr>
-										<td style="width: 100%;">
-											<div class="v-table-resizer"></div>
-											<div class="v-table-sort-indicator"></div>
-											<div class="v-table-caption-container" style="width: 100%;"></div>
-										</td>
-										<td style="width: 100%;">
-											<div class="v-table-resizer"></div>
-											<div class="v-table-sort-indicator"></div>
-											<div class="v-table-caption-container" style="width: 100%;"></div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-					<div class="v-table-column-selector" style="display: none;"></div>
-				</div>
-				<div tabindex="-1" class="v-scrollable v-table-body-wrapper v-table-body" style="zoom: 1; position: relative; overflow: auto; height: 100%; width: 100%;">
-					<div style="height: 100%;">
-						<div class="v-table-row-spacer" style="height: 0px;"></div>
-						<table class="v-table-table" id="tbl_menu_3">
-							<tbody>
-							</tbody>
-						</table>
-						<div class="v-table-row-spacer" style="height: 0px;"></div>
-					</div>
-					<div tabindex="0" style="position: fixed; top: 0px; left: 0px;"></div>
-				</div>
-				<div class="v-table-footer-wrap" style="display: none; width: 100%;">
-					<div class="v-table-footer" style="overflow: hidden;">
-						<div style="width: 100%;">
-							<table>
-								<tbody>
-									<tr>
-										<td style="width: 33px;">
-											<div class="v-table-footer-container" style="width: 21px;">&nbsp;
-											</div>
-										</td>
-										<td style="width: 100%;">
-											<div class="v-table-footer-container" style="width: 100%;">&nbsp;
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
+	<div style="height: 100%;  width: 100%;">
+		<div id="accordion">
+			<#list form.menus as menulist>
+				  <h3 id="menu#${menulist.theId}" code="code#${menulist.dictCode}">${menulist.theName}</h3>
+				  <div id="div#${menulist.theId}"></div>
+			</#list>
 		</div>
 	</div>
 </div>

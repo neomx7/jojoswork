@@ -43,9 +43,9 @@ public class MenuBizImpl implements MenuBiz
      * @see com.jojo.biz.MenuBiz#queryChildren(java.lang.String)
      */
     @Override
-    public List<MenuBO> queryChildren(String parentId)
+    public List<MenuBO> queryChildren(String parentId, String parentCode)
     {
-        List<MenuMO> mos = menuService.queryChildren(parentId);
+        List<MenuMO> mos = menuService.queryChildren(parentId, parentCode);
         List<MenuBO> list = new ArrayList<MenuBO>(mos.size());
         for (MenuMO mo : mos)
         {

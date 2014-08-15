@@ -30,5 +30,5 @@ public interface MenuBiz
     * @param parentId
     * @return
     */
-   public List<MenuBO> queryChildren(String parentId);
+   public List<MenuBO> queryChildren(String parentId, String parentCode);
 }

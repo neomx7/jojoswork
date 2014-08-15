@@ -7,6 +7,8 @@ package com.jojo.webapp.Controller;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jojo.biz.MenuBiz;
 import com.jojo.util.biz.bo.MenuBO;
+import com.jojo.web.common.context.SystemMgrCtxHolder;
 
 /**
  * <summary>
@@ -34,6 +37,9 @@ public class MenuController
 
     @Autowired
     private MenuBiz menuBiz;
+
+    @Resource(name="systemMgrCtxHolder")
+    private SystemMgrCtxHolder systemMgrCtxHolder;
 
     /**
      *
@@ -52,9 +58,10 @@ public class MenuController
     @ResponseBody
     public List<MenuBO> show(@RequestBody  MenuBO bo)
     {
-        logger.info("menuId : [{}]", bo.getTheId());
+        logger.info("menuId : [{}],menuCode : [{}]", new Object[]{ bo.getTheId() ,bo.getDictCode()});
 
-        List<MenuBO> list = menuBiz.queryChildren(bo.getTheId());
+        List<MenuBO> list = systemMgrCtxHolder.getSubMenus4NextLv(bo.getTheId(),bo.getDictCode());
+//                menuBiz.queryChildren(bo.getTheId(), bo.getDictCode());
         return list;
     }
 

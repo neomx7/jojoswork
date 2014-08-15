@@ -172,7 +172,18 @@
 		and P.t_prv_id = V.T_ID
 		and V.t_target_id = res.t_id
 		and dur.t_role_id = P.t_role_id
+		order by res.T_CODE asc
 	</select>
+
+	<!-- 全部子菜单查询 -->
+<!-- 	<select id="queryAllChildrenMenus" parameterType="java.util.Map" resultMap="resourceResultMap">
+		select  r.* from jojo_resource r
+			where r.t_code  like ${code} '%'
+			and r.t_code != #{code}
+			and
+		and u.t_usrid = ${}
+	</select> -->
+
 
 	<select id="getUser" parameterType="java.util.Map" resultMap="userResultMap">
 	</select>

@@ -28,32 +28,32 @@ public class DemoListController
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    /**
-     *
-     * <summary>
-     * <p>
-     * 点击左侧边栏的3级菜单,显示内容页面
-     * </p>
-     * </summary>
-     *
-     * @author jojo
-     *
-     * @return
-     */
-    @RequestMapping(value = "/demo/toList")
-    public String toList()
-    {
-        logger.info("match url 4 '/demo/toList'");
-     // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
-        return "view/demo-list";
-    }
+//    /**
+//     *
+//     * <summary>
+//     * <p>
+//     * 点击左侧边栏的3级菜单,显示内容页面
+//     * </p>
+//     * </summary>
+//     *
+//     * @author jojo
+//     *
+//     * @return
+//     */
+//    @RequestMapping(value = "/demo/toList")
+//    public String toList()
+//    {
+//        logger.info("match url 4 '/demo/toList'");
+//     // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
+//        return "view/demo-list";
+//    }
 
 
 
-    @RequestMapping(value = "/demo/toCreateApplyList")
+    @RequestMapping(value = "/biz/toCreateApplyList")
     public String toCreateApplyList()
     {
-        logger.info("match url 4 '/demo/toCreateApplyList'");
+        logger.info("match url 4 '/biz/toCreateApplyList'");
      // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
         return "view/createApply-list";
     }
@@ -69,10 +69,10 @@ public class DemoListController
      *
      * @return
      */
-    @RequestMapping(value = "/demo/toMyTaskList")
+    @RequestMapping(value = "/process/toTODOTaskList")
     public String toMyTaskList()
     {
-        logger.info("match url 4 '/demo/toMyTaskList'");
+        logger.info("match url 4 '/process/toTODOTaskList'");
      // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
         return "view/todoTaskList-list";
     }
@@ -90,10 +90,10 @@ public class DemoListController
      * @param model
      * @return
      */
-    @RequestMapping(value = "/demo/toProcessTask")
+    @RequestMapping(value = "/process/toProcessTask")
     public String toProcessTaskList(@RequestBody ProcessTaskForm form,@ModelAttribute("form") ProcessTaskForm model)
     {
-        logger.info("match url 4 '/demo/toProcessTask'");
+        logger.info("match url 4 '/process/toProcessTask'");
         model.setTaskId(form.getTaskId());
      // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
         return "view/processTask";

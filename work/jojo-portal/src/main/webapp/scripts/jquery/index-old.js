@@ -184,24 +184,6 @@ $(document).ready(function()
             position : "center" // 窗口显示的位置
         });
 
-        //左侧菜单栏
-        var icons = {
-                header: "ui-icon-circle-arrow-e",
-                activeHeader: "ui-icon-circle-arrow-s"
-              };
-              $( "#accordion" ).accordion({
-                icons: icons,
-                heightStyle: "content"
-              });
-              $( "#toggle" ).button().click(function() {
-                if ( $( "#accordion" ).accordion( "option", "icons" ) ) {
-                  $( "#accordion" ).accordion( "option", "icons", null );
-                } else {
-                  $( "#accordion" ).accordion( "option", "icons", icons );
-                }
-              });
-
-
      //    alert("-------[Done]-------");
     }
     catch (e)
@@ -219,7 +201,7 @@ $(document).ready(function()
 function bindMenuEvents()
 {
     // ajax 触发 点击1级菜单刷新 2级top菜单栏
-    $("[id^='menu#']")
+    $("div[id^='menu_1#']")
             .each(
                     function()
                     {
@@ -228,6 +210,16 @@ function bindMenuEvents()
                                         "click",
                                         function()
                                         {
+                                            // 去掉全部元素的active样式(下面的白色三角底)
+                                            $("div[id^='menu_1#']").each(function()
+                                            {
+                                                $(this).children(1).children(1).removeClass("v-button-active active");
+                                            });
+
+                                            // 当前元素置为 active 样式
+                                            var activingDiv = $(this).children(1).children(1);
+                                            activingDiv.addClass("v-button-active").addClass("active");
+
                                             var jsonData = {};
                                             var menduId = ($(this).attr("id").split("#")[1]);
                                             if (jsonData["theId"] && jsonData["theId"].push)
@@ -238,8 +230,8 @@ function bindMenuEvents()
                                             {
                                                 jsonData["theId"] = (menduId || '');
                                             }
-                                            jsonData["dictCode"] = (($(this).attr("code").split("#")[1]) || '');
                                             jsonData = $.toJSON(jsonData);
+                                            // = {"theId" : "'" + menduId + "'"};
                                             $
                                                     .ajax(
                                                     {
@@ -254,22 +246,20 @@ function bindMenuEvents()
                                                             // json格式的 List<MenuMO> 数组字符串
                                                             // 遍历 list, 并生成 html
                                                             var josnArray = eval(dataResult);
-                                                            var divEl = $("div[id='div#"+menduId+"']");
-                                                            divEl.empty();
+                                                            $("div[id='div_menu_2']").empty();
                                                             for (var idx = 0; idx < josnArray.length; idx++)
                                                             {
-//                                                                 alert(josnArray[idx].theId + josnArray[idx].action);
-                                                                var lv2MenuHtml = "<p>"
-                                                                    + "<span class='v-button-caption' "
-                                                                    + "uri='" + josnArray[idx].action + "'"
-                                                                    + ">"
-                                                                    + josnArray[idx].theName
-                                                                    + "</span>"
-                                                                    + "</p>";
-                                                                divEl.append(lv2MenuHtml);
+                                                                // alert(josnArray[i].theId + josnArray[i].theName);
+                                                                $("div[id='div_menu_2']")
+                                                                        .append(
+                                                                                "<div tabindex=\"0\" class=\"v-button v-button-link link\" role=\"button\" id=\"menu_2#"
+                                                                                        + josnArray[idx].theId
+                                                                                        + "\"  style=\"width: 69px;\"><span class=\"v-button-wrap\"><span class=\"v-button-caption\">"
+                                                                                        + josnArray[idx].theName
+                                                                                        + "</span></span></div>");
                                                             }
                                                             // do sth more...
-                                                       //     bind2LvMenuEvents();
+                                                            bind2LvMenuEvents();
                                                         },
                                                         error : function(XMLHttpRequest, textStatus, errorThrown)
                                                         {
@@ -285,7 +275,7 @@ function bindMenuEvents()
 function bind2LvMenuEvents()
 {
     // 2级菜单
-    $("[id^='menu#']")
+    $("div[id^='menu_2#']")
             .each(
                     function()
                     {
@@ -296,6 +286,15 @@ function bind2LvMenuEvents()
                                         "click",
                                         function()
                                         {
+                                            // 去掉全部元素的active样式(下面的白色三角底)
+                                            $("div[id^='menu_2#']").each(function()
+                                            {
+                                                $(this).removeClass("v-button-active active");
+                                            });
+
+                                            // 当前元素置为 active 样式
+                                            $(this).addClass("v-button-active").addClass("active");
+
                                             // ajax 触发 点击2级菜单刷新3级左侧菜单栏
                                             var jsonData = {};
                                             var menduId = ($(this).attr("id").split("#")[1]);
@@ -356,6 +355,7 @@ function bind2LvMenuEvents()
                                                                                         + "</div></td></tr>");
                                                             }
                                                             // do sth more...
+                                                            bind3LvMenuEvents();
                                                         },
                                                         error : function(XMLHttpRequest, textStatus, errorThrown)
                                                         {
@@ -372,6 +372,62 @@ function bind2LvMenuEvents()
 // $(mainTabs).tabs('add',("#tabs-"+theId), menuName);
 // }
 
+/**
+ *
+ */
+function bind3LvMenuEvents()
+{
+    // 3级菜单,在内容区域里增加新标签(添加时根据 id 去重复),标签内容使用 ajax 的页面返回的 html 填充
+    $("tr[id^='menu_3#']").each(function()
+    {
+        // 先解除绑定
+        $(this).unbind("click");
+        $(this).bind("click", function()
+        {
+            // 去掉全部元素的select样式(淡蓝色背景)
+            $("tr[id^='menu_3#']").each(function()
+            {
+                $(this).removeClass("v-selected");
+            });
+
+            // TODO 如果标签超过7个,不允许再新增;
+            // TODO 如果标签已存在,不允许再新增;
+
+            // 当前元素置为 active 样式
+            $(this).addClass("v-selected");
+            var theId = $(this).attr("theId");
+            var menuName = $(this).attr("theName");
+
+            // ajax 刷新action 到内容区域,如果有额外参数,通过 action附带
+            var textData = $(this).attr("extraParams");
+            textData = (textData == null ? "" : textData || '');
+            var action = ($(this).attr("action"));
+            // alert(action);
+            $.ajax(
+            {
+                type : 'POST',
+                contentType : 'application/json',
+                url : action,
+                data : textData,
+                dataType : 'html',
+                success : function(dataResult)
+                {
+                    // 这里把ajax的结果(html内容)通过js替换dom中的元素
+                    // 通过 jquery-UI 放入新的标签内
+                    addTab(tabs, menuName, dataResult, theId);
+                    // addMainTab(menuName, dataResult, theId);
+                    // do sth more...
+
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert("error info :" + errorThrown)
+                }
+            });
+
+        });
+    });
+}
 
 function initLayout()
 {

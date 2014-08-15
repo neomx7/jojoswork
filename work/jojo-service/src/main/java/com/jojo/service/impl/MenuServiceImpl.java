@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import com.jojo.dal.common.postgre.domain.ResourceDO;
 import com.jojo.facade.service.MenuService;
 import com.jojo.util.service.model.MenuMO;
 
@@ -29,22 +30,29 @@ public class MenuServiceImpl implements MenuService
 {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
+
+
     /*
      * (non-Javadoc)
      *
      * @see com.jojo.service.MenuService#queryChildren(java.lang.String)
      */
     @Override
-    public List<MenuMO> queryChildren(String parentId)
+    public List<MenuMO> queryChildren(String parentId, String parentCode)
     {
 
-        List<MenuMO> list = new ArrayList<MenuMO>();
+        List<MenuMO> list = null;
         if (StringUtils.isBlank(parentId))
         {
-            return list;
+            return new ArrayList<MenuMO>();
         }
 
-        // TODO 先造内存数据
+
+
+
+        /*// TODO 先造内存数据
         if (parentId.trim().equals("001"))
         {
             MenuMO mo = new MenuMO();
@@ -133,7 +141,7 @@ public class MenuServiceImpl implements MenuService
             mo.setAction("demo/toMyTaskList");
             list.add(mo);
 
-        }
+        }*/
 
         return list;
     }

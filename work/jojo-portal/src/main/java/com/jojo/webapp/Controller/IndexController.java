@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jojo.util.biz.bo.UserBO;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
+import com.jojo.web.common.context.SystemMgrCtxHolder;
 import com.jojo.webapp.form.IndexForm;
 
 /**
@@ -41,11 +43,17 @@ public class IndexController
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Resource(name="systemMgrCtxHolder")
+    private SystemMgrCtxHolder systemMgrCtxHolder;
+
     // , method = RequestMethod.GET
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String test(@ModelAttribute("form") IndexForm form)
+    @RequestMapping(value = "/index")
+    public String index(@ModelAttribute("form") IndexForm form)
     {
         logger.info("enter index navigation.");
+
+        form.setMenus(systemMgrCtxHolder.getSubMenus4NextLv(form.getMenuId(), form.getMenuCode()));
+
         return "view/index";  // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
     }
 
