@@ -8,6 +8,7 @@ package com.jojo.webapp.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jojo.dal.common.postgre.domain.UserDO;
 import com.jojo.util.biz.bo.MenuBO;
 
 /**
@@ -25,6 +26,8 @@ public class IndexForm extends BaseForm
     private String menuId;
 
     private String menuCode;
+
+    private UserDO userDO = new UserDO();
 
     public List<MenuBO> getMenus()
     {
@@ -54,6 +57,16 @@ public class IndexForm extends BaseForm
     public void setMenuCode(String menuCode)
     {
         this.menuCode = menuCode;
+    }
+
+    public UserDO getUserDO()
+    {
+        return userDO;
+    }
+
+    public void setUserDO(UserDO userDO)
+    {
+        this.userDO = userDO;
     }
 
 

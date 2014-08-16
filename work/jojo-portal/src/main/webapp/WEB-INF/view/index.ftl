@@ -29,7 +29,7 @@
 													<div style="float: left; margin-left: 649px;">
 														<div tabindex="0" class="v-menubar v-menubar-person person">
 															<span class="v-menubar-menuitem v-menubar-menuitem-person-menu">
-																<span class="v-menubar-menuitem-caption">JOJO</span>
+																<span class="v-menubar-menuitem-caption">${form.userDO.usrId}</span>
 															</span>
 														</div>
 													</div>
@@ -56,7 +56,7 @@
 	<div style="height: 100%;  width: 100%;">
 		<div id="accordion">
 			<#list form.menus as menulist>
-				  <h3 id="menu#${menulist.theId}" code="code#${menulist.dictCode}">${menulist.theName}</h3>
+				  <h3 id="menu1#${menulist.theId}" code="code#${menulist.dictCode}">${menulist.theName}</h3>
 				  <div id="div#${menulist.theId}"></div>
 			</#list>
 		</div>

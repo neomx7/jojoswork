@@ -63,7 +63,7 @@ public class ApplyController
      * @param httpServletRequest
      * @return
      */
-    @RequestMapping(value = "/demo/createApplyList")
+    @RequestMapping(value = "/process/createApplyList")
     @ResponseBody
     public DataResponse<ApplyBO> queryApply(
             @RequestParam(defaultValue = "1", value = "page") String page,
@@ -115,7 +115,7 @@ public class ApplyController
      * @param httpServletRequest
      * @return
      */
-    @RequestMapping(value = "/demo/qryMyTaskList")
+    @RequestMapping(value = "/process/qryMyTaskList")
     @ResponseBody
     public DataResponse<WorkFlowTaskDTO> queryMyTaskList(
             @RequestParam(defaultValue = "1", value = "page") String page,

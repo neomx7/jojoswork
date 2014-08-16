@@ -8,7 +8,10 @@ package com.jojo.webapp.Controller;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jojo.biz.MenuBiz;
 import com.jojo.util.biz.bo.MenuBO;
+import com.jojo.util.common.CookieUtil;
+import com.jojo.web.common.authenticate.AuthenticationUtil;
+import com.jojo.web.common.context.AppContextHolder;
 import com.jojo.web.common.context.SystemMgrCtxHolder;
+import com.jojo.webapp.common.filter.AuthenticationAndAuthorizationFilter.JOJOCid;
 
 /**
  * <summary>
@@ -31,14 +38,14 @@ import com.jojo.web.common.context.SystemMgrCtxHolder;
  *
  */
 @Controller
-public class MenuController
+public class MenuController extends BaseController
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private MenuBiz menuBiz;
 
-    @Resource(name="systemMgrCtxHolder")
+    @Resource(name = "systemMgrCtxHolder")
     private SystemMgrCtxHolder systemMgrCtxHolder;
 
     /**
@@ -56,28 +63,28 @@ public class MenuController
      */
     @RequestMapping(value = "/menu/show", method = RequestMethod.POST)
     @ResponseBody
-    public List<MenuBO> show(@RequestBody  MenuBO bo)
+    public List<MenuBO> show(@RequestBody MenuBO bo, HttpServletRequest request, HttpServletResponse response)
     {
-        logger.info("menuId : [{}],menuCode : [{}]", new Object[]{ bo.getTheId() ,bo.getDictCode()});
+        logger.info("menuId : [{}],menuCode : [{}]", new Object[] { bo.getTheId(), bo.getDictCode() });
 
-        List<MenuBO> list = systemMgrCtxHolder.getSubMenus4NextLv(bo.getTheId(),bo.getDictCode());
-//                menuBiz.queryChildren(bo.getTheId(), bo.getDictCode());
+        List<MenuBO> list = systemMgrCtxHolder.getSubMenus4NextLv(bo.getTheId(), bo.getDictCode(),getLoginUsrId(request, response));
+        // menuBiz.queryChildren(bo.getTheId(), bo.getDictCode());
         return list;
     }
 
-    //ajax 示例
-//  PrintWriter out = null;
-//  String resultJson = "";
-//  response.setContentType("text/html;charset=UTF-8");
-//  response.setCharacterEncoding("UTF-8");
-//  try
-//  {
-//      out = response.getWriter();
-//      out.write(resultHtml);
-//  }
-//  catch (IOException e)
-//  {
-//      logger.error("parse html failed. exception info : [{}]", e);
-//  }
+    // ajax 示例
+    // PrintWriter out = null;
+    // String resultJson = "";
+    // response.setContentType("text/html;charset=UTF-8");
+    // response.setCharacterEncoding("UTF-8");
+    // try
+    // {
+    // out = response.getWriter();
+    // out.write(resultHtml);
+    // }
+    // catch (IOException e)
+    // {
+    // logger.error("parse html failed. exception info : [{}]", e);
+    // }
 
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ import com.jojo.webapp.form.IndexForm;
  *
  */
 @Controller
-public class IndexController
+public class IndexController extends BaseController
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -48,11 +49,12 @@ public class IndexController
 
     // , method = RequestMethod.GET
     @RequestMapping(value = "/index")
-    public String index(@ModelAttribute("form") IndexForm form)
+    public String index(@ModelAttribute("form") IndexForm form,HttpServletRequest request,HttpServletResponse response)
     {
         logger.info("enter index navigation.");
-
-        form.setMenus(systemMgrCtxHolder.getSubMenus4NextLv(form.getMenuId(), form.getMenuCode()));
+        String loginUserName = getLoginUsrId(request, response);
+        form.setMenus(systemMgrCtxHolder.getSubMenus4NextLv(form.getMenuId(),form.getMenuCode(), loginUserName));
+        form.getUserDO().setUsrId(loginUserName);
 
         return "view/index";  // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
     }

@@ -20,11 +20,11 @@ public class AppContextHolder {
         return APP_CONTEXT_HOLDER.get();
     }
 
-    public static void setScppunContext(AppContext context) {
+    public static void setAppContext(AppContext context) {
         APP_CONTEXT_HOLDER.set(context);
     }
 
-    public static void removeScppunContext() {
+    public static void removeAppContext() {
         APP_CONTEXT_HOLDER.set(null);
     }
 }

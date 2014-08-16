@@ -74,7 +74,7 @@ $(function()
     ];
     try
     {
-        initJqGird('todoTaskGrid', 'demo/qryMyTaskList', colNames, colModel, 'number', '待办任务列表');
+        initJqGird('todoTaskGrid', 'process/qryMyTaskList', colNames, colModel, 'number', '待办任务列表');
 
         var currGrid = $('#todoTaskGrid');
         // 重载jqGrid的事件，单击事件
@@ -142,7 +142,7 @@ function toProcessTODOTask(tblId, rowid)
     {
         type : 'POST',
         contentType : 'application/json',
-        url : 'demo/toProcessTask',
+        url : 'process/toProcessTask',
         data : datajson,
         dataType : 'html',
         success : function(data)

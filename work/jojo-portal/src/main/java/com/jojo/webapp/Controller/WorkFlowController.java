@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
-package com.jojo.webapp.Controller.workflow;
+package com.jojo.webapp.Controller;
 
 import java.awt.Point;
 import java.io.IOException;

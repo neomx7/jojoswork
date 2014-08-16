@@ -349,13 +349,14 @@ input.login-field {
 }
 
 /* ------
-   Header
+   Header #007dc3  url(img/bg-header.gif)
    ------ */
 .header {
 	padding:0 12px 0 10px;
 	height:1%;
 	position:relative;
-	background:#007dc3 url(img/bg-header.gif) repeat-x;
+	border: 1px solid #2694e8;
+	background:#3baae3  url("img/ui-bg_glass_50_3baae3_1x400.png")  repeat-x;
 }
 
 .header .v-button .v-button-wrap {

@@ -219,7 +219,7 @@ $(document).ready(function()
 function bindMenuEvents()
 {
     // ajax 触发 点击1级菜单刷新 2级top菜单栏
-    $("[id^='menu#']")
+    $("[id^='menu1#']")
             .each(
                     function()
                     {
@@ -260,16 +260,19 @@ function bindMenuEvents()
                                                             {
 //                                                                 alert(josnArray[idx].theId + josnArray[idx].action);
                                                                 var lv2MenuHtml = "<p>"
-                                                                    + "<span class='v-button-caption' "
+                                                                    + "<span class='v-button-caption ' "
+                                                                    + "id='menu2#" + josnArray[idx].theId + "'"
+                                                                    + "menuName='" + josnArray[idx].theName + "'"
                                                                     + "uri='" + josnArray[idx].action + "'"
-                                                                    + ">"
+//                                                                    + "extraParams='" + josnArray[idx].extraParams + "'"
+                                                                    + "><a href='###' style='color: #06c;' >"
                                                                     + josnArray[idx].theName
-                                                                    + "</span>"
+                                                                    + "</a></span>"
                                                                     + "</p>";
                                                                 divEl.append(lv2MenuHtml);
                                                             }
                                                             // do sth more...
-                                                       //     bind2LvMenuEvents();
+                                                            bind2LvMenuEvents();
                                                         },
                                                         error : function(XMLHttpRequest, textStatus, errorThrown)
                                                         {
@@ -285,7 +288,7 @@ function bindMenuEvents()
 function bind2LvMenuEvents()
 {
     // 2级菜单
-    $("[id^='menu#']")
+    $("[id^='menu2#']")
             .each(
                     function()
                     {
@@ -296,66 +299,34 @@ function bind2LvMenuEvents()
                                         "click",
                                         function()
                                         {
+                                            var theId =  ($(this).attr("id").split("#")[1]);
                                             // ajax 触发 点击2级菜单刷新3级左侧菜单栏
-                                            var jsonData = {};
-                                            var menduId = ($(this).attr("id").split("#")[1]);
-                                            if (jsonData["theId"] && jsonData["theId"].push)
+                                            var menuName = $(this).attr("menuName");
+                                            // ajax 刷新action 到内容区域,如果有额外参数,通过 action附带
+                                            var textData = $(this).attr("extraParams");
+                                            textData = (textData == null ? "" : textData || '');
+                                            var action = ($(this).attr("uri"));
+                                            if (action.indexOf('/') == 0)
                                             {
-                                                jsonData["theId"].push(menduId || '');
+                                                action =  action.substring(1,action.length);
                                             }
-                                            else
-                                            {
-                                                jsonData["theId"] = (menduId || '');
-                                            }
-                                            jsonData = $.toJSON(jsonData);
+//                                            alert(action);
                                             $
                                                     .ajax(
                                                     {
                                                         type : 'POST',
                                                         contentType : 'application/json',
-                                                        url : 'menu/show',
-                                                        data : jsonData,
+                                                        url : action,
+                                                        data : textData,
                                                         dataType : 'html',
                                                         success : function(dataResult)
                                                         {
                                                             // 这里把ajax的结果(html内容)通过js替换dom中的元素
-                                                            // json格式的 List<MenuMO> 数组字符串
-                                                            // 遍历 list, 并生成 html
-                                                            var josnArray = eval(dataResult);
-                                                            $("table[id='tbl_menu_3']").children("tbody").empty();
-                                                            for (var idx = 0; idx < josnArray.length; idx++)
-                                                            {
-                                                                // alert(josnArray[i].theId + josnArray[i].theName);
-                                                                $("table[id='tbl_menu_3']")
-                                                                        .children("tbody")
-                                                                        .append(
-                                                                                "<tr class=\""
-                                                                                        + (idx % 2 == 0 ? "v-table-row"
-                                                                                                : "v-table-row-odd")
-                                                                                        + "\" "
-                                                                                        + "id=\"menu_3#"
-                                                                                        + josnArray[idx].theId
-                                                                                        + "\" "
-                                                                                        + "theName=\""
-                                                                                        + josnArray[idx].theName
-                                                                                        + "\" "
-                                                                                        + "theId=\""
-                                                                                        + josnArray[idx].theId
-                                                                                        + "\" "
-                                                                                        + "action=\""
-                                                                                        + josnArray[idx].action
-                                                                                        + "\""
-                                                                                        + ">"
-                                                                                        + "<td class=\"v-table-cell-content\" style=\"width: 100%;\"><div class=\"v-table-cell-wrapper\" style=\"width: 22px;\">"
-                                                                                        + "<div class=\"v-embedded v-embedded-image\" style=\"width: 22px; height: 22px;\">"
-                                                                                        + "<img src=\""
-                                                                                        + appRelPath
-                                                                                        + "/styles/activiti/img/task-22.png\"></div></div></td>"
-                                                                                        + "<td class=\"v-table-cell-content\" style=\"width: 100%;\"><div class=\"v-table-cell-wrapper\" style=\"width: 100%;\">"
-                                                                                        + josnArray[idx].theName
-                                                                                        + "</div></td></tr>");
-                                                            }
+                                                            // 通过 jquery-UI 放入新的标签内
+                                                            addTab(tabs, menuName, dataResult, theId);
+                                                            // addMainTab(menuName, dataResult, theId);
                                                             // do sth more...
+
                                                         },
                                                         error : function(XMLHttpRequest, textStatus, errorThrown)
                                                         {

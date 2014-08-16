@@ -104,7 +104,7 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
         }
 
         sc = getAppContext(request, response);
-        AppContextHolder.setScppunContext(sc);
+        AppContextHolder.setAppContext(sc);
 
 
 //        WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
@@ -136,7 +136,7 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
         }
         finally
         {
-            AppContextHolder.removeScppunContext();
+            AppContextHolder.removeAppContext();
         }
     }
 

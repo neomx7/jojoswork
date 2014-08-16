@@ -1,6 +1,6 @@
 /**
  * JOJO
- *
+ * 
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
 package com.jojo.web.common.context;
@@ -32,9 +32,9 @@ import com.jojo.util.service.model.MenuMO;
  * 对于有些部门用户是全部门通用的情况，此时可以考虑加入一个特别的'通用部门'的部门概念<br>
  * <br>
  * </summary>
- *
+ * 
  * @author jojo
- *
+ * 
  */
 @Repository
 public class SystemMgrCtxHolder
@@ -43,49 +43,50 @@ public class SystemMgrCtxHolder
     private SysMgrBiz sysMgrBiz;
 
     /**
-     *
+     * 
      * <summary>
      * [得到登录用户某级菜单的下一级子菜单]<br>
      * <br>
      * </summary>
-     *
+     * 
      * @author jojo
-     *
+     * 
      * @param parentId
      * @param parentCode
      * @return
      */
-    public List<MenuBO> getSubMenus4NextLv(String parentId,String parentCode)
+    public List<MenuBO> getSubMenus4NextLv(String parentId, String parentCode, String loginUserName)
     {
-        //AppContextHolder.get().getUserName()
-        List<ResourceDO> resourceDOs = ContextHolder.getUsr2ResourceMap().get("jojo");
+        // AppContextHolder.get().getUserName()
+        List<ResourceDO> resourceDOs = ContextHolder.getUsr2ResourceMap().get(loginUserName);
         List<MenuBO> subMenus = new ArrayList<MenuBO>(10);
-//String menuId = StringUtils.isBlank(parentId) ? "": parentId;
-String menuCode = StringUtils.isBlank(parentCode) ? "": parentCode;
-
+        // String menuId = StringUtils.isBlank(parentId) ? "": parentId;
+        String menuCode = StringUtils.isBlank(parentCode) ? "" : parentCode;
 
         if (resourceDOs != null)
         {
 
             for (ResourceDO resourceDO : resourceDOs)
             {
-//                if (StringUtils.isBlank(resourceDO.getCode()) || StringUtils.isBlank(resourceDO.getParentId()))
-//                {
-//                    continue;
-//                }
-                //去掉当前菜单id
-//                if (resourceDO.getTheId().equals(parentId))
-//                {
-//                }
-                //只保留下一级的菜单列表，默认的菜单编号是01-99个，实在不够可以考虑使用Aa-Zz
-                if (resourceDO.getCode().length() ==  (menuCode.length() + 2) && resourceDO.getCode().startsWith(menuCode))
+                // if (StringUtils.isBlank(resourceDO.getCode()) ||
+                // StringUtils.isBlank(resourceDO.getParentId()))
+                // {
+                // continue;
+                // }
+                // 去掉当前菜单id
+                // if (resourceDO.getTheId().equals(parentId))
+                // {
+                // }
+                // 只保留下一级的菜单列表，默认的菜单编号是01-99个，实在不够可以考虑使用Aa-Zz
+                if (resourceDO.getCode().length() == (menuCode.length() + 2)
+                        && resourceDO.getCode().startsWith(menuCode))
                 {
                     MenuBO menuBO = new MenuBO();
                     menuBO.setAction(resourceDO.getUri());
                     menuBO.setDictCode(resourceDO.getCode());
                     menuBO.setLevel(resourceDO.getLevel());
                     menuBO.setParentId(parentId);
-//                    menuMO.setSortWay(resourceDO.get);
+                    // menuMO.setSortWay(resourceDO.get);
                     menuBO.setStatus(resourceDO.getStatus());
                     menuBO.setTheId(resourceDO.getTheId());
                     menuBO.setTheName(resourceDO.getTheName());
@@ -98,9 +99,8 @@ String menuCode = StringUtils.isBlank(parentCode) ? "": parentCode;
         return subMenus;
     }
 
-
     /**
-     *
+     * 
      * <summary>
      * [初始化系统管理所需要的缓存数据，包括]<br>
      * ★.用户id：用户对象<br>
@@ -109,7 +109,7 @@ String menuCode = StringUtils.isBlank(parentCode) ? "": parentCode;
      * ★.用户id:List<ResourceDO> resources <br>
      * <br>
      * </summary>
-     *
+     * 
      * @author jojo
      */
     public void init()
