@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,10 +31,11 @@ import com.jojo.util.pojo.PageQuery;
 import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
 import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
 import com.jojo.web.common.context.ContextHolder;
+import com.jojo.webapp.form.ApplyForm;
 
 /**
  * <summary>
- *
+ * 物料申请Controller
  * </summary>
  *
  * @author jojo
@@ -43,6 +45,24 @@ import com.jojo.web.common.context.ContextHolder;
 public class ApplyController extends BaseController
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    /**
+     *
+     * <summary>
+     * [进入到物料管理申请界面]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param form
+     * @return
+     */
+    @RequestMapping(value = "/equipment/toApplyEquipment")
+    public String toCreateApply(@ModelAttribute("form") ApplyForm form){
+        logger.info("match url 4 '/equipment/toApplyEquipment'");
+        return "view/equipment/create-apply";
+    }
 
     /**
      *
