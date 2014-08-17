@@ -62,7 +62,53 @@
 		overflow: auto;
 	}
 
+	.errorTip {
+		width: 100%;
+		margin: 0 auto;
+		text-align: center;
+		padding: 24px 0;
+		color: #333;
+		background: #FFF1F0;
+		border: 1px solid #f2bfbb;
+	}
 
+	.warnTip {
+		width: 100%;
+		margin: 0 auto;
+		text-align: center;
+		color: #333;
+		background: #ffefc8;
+		border: 1px solid #edc898;
+		min-height: 78px;
+		line-height: 78px;
+	}
+
+	.tipTitle {
+		font-size: 14px;
+		font-weight: bold;
+		padding-bottom: 5px;
+	}
+
+	.tipContent {
+		text-align: left;
+		color: red;
+		padding-left: 12px;
+		line-height: 23px;
+	}
+
+	.tip {
+		width: 1280px;
+		margin: 0 auto;
+		text-align: center;
+		height: 78px;
+		line-height: 78px;
+		background: #c8ffc8;
+		border: 1px solid #98ff98;
+	}
+
+	.tip a {
+		text-decoration: none;
+	}
 	</style>
 
 	<#-- jquery -->

@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import com.jojo.dal.common.postgre.domain.ResourceDO;
 import com.jojo.facade.service.MenuService;
 import com.jojo.util.service.model.MenuMO;
 
@@ -29,7 +28,7 @@ import com.jojo.util.service.model.MenuMO;
 public class MenuServiceImpl implements MenuService
 {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
 

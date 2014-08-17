@@ -8,30 +8,46 @@ package com.jojo.util.pojo;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * <summary>
- * 
+ *
  * </summary>
- * 
+ *
  * @author jojo
- * 
+ *
  */
-public class DataResponse <T> {  
-    
-    //需要显示的数据集  
-    private List<T> rows;  
-  
-    //每页显示数量  
-    private int page;  
-      
-    //数据总数  
-    private int records;  
-      
-    //可显示的页数  
-    private int total;  
-      
-    //自定义数据  
+public class DataResponse <T> {
+
+    //需要显示的数据集
+    private List<T> rows;
+
+    //每页显示数量
+    private int page;
+
+    //数据总数
+    private int records;
+
+    //可显示的页数
+    private int total;
+
+    //自定义数据
     private Map<String, Object> userdata;
+
+    /**
+     * 返回结果编号，取值为 javax.servlet.http.HttpServletResponse 的状态码
+     */
+    private int status = HttpServletResponse.SC_OK;
+    /**
+     * 提示消息概要
+     */
+    private String tip;
+    /**
+     * 提示消息详细
+     */
+    private String tipDesc;
+
 
     public List<T> getRows()
     {
@@ -81,5 +97,35 @@ public class DataResponse <T> {
     public void setUserdata(Map<String, Object> userdata)
     {
         this.userdata = userdata;
-    }  
-}  
+    }
+
+    public String getTip()
+    {
+        return tip;
+    }
+
+    public void setTip(String tip)
+    {
+        this.tip = tip;
+    }
+
+    public String getTipDesc()
+    {
+        return tipDesc;
+    }
+
+    public void setTipDesc(String tipDesc)
+    {
+        this.tipDesc = tipDesc;
+    }
+
+    public int getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(int status)
+    {
+        this.status = status;
+    }
+}

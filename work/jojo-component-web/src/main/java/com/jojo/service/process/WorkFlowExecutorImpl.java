@@ -641,7 +641,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     }
 
     @Override
-    public PageResultBO queryWorkFlowTODOTask(WorkFlowQuery query)
+    public PageResultBO<WorkFlowTaskDTO> queryWorkFlowTODOTask(WorkFlowQuery query)
     {
         PageResultBO<WorkFlowTaskDTO> resultBO = new PageResultBO<WorkFlowTaskDTO>();
         Map<String, Object> params = new HashMap<String, Object>();

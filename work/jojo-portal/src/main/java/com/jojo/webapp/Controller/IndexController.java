@@ -174,6 +174,7 @@ public class IndexController extends BaseController
 
 
 
+    @SuppressWarnings("unchecked")
     public <T> DataResponse<T> findResult(DataRequest request, Class<T> cls)
     {
         DataResponse<T> response = new DataResponse<T>();

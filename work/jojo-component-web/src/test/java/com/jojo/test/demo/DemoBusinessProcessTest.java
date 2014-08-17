@@ -41,7 +41,7 @@ public class DemoBusinessProcessTest
 {
     private static Logger logger = LoggerFactory.getLogger(DemoBusinessProcessTest.class);
 
-    private static String deploymentId = null;
+//    private static String deploymentId = null;
 
     @Autowired
     private ProcessEngine processEngine;

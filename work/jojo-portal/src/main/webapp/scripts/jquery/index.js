@@ -93,11 +93,20 @@ var tabTemplate = "<li id='#{li_id}'><a href='#{href}'>#{label}</a><span class='
 // actual addTab function: adds new tab using the input from the form above
 function addTab(tabs, tabLabel, tabContentHtml, theId)
 {
+    mainTabs = $(tabs);
     var label = tabLabel;
     var newTabId = "tabs-" + theId;
-    var li = $(tabTemplate.replace(/#\{li_id\}/g, "#" + "tabs_Li_" + theId).replace(/#\{href\}/g, "#" + newTabId)
+    if ($("#" + newTabId).length)
+    {
+        //首先检查一下是否已经加载过了同样的id的tab，如果加载过，则删除原来的，重新生成
+        tabCounter = (tabCounter - 1);
+     // close icon: removing the tab on click
+       $("#tabs_Li_" + theId ).children("span.ui-icon-close").trigger("click");
+
+    }
+
+    var li = $(tabTemplate.replace(/#\{li_id\}/g, "tabs_Li_" + theId).replace(/#\{href\}/g, "#" + newTabId)
             .replace(/#\{label\}/g, label));
-    mainTabs = $(tabs);
     // mainTabs.find( ".ui-tabs-nav" ).append( li );
     // mainTabs.append( "<div id='" + newTabId + "' style='width:98%;'>" + tabContentHtml + "</div>" );
     // mainTabs.find( ".ui-tabs-nav" ).append( li );
@@ -115,6 +124,8 @@ function addTab(tabs, tabLabel, tabContentHtml, theId)
     // 重新加载css样式
     // $("#tabs").trigger("create");
 }
+
+
 
 $(document).ready(function()
 {
@@ -276,12 +287,26 @@ function bindMenuEvents()
                                                         },
                                                         error : function(XMLHttpRequest, textStatus, errorThrown)
                                                         {
-                                                            alert("error info :" + errorThrown)
+                                                            alert("error info :" + XMLHttpRequest.responseText)
                                                         }
                                                     });
                                         });
 
                     });
+
+}
+
+/**
+ *
+ * 打开模态对话框，显示错误信息
+ */
+function showErrMessage(errHtml)
+{
+    var consoleDlg = $("#consoleDlg");
+    consoleDlg.empty();
+    var infoV = errHtml;//$("#globalErrDiv").html();
+    consoleDlg.append(infoV);
+    consoleDlg.dialog("option", "title", "错误信息").dialog("open");
 
 }
 
@@ -330,7 +355,8 @@ function bind2LvMenuEvents()
                                                         },
                                                         error : function(XMLHttpRequest, textStatus, errorThrown)
                                                         {
-                                                            alert("error info :" + errorThrown)
+                                                            alert(textStatus);
+                                                            alert("error info :" + XMLHttpRequest.responseText)
                                                         }
                                                     });
                                         });
@@ -532,7 +558,7 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
                     repeatitems : false, // 为 false 时传值不区分次序,只根据 name 获取,而所使用的name是来自于colModel中的name设定。
                     // id: "id", cell: "cell",
                     // //注：id/cell在repeatitems为true时可以用到，即每一个记录是由一对id和cell组合而成，即可以适用另一种json结构。
-                    userdata : "userdata"
+                    userdata : "userData"
                 // , subgrid: {
                 // root:"rows",
                 // repeatitems: true,
@@ -564,7 +590,7 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
 
                 /** 增加数据行的操作按钮 */
                 ,
-                gridComplete : function()
+                gridComplete : function(jqXHR, textStatus)
                 {
                     var ids = $('#' + tblId).jqGrid('getDataIDs');
                     if (ids && btns)
@@ -616,10 +642,30 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
                             },
                             error : function(XMLHttpRequest, textStatus, errorThrown)
                             {
-                                alert("error info :" + errorThrown)
+                                alert("error info :" + XMLHttpRequest.responseText)
                             }
                         });
                     }
+                }
+                /** 增加加载后的处理*/
+                ,loadComplete: function (data) {
+                  //  alert('loadComplete: ' + '\n' + data.status);
+                  if (data.status != 200)
+                    {
+                      $("#tip").text( (data.tip));
+                      $("#tipDesc").text( (data.tipDesc));
+                      var errHtml = $("#globalErrDiv").html();
+                      showErrMessage(errHtml);
+                    }
+                }
+
+                /** 增加异常处理 */
+                ,loadError: function (jqXHR, textStatus, errorThrown) {
+//                    alert('HTTP status code: ' + jqXHR.status + '\n' +
+//                          'textStatus: ' + textStatus + '\n' +
+//                          'errorThrown: ' + errorThrown);
+
+                    alert('HTTP message body (jqXHR.responseText): ' + '\n' + jqXHR.responseText);
                 }
 
                 ,
@@ -640,4 +686,72 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
         deltitle : "删除",
         searchtitle : "搜索"
     });
+}
+
+/**
+*
+*  UTF-8 data encode / decode
+*  http://www.webtoolkit.info/
+*
+**/
+
+var Utf8 = {
+
+    // public method for url encoding
+    encode : function (string) {
+        string = string.replace(/\r\n/g,"\n");
+        var utftext = "";
+
+        for (var n = 0; n < string.length; n++) {
+
+            var c = string.charCodeAt(n);
+
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            }
+            else if((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+            else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+
+        }
+
+        return utftext;
+    },
+
+    // public method for url decoding
+    decode : function (utftext) {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+
+        while ( i < utftext.length ) {
+
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            }
+            else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            }
+            else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+
+        }
+        return string;
+    }
+
 }

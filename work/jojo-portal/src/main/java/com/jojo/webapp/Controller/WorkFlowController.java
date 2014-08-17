@@ -226,6 +226,7 @@ public class WorkFlowController extends BaseController
         // 从session中获取operId
         String operId = "jojo";
         Map<String, Object> variables = new HashMap<String, Object>(0);
+        @SuppressWarnings("unused")
         String processInstanceId = workFlowExecutor.startProcessInstanceByKey(query.getProDefKey(), operId,
                 businessKey, variables);
 

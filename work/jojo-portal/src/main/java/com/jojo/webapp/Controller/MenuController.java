@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jojo.biz.MenuBiz;
 import com.jojo.util.biz.bo.MenuBO;
-import com.jojo.util.common.CookieUtil;
-import com.jojo.web.common.authenticate.AuthenticationUtil;
-import com.jojo.web.common.context.AppContextHolder;
 import com.jojo.web.common.context.SystemMgrCtxHolder;
-import com.jojo.webapp.common.filter.AuthenticationAndAuthorizationFilter.JOJOCid;
 
 /**
  * <summary>

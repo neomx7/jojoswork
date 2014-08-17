@@ -5,8 +5,6 @@
  */
 package com.jojo.dal.common.postgre.domain;
 
-import java.util.Arrays;
-
 import com.jojo.util.pojo.BasePOJO;
 
 /**

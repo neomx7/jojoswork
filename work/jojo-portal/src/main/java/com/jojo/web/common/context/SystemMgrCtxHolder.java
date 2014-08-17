@@ -1,6 +1,6 @@
 /**
  * JOJO
- * 
+ *
  * Copyright (c) 2013-2096 JOJO,Inc.All Rights Reserved.
  */
 package com.jojo.web.common.context;
@@ -21,7 +21,6 @@ import com.jojo.dal.common.postgre.domain.RoleDO;
 import com.jojo.dal.common.postgre.domain.UserDO;
 import com.jojo.dal.common.postgre.domain.UserResourcesDO;
 import com.jojo.util.biz.bo.MenuBO;
-import com.jojo.util.service.model.MenuMO;
 
 /**
  * <summary>
@@ -32,9 +31,9 @@ import com.jojo.util.service.model.MenuMO;
  * 对于有些部门用户是全部门通用的情况，此时可以考虑加入一个特别的'通用部门'的部门概念<br>
  * <br>
  * </summary>
- * 
+ *
  * @author jojo
- * 
+ *
  */
 @Repository
 public class SystemMgrCtxHolder
@@ -43,14 +42,14 @@ public class SystemMgrCtxHolder
     private SysMgrBiz sysMgrBiz;
 
     /**
-     * 
+     *
      * <summary>
      * [得到登录用户某级菜单的下一级子菜单]<br>
      * <br>
      * </summary>
-     * 
+     *
      * @author jojo
-     * 
+     *
      * @param parentId
      * @param parentCode
      * @return
@@ -100,7 +99,7 @@ public class SystemMgrCtxHolder
     }
 
     /**
-     * 
+     *
      * <summary>
      * [初始化系统管理所需要的缓存数据，包括]<br>
      * ★.用户id：用户对象<br>
@@ -109,7 +108,7 @@ public class SystemMgrCtxHolder
      * ★.用户id:List<ResourceDO> resources <br>
      * <br>
      * </summary>
-     * 
+     *
      * @author jojo
      */
     public void init()

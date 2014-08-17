@@ -6,33 +6,32 @@ package com.jojo.util.common;
 
 /**
  *
- * @author finley.yao
- * @version $Id: ExceptionUtil.java, v 0.1 2013-8-5 上午11:06:07 finley.yao Exp $
+ * @author JOJO
  */
 public class ExceptionUtil {
 
-    public static String getExceptionStackTrace(Exception e) {
-        if (e == null) {
+    public static String getExceptionStackTrace(Throwable t) {
+        if (t == null) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(e.toString());
+        sb.append(t.toString());
 
-        StackTraceElement[] traceElements = e.getStackTrace();
+        StackTraceElement[] traceElements = t.getStackTrace();
         for (StackTraceElement traceElement : traceElements) {
             sb.append("\r\n\t").append(" at ").append(traceElement.toString());
         }
         return sb.toString();
     }
 
-    public static String getSimpleExceptionStackTrace(Exception e) {
+    public static String getSimpleExceptionStackTrace(Throwable t) {
         StackTraceElement[] traceElements = null;
-        if (e == null || e.getCause() == null
-            || (traceElements = e.getCause().getStackTrace()) == null || traceElements.length == 0) {
+        if (t == null || t.getCause() == null
+            || (traceElements = t.getCause().getStackTrace()) == null || traceElements.length == 0) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("</br>").append(" Caused by: ").append(e.getCause().toString());
+        sb.append("</br>").append(" Caused by: ").append(t.getCause().toString());
         sb.append("</br>").append(" at ").append(traceElements[0].toString());
 
         return sb.toString();

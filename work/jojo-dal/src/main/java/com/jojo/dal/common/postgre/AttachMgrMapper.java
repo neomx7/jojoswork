@@ -8,8 +8,6 @@ package com.jojo.dal.common.postgre;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Repository;
-
 import com.jojo.dal.common.postgre.domain.AttachDO;
 
 /**

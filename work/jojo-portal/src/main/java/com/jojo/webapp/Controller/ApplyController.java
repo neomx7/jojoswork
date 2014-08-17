@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ import com.jojo.web.common.context.ContextHolder;
  *
  */
 @Controller
-public class ApplyController
+public class ApplyController extends BaseController
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -126,8 +127,9 @@ public class ApplyController
             @RequestParam(required = false, value = "searchField") String searchField,
             @RequestParam(required = false, value = "searchOper") String searchOper,
             @RequestParam(required = false, value = "searchString") String searchString,
-            @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest)
+            @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse)
     {
+        DataResponse<WorkFlowTaskDTO> dataResponse = new DataResponse<WorkFlowTaskDTO>();
         try
         {
             DataRequest request = new DataRequest();
@@ -146,26 +148,27 @@ public class ApplyController
 
 
             return findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowTODOTask",
-                    query,WorkFlowQuery.class);
+                    query,WorkFlowQuery.class, dataResponse);
 
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+          logger.error("调用工作流服务出错",e);
+          redirectGolbalErr(dataResponse, e);
         }
-        return null;
+        return dataResponse;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> DataResponse<T> findWorkFlowResult(DataRequest request, String qryBean, String qryMethodName,
             PageQuery qryParamObj
 //            ,Class<T> cls
             ,Class<?> cls
-            )
+            ,DataResponse<T> response
+//            ,HttpServletRequest httpServletRequest
+//            ,HttpServletResponse httpServletResponse
+            ) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {
-//        Class<?> cls = WorkFlowQuery.class.getClass();
-        DataResponse<T> response = new DataResponse<T>();
-        try
-        {
             Object wfService = (ContextHolder.getBean(qryBean));// "workFlowServiceProxy"
 
             int count = 0;// 总记录数
@@ -179,12 +182,12 @@ public class ApplyController
             qryParamObj.setOperId("jojo");
 
             // 反射通过查询方法得到对象
-            PageResultBO resultBO = null;
+            PageResultBO<T> resultBO = null;
 
-            Class clazz = wfService.getClass();
+            Class<? extends Object> clazz = wfService.getClass();
             Method qryMethod = null;
             qryMethod = clazz.getDeclaredMethod(qryMethodName, cls);
-            resultBO =  (PageResultBO)(qryMethod.invoke(wfService, qryParamObj));
+            resultBO =  (PageResultBO<T>)(qryMethod.invoke(wfService, qryParamObj));
 
             int currPage = resultBO.getCurPage();
 //            count = resultBO.getTotalCount();
@@ -199,26 +202,11 @@ public class ApplyController
             response.setTotal(totalPages);
             response.setPage(currPage);
             response.setRows(resultBO.getResults());
-        }
-        catch (NoSuchMethodException | SecurityException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (Exception e)
-        {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
 
         return response;
     }
 
+    @SuppressWarnings("unused")
     private ApplyBO createOne(String id, String applyName, String remark, int number)
     {
         ApplyBO bo = new ApplyBO();

@@ -3,7 +3,6 @@ package com.jojo.dal.common.postgre.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jojo.util.constants.JOJOConstants;
 import com.jojo.util.pojo.BasePOJO;
 
 /**

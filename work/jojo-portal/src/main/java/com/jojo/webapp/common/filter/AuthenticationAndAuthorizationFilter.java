@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.jojo.dal.common.postgre.domain.UserDO;
@@ -99,21 +97,21 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
         }
 
         AppContext sc = AppContextHolder.get();
-        if (sc != null) {
+        if (sc != null)
+        {
             return;
         }
 
         sc = getAppContext(request, response);
         AppContextHolder.setAppContext(sc);
 
-
-//        WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
-//        webApplicationContext.getBean(arg0)
+        // webApplicationContext.getBean(arg0)
         try
         {
 
-            // TODO 通过验证
-            if (AuthenticationUtil.hasAuthentication(sc.getUri(), sc.hasLogined(), sc.getUserId())) {
+            // 通过验证
+            if (AuthenticationUtil.hasAuthentication(sc.getUri(), sc.hasLogined(), sc.getUserId()))
+            {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -121,17 +119,35 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
             String redirectURL = uri;
             String encodeURL = URLEncoder.encode((redirectURL + (StringUtils.isBlank(request.getQueryString()) ? ""
                     : "?" + request.getQueryString())), "UTF-8");
-            //
-            response.sendRedirect(sc.hasLogined() ? request.getContextPath() + "/index" : request.getContextPath() + "/login?redirectURL=" + encodeURL);
+            // 修改，如果 已登录&&没有菜单权限，则在当前页面提示；未登录，则直接转向重新登录页面。
+            if (sc.hasLogined())
+            {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "unavailable URI");
+            }
+            else if (sc.getUri().equals("/index"))
+            {
+                response.sendRedirect(request.getContextPath() + "/index");
+            }
+            else
+            {
+                response.sendRedirect(request.getContextPath() + "/login?redirectURL=" + encodeURL);
+            }
+
+            // response.sendRedirect( ? request.getContextPath() + "/index" :
+            // request.getContextPath() + "/login?redirectURL=" + encodeURL);
             return;
         }
         catch (Exception e)
         {
             logger.warn(e.getMessage(), e);
-
-            response.sendRedirect(request.getContextPath() + "/exception?tip="
-                    + URLEncoder.encode(e.getMessage(), "UTF-8") + "&tipDesc="
-                    + URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+//                    URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
+             response.sendRedirect(request.getContextPath() +
+             "/tip/exception?tip="
+             + URLEncoder.encode(e.getMessage(), "UTF-8") + "&tipDesc="
+             +
+             URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e),
+             "UTF-8"));
 
         }
         finally
@@ -139,7 +155,6 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
             AppContextHolder.removeAppContext();
         }
     }
-
 
     /**
      *
@@ -166,7 +181,7 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
             String loginUsrId = appCid.getUserId();
             sc.setUserId(appCid.getUserId());
 
-            //从内存中获取用户信息
+            // 从内存中获取用户信息
             UserDO user = ContextHolder.getUserMap().get(appCid.getUserId());
 
             if (user != null && ContextHolder.isValidUsr(loginUsrId))
@@ -176,7 +191,7 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
                 sc.setUserName(user.getTheName());
             }
         }
-//        sc.setUri(request.getRequestURI());
+        // sc.setUri(request.getRequestURI());
         String uri = request.getRequestURI();
         uri = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
         sc.setUri(uri.replaceFirst(request.getContextPath(), ""));

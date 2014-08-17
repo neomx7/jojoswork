@@ -83,6 +83,22 @@
 
 <!--hidden pane-->
 <div id="consoleDlg" ></div>
+<!-- hidden error message -->
+<div id="globalErrDiv" style="display:none;">
+	<div class="errorTip">
+		<div class="tipTitle">
+			系统异常
+		</div>
+		温馨提示：您访问的功能出现异常，请与开发人员联系！
+		<div class="tipContent">
+			<span class="h5">异常信息如下：</span>
+			</br>
+			<span id="tip"></span>
+			<span id="tipDesc"></span>
+		</div>
+	</div>
+</div>
+
 
 <!-- #RightPane -->
 <div id="RightPane" class="ui-layout-east">

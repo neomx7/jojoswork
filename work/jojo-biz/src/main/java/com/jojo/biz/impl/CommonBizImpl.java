@@ -27,7 +27,7 @@ import com.jojo.facade.service.CommonService;
 public class CommonBizImpl implements CommonBiz
 {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private CommonService commonService;

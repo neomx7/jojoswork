@@ -1,12 +1,14 @@
 /**
  *
- *汇付天下有限公司
+ * 汇付天下有限公司
  * Copyright (c) 2006-2013 ChinaPnR,Inc.All Rights Reserved.
  */
 package com.jojo.webapp.Controller;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jojo.util.common.CookieUtil;
+import com.jojo.util.common.ExceptionUtil;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
+import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
 import com.jojo.web.common.authenticate.AuthenticationUtil;
 import com.jojo.web.common.context.AppContextHolder;
 import com.jojo.webapp.common.filter.AuthenticationAndAuthorizationFilter.JOJOCid;
@@ -28,29 +32,82 @@ import com.jojo.webapp.common.filter.AuthenticationAndAuthorizationFilter.JOJOCi
  *
  * @author JOJO
  */
-public class BaseController {
+public class BaseController
+{
 
-    protected final Logger        logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public String getLoginUsrId(HttpServletRequest request,HttpServletResponse response){
+    public String getLoginUsrId(HttpServletRequest request, HttpServletResponse response)
+    {
         String loginUserId = null;
         if (AppContextHolder.get() == null)
         {
             // 获取登录用户名
             CookieUtil cookieUtil = new CookieUtil(request, response);
-            final JOJOCid appCid = new JOJOCid(StringUtils.trimToEmpty(cookieUtil.getCookie(AuthenticationUtil.APP_CID)));
+            final JOJOCid appCid = new JOJOCid(
+                    StringUtils.trimToEmpty(cookieUtil.getCookie(AuthenticationUtil.APP_CID)));
 
             if (appCid.isValid())
             {
                 loginUserId = (appCid.getUserId());
             }
 
-        }else {
+        }
+        else
+        {
             loginUserId = AppContextHolder.get().getUserId();
         }
         return loginUserId;
     }
-    
+
+    public void redirectGolbalErr(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+            Exception e)
+    {
+        // 转给全局异常
+        try
+        {
+            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/tip/exception?tip="
+                    + URLEncoder.encode(e.getMessage(), "UTF-8") + "&tipDesc="
+                    + URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
+        }
+        catch (IOException e1)
+        {
+            logger.error("处理异常时发生另一个异常", e1);
+        }
+    }
+
+    public void redirectGolbalErr(DataResponse<WorkFlowTaskDTO> dataResponse, Exception e)
+    {
+        try
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//            dataResponse.setTip(URLEncoder.encode(e.getMessage() == null ? "" : e.getMessage(), "UTF-8"));
+//            dataResponse.setTipDesc(URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
+            dataResponse.setTip( e.getMessage() );
+            dataResponse.setTipDesc( ExceptionUtil.getSimpleExceptionStackTrace(e));
+        }
+        catch (Exception e1)
+        {
+            logger.error("处理异常时发生另一个异常", e1);
+        }
+
+    }
+
+    // public String sendErr(String appConetxtPath,String tip ,String tipDesc){
+    // try
+    // {
+    // return appConetxtPath
+    // + "/tip/exception?tip="
+    // + URLEncoder.encode(tip, "UTF-8")
+    // + "&tipDesc="
+    // + URLEncoder.encode(tipDesc,"UTF-8");
+    // }
+    // catch (IOException e)
+    // {
+    // logger.error("处理异常时发生另一个异常",e);
+    // }
+    // return "";
+    // }
 
     /**
      *
@@ -65,6 +122,7 @@ public class BaseController {
      * @param cls
      * @return
      */
+    @SuppressWarnings("unchecked")
     public <T> DataResponse<T> findResult(DataRequest request, Class<T> cls, Object qryService, String qryMethod)
     {
         if (qryService == null)
@@ -83,7 +141,7 @@ public class BaseController {
 
         int start = currPage * limit - limit;
         start = start < 0 ? 0 : start;
-        Class clazz = qryService.getClass();
+        Class<? extends Object> clazz = qryService.getClass();
         Method query = null;
         try
         {

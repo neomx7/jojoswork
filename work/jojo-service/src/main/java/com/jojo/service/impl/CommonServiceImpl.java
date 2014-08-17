@@ -30,7 +30,7 @@ import com.jojo.facade.service.CommonService;
 public class CommonServiceImpl implements CommonService
 {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     @Autowired

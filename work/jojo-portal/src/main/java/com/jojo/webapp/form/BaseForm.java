@@ -39,6 +39,15 @@ public class BaseForm
     private String category;
     private int version = 0;
 
+    /**
+     * 提示消息概要
+     */
+    private String tip;
+    /**
+     * 提示消息详细
+     */
+    private String tipDesc;
+
 
     /**
      * 获取上下文信息
@@ -191,5 +200,25 @@ public class BaseForm
     public void setVersion(int version)
     {
         this.version = version;
+    }
+
+    public String getTip()
+    {
+        return tip;
+    }
+
+    public void setTip(String tip)
+    {
+        this.tip = tip;
+    }
+
+    public String getTipDesc()
+    {
+        return tipDesc;
+    }
+
+    public void setTipDesc(String tipDesc)
+    {
+        this.tipDesc = tipDesc;
     }
 }

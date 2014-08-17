@@ -5,13 +5,8 @@
  */
 package com.jojo.util.common;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DateUtils {
 
-    private static final Logger logger                     = LoggerFactory
+    protected static final Logger logger                     = LoggerFactory
                                                                .getLogger(DateUtils.class);
 
     public static final String  DATE_TIME_PATTERN_NUM_DATE = "yyyyMMdd";
