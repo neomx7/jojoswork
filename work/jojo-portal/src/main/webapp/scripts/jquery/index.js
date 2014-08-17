@@ -98,15 +98,15 @@ function addTab(tabs, tabLabel, tabContentHtml, theId)
     var newTabId = "tabs-" + theId;
     if ($("#" + newTabId).length)
     {
-        //首先检查一下是否已经加载过了同样的id的tab，如果加载过，则删除原来的，重新生成
+        // 首先检查一下是否已经加载过了同样的id的tab，如果加载过，则删除原来的，重新生成
         tabCounter = (tabCounter - 1);
-     // close icon: removing the tab on click
-       $("#tabs_Li_" + theId ).children("span.ui-icon-close").trigger("click");
+        // close icon: removing the tab on click
+        $("#tabs_Li_" + theId).children("span.ui-icon-close").trigger("click");
 
     }
 
-    var li = $(tabTemplate.replace(/#\{li_id\}/g, "tabs_Li_" + theId).replace(/#\{href\}/g, "#" + newTabId)
-            .replace(/#\{label\}/g, label));
+    var li = $(tabTemplate.replace(/#\{li_id\}/g, "tabs_Li_" + theId).replace(/#\{href\}/g, "#" + newTabId).replace(
+            /#\{label\}/g, label));
     // mainTabs.find( ".ui-tabs-nav" ).append( li );
     // mainTabs.append( "<div id='" + newTabId + "' style='width:98%;'>" + tabContentHtml + "</div>" );
     // mainTabs.find( ".ui-tabs-nav" ).append( li );
@@ -124,8 +124,6 @@ function addTab(tabs, tabLabel, tabContentHtml, theId)
     // 重新加载css样式
     // $("#tabs").trigger("create");
 }
-
-
 
 $(document).ready(function()
 {
@@ -195,25 +193,37 @@ $(document).ready(function()
             position : "center" // 窗口显示的位置
         });
 
-        //左侧菜单栏
-        var icons = {
-                header: "ui-icon-circle-arrow-e",
-                activeHeader: "ui-icon-circle-arrow-s"
-              };
-              $( "#accordion" ).accordion({
-                icons: icons,
-                heightStyle: "content"
-              });
-              $( "#toggle" ).button().click(function() {
-                if ( $( "#accordion" ).accordion( "option", "icons" ) ) {
-                  $( "#accordion" ).accordion( "option", "icons", null );
-                } else {
-                  $( "#accordion" ).accordion( "option", "icons", icons );
-                }
-              });
+        // 左侧菜单栏
+        var icons =
+        {
+            header : "ui-icon-circle-arrow-e",
+            activeHeader : "ui-icon-circle-arrow-s"
+        };
+        $("#accordion").accordion(
+        {
+            icons : icons,
+            heightStyle : "content"
+        });
+        $("#toggle").button().click(function()
+        {
+            if ($("#accordion").accordion("option", "icons"))
+            {
+                $("#accordion").accordion("option", "icons", null);
+            }
+            else
+            {
+                $("#accordion").accordion("option", "icons", icons);
+            }
+        });
+        // 默认打开左侧菜单的第一个1级菜单
+        var memnus1lv = $("[id^='menu1#']");
+        var menus1Count = memnus1lv.length;
+        if (menus1Count > 0)
+        {
+            $(memnus1lv[0]).trigger("click");
+        }
 
-
-     //    alert("-------[Done]-------");
+        // alert("-------[Done]-------");
     }
     catch (e)
     {
@@ -230,81 +240,73 @@ $(document).ready(function()
 function bindMenuEvents()
 {
     // ajax 触发 点击1级菜单刷新 2级top菜单栏
-    $("[id^='menu1#']")
-            .each(
-                    function()
-                    {
-                        $(this)
-                                .bind(
-                                        "click",
-                                        function()
-                                        {
-                                            var jsonData = {};
-                                            var menduId = ($(this).attr("id").split("#")[1]);
-                                            if (jsonData["theId"] && jsonData["theId"].push)
-                                            {
-                                                jsonData["theId"].push(menduId || '');
-                                            }
-                                            else
-                                            {
-                                                jsonData["theId"] = (menduId || '');
-                                            }
-                                            jsonData["dictCode"] = (($(this).attr("code").split("#")[1]) || '');
-                                            jsonData = $.toJSON(jsonData);
-                                            $
-                                                    .ajax(
-                                                    {
-                                                        type : 'POST',
-                                                        contentType : 'application/json',
-                                                        url : 'menu/show',
-                                                        data : jsonData,
-                                                        dataType : 'html',
-                                                        success : function(dataResult)
-                                                        {
-                                                            // 这里把ajax的结果(html内容)通过js替换dom中的元素
-                                                            // json格式的 List<MenuMO> 数组字符串
-                                                            // 遍历 list, 并生成 html
-                                                            var josnArray = eval(dataResult);
-                                                            var divEl = $("div[id='div#"+menduId+"']");
-                                                            divEl.empty();
-                                                            for (var idx = 0; idx < josnArray.length; idx++)
-                                                            {
-//                                                                 alert(josnArray[idx].theId + josnArray[idx].action);
-                                                                var lv2MenuHtml = "<p>"
-                                                                    + "<span class='v-button-caption ' "
-                                                                    + "id='menu2#" + josnArray[idx].theId + "'"
-                                                                    + "menuName='" + josnArray[idx].theName + "'"
-                                                                    + "uri='" + josnArray[idx].action + "'"
-//                                                                    + "extraParams='" + josnArray[idx].extraParams + "'"
-                                                                    + "><a href='###' style='color: #06c;' >"
-                                                                    + josnArray[idx].theName
-                                                                    + "</a></span>"
-                                                                    + "</p>";
-                                                                divEl.append(lv2MenuHtml);
-                                                            }
-                                                            // do sth more...
-                                                            bind2LvMenuEvents();
-                                                        },
-                                                        error : function(XMLHttpRequest, textStatus, errorThrown)
-                                                        {
-                                                            alert("error info :" + XMLHttpRequest.responseText)
-                                                        }
-                                                    });
-                                        });
+    $("[id^='menu1#']").each(
+            function()
+            {
+                $(this).bind(
+                        "click",
+                        function()
+                        {
+                            var jsonData = {};
+                            var menduId = ($(this).attr("id").split("#")[1]);
+                            if (jsonData["theId"] && jsonData["theId"].push)
+                            {
+                                jsonData["theId"].push(menduId || '');
+                            }
+                            else
+                            {
+                                jsonData["theId"] = (menduId || '');
+                            }
+                            jsonData["dictCode"] = (($(this).attr("code").split("#")[1]) || '');
+                            jsonData = $.toJSON(jsonData);
+                            $.ajax(
+                            {
+                                type : 'POST',
+                                contentType : 'application/json',
+                                url : 'menu/show',
+                                data : jsonData,
+                                dataType : 'html',
+                                success : function(dataResult)
+                                {
+                                    // 这里把ajax的结果(html内容)通过js替换dom中的元素
+                                    // json格式的 List<MenuMO> 数组字符串
+                                    // 遍历 list, 并生成 html
+                                    var josnArray = eval(dataResult);
+                                    var divEl = $("div[id='div#" + menduId + "']");
+                                    divEl.empty();
+                                    for (var idx = 0; idx < josnArray.length; idx++)
+                                    {
+                                        // alert(josnArray[idx].theId + josnArray[idx].action);
+                                        var lv2MenuHtml = "<p>" + "<span class='v-button-caption ' " + "id='menu2#"
+                                                + josnArray[idx].theId + "'" + "menuName='" + josnArray[idx].theName
+                                                + "'" + "uri='" + josnArray[idx].action + "'"
+                                                // + "extraParams='" + josnArray[idx].extraParams + "'"
+                                                + "><a href='###' style='color: #06c;' >" + josnArray[idx].theName
+                                                + "</a></span>" + "</p>";
+                                        divEl.append(lv2MenuHtml);
+                                    }
+                                    // do sth more...
+                                    bind2LvMenuEvents();
+                                },
+                                error : function(XMLHttpRequest, textStatus, errorThrown)
+                                {
+                                    alert("error info :" + XMLHttpRequest.responseText)
+                                }
+                            });
+                        });
 
-                    });
+            });
 
 }
 
 /**
- *
  * 打开模态对话框，显示错误信息
  */
 function showErrMessage(errHtml)
 {
     var consoleDlg = $("#consoleDlg");
     consoleDlg.empty();
-    var infoV = errHtml;//$("#globalErrDiv").html();
+    var infoV = errHtml;// $("#globalErrDiv").html();
     consoleDlg.append(infoV);
     consoleDlg.dialog("option", "title", "错误信息").dialog("open");
 
@@ -313,54 +315,48 @@ function showErrMessage(errHtml)
 function bind2LvMenuEvents()
 {
     // 2级菜单
-    $("[id^='menu2#']")
-            .each(
-                    function()
-                    {
-                        // 先解除绑定
-                        $(this).unbind("click");
-                        $(this)
-                                .bind(
-                                        "click",
-                                        function()
-                                        {
-                                            var theId =  ($(this).attr("id").split("#")[1]);
-                                            // ajax 触发 点击2级菜单刷新3级左侧菜单栏
-                                            var menuName = $(this).attr("menuName");
-                                            // ajax 刷新action 到内容区域,如果有额外参数,通过 action附带
-                                            var textData = $(this).attr("extraParams");
-                                            textData = (textData == null ? "" : textData || '');
-                                            var action = ($(this).attr("uri"));
-                                            if (action.indexOf('/') == 0)
-                                            {
-                                                action =  action.substring(1,action.length);
-                                            }
-//                                            alert(action);
-                                            $
-                                                    .ajax(
-                                                    {
-                                                        type : 'POST',
-                                                        contentType : 'application/json',
-                                                        url : action,
-                                                        data : textData,
-                                                        dataType : 'html',
-                                                        success : function(dataResult)
-                                                        {
-                                                            // 这里把ajax的结果(html内容)通过js替换dom中的元素
-                                                            // 通过 jquery-UI 放入新的标签内
-                                                            addTab(tabs, menuName, dataResult, theId);
-                                                            // addMainTab(menuName, dataResult, theId);
-                                                            // do sth more...
+    $("[id^='menu2#']").each(function()
+    {
+        // 先解除绑定
+        $(this).unbind("click");
+        $(this).bind("click", function()
+        {
+            var theId = ($(this).attr("id").split("#")[1]);
+            // ajax 触发 点击2级菜单刷新3级左侧菜单栏
+            var menuName = $(this).attr("menuName");
+            // ajax 刷新action 到内容区域,如果有额外参数,通过 action附带
+            var textData = $(this).attr("extraParams");
+            textData = (textData == null ? "" : textData || '');
+            var action = ($(this).attr("uri"));
+            if (action.indexOf('/') == 0)
+            {
+                action = action.substring(1, action.length);
+            }
+            // alert(action);
+            $.ajax(
+            {
+                type : 'POST',
+                contentType : 'application/json',
+                url : action,
+                data : textData,
+                dataType : 'html',
+                success : function(dataResult)
+                {
+                    // 这里把ajax的结果(html内容)通过js替换dom中的元素
+                    // 通过 jquery-UI 放入新的标签内
+                    addTab(tabs, menuName, dataResult, theId);
+                    // addMainTab(menuName, dataResult, theId);
+                    // do sth more...
 
-                                                        },
-                                                        error : function(XMLHttpRequest, textStatus, errorThrown)
-                                                        {
-                                                            alert(textStatus);
-                                                            alert("error info :" + XMLHttpRequest.responseText)
-                                                        }
-                                                    });
-                                        });
-                    });
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert(textStatus);
+                    alert("error info :" + XMLHttpRequest.responseText)
+                }
+            });
+        });
+    });
 }
 
 // 已废弃
@@ -368,7 +364,6 @@ function bind2LvMenuEvents()
 // {
 // $(mainTabs).tabs('add',("#tabs-"+theId), menuName);
 // }
-
 
 function initLayout()
 {
@@ -647,23 +642,27 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
                         });
                     }
                 }
-                /** 增加加载后的处理*/
-                ,loadComplete: function (data) {
-                  //  alert('loadComplete: ' + '\n' + data.status);
-                  if (data.status != 200)
+                /** 增加加载后的处理 */
+                ,
+                loadComplete : function(data)
+                {
+                    // alert('loadComplete: ' + '\n' + data.status);
+                    if (data.status != 200)
                     {
-                      $("#tip").text( (data.tip));
-                      $("#tipDesc").text( (data.tipDesc));
-                      var errHtml = $("#globalErrDiv").html();
-                      showErrMessage(errHtml);
+                        $("#tip").html((data.tip));
+                        $("#tipDesc").html((data.tipDesc));
+                        var errHtml = $("#globalErrDiv").html();
+                        showErrMessage(errHtml);
                     }
                 }
 
                 /** 增加异常处理 */
-                ,loadError: function (jqXHR, textStatus, errorThrown) {
-//                    alert('HTTP status code: ' + jqXHR.status + '\n' +
-//                          'textStatus: ' + textStatus + '\n' +
-//                          'errorThrown: ' + errorThrown);
+                ,
+                loadError : function(jqXHR, textStatus, errorThrown)
+                {
+                    // alert('HTTP status code: ' + jqXHR.status + '\n' +
+                    // 'textStatus: ' + textStatus + '\n' +
+                    // 'errorThrown: ' + errorThrown);
 
                     alert('HTTP message body (jqXHR.responseText): ' + '\n' + jqXHR.responseText);
                 }
@@ -689,31 +688,34 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
 }
 
 /**
-*
-*  UTF-8 data encode / decode
-*  http://www.webtoolkit.info/
-*
-**/
+ * UTF-8 data encode / decode http://www.webtoolkit.info/
+ */
 
-var Utf8 = {
+var Utf8 =
+{
 
     // public method for url encoding
-    encode : function (string) {
-        string = string.replace(/\r\n/g,"\n");
+    encode : function(string)
+    {
+        string = string.replace(/\r\n/g, "\n");
         var utftext = "";
 
-        for (var n = 0; n < string.length; n++) {
+        for (var n = 0; n < string.length; n++)
+        {
 
             var c = string.charCodeAt(n);
 
-            if (c < 128) {
+            if (c < 128)
+            {
                 utftext += String.fromCharCode(c);
             }
-            else if((c > 127) && (c < 2048)) {
+            else if ((c > 127) && (c < 2048))
+            {
                 utftext += String.fromCharCode((c >> 6) | 192);
                 utftext += String.fromCharCode((c & 63) | 128);
             }
-            else {
+            else
+            {
                 utftext += String.fromCharCode((c >> 12) | 224);
                 utftext += String.fromCharCode(((c >> 6) & 63) | 128);
                 utftext += String.fromCharCode((c & 63) | 128);
@@ -725,27 +727,32 @@ var Utf8 = {
     },
 
     // public method for url decoding
-    decode : function (utftext) {
+    decode : function(utftext)
+    {
         var string = "";
         var i = 0;
         var c = c1 = c2 = 0;
 
-        while ( i < utftext.length ) {
+        while (i < utftext.length)
+        {
 
             c = utftext.charCodeAt(i);
 
-            if (c < 128) {
+            if (c < 128)
+            {
                 string += String.fromCharCode(c);
                 i++;
             }
-            else if((c > 191) && (c < 224)) {
-                c2 = utftext.charCodeAt(i+1);
+            else if ((c > 191) && (c < 224))
+            {
+                c2 = utftext.charCodeAt(i + 1);
                 string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
                 i += 2;
             }
-            else {
-                c2 = utftext.charCodeAt(i+1);
-                c3 = utftext.charCodeAt(i+2);
+            else
+            {
+                c2 = utftext.charCodeAt(i + 1);
+                c3 = utftext.charCodeAt(i + 2);
                 string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
                 i += 3;
             }

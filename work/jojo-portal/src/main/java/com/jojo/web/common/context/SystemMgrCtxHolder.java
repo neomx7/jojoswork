@@ -67,15 +67,16 @@ public class SystemMgrCtxHolder
 
             for (ResourceDO resourceDO : resourceDOs)
             {
-                // if (StringUtils.isBlank(resourceDO.getCode()) ||
-                // StringUtils.isBlank(resourceDO.getParentId()))
-                // {
-                // continue;
-                // }
+                // 去掉无效的菜单和级别为0的菜单
+                if (resourceDO.getLevel() == 0 || !resourceDO.isValid())
+                {
+                    continue;
+                }
                 // 去掉当前菜单id
                 // if (resourceDO.getTheId().equals(parentId))
                 // {
                 // }
+
                 // 只保留下一级的菜单列表，默认的菜单编号是01-99个，实在不够可以考虑使用Aa-Zz
                 if (resourceDO.getCode().length() == (menuCode.length() + 2)
                         && resourceDO.getCode().startsWith(menuCode))

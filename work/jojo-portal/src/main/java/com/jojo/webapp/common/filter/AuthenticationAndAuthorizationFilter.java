@@ -120,11 +120,11 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
             String encodeURL = URLEncoder.encode((redirectURL + (StringUtils.isBlank(request.getQueryString()) ? ""
                     : "?" + request.getQueryString())), "UTF-8");
             // 修改，如果 已登录&&没有菜单权限，则在当前页面提示；未登录，则直接转向重新登录页面。
-            if (sc.hasLogined())
+            if (sc.hasLogined() && !sc.getUri().equals("/index"))
             {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "unavailable URI");
             }
-            else if (sc.getUri().equals("/index"))
+            else if (sc.hasLogined())
             {
                 response.sendRedirect(request.getContextPath() + "/index");
             }
@@ -140,14 +140,12 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
         catch (Exception e)
         {
             logger.warn(e.getMessage(), e);
-//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-//                    URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
-             response.sendRedirect(request.getContextPath() +
-             "/tip/exception?tip="
-             + URLEncoder.encode(e.getMessage(), "UTF-8") + "&tipDesc="
-             +
-             URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e),
-             "UTF-8"));
+            // response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+            // URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e),
+            // "UTF-8"));
+            response.sendRedirect(request.getContextPath() + "/tip/exception?tip="
+                    + URLEncoder.encode(e.getMessage(), "UTF-8") + "&tipDesc="
+                    + URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
 
         }
         finally
