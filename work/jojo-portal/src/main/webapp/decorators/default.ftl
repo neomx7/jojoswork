@@ -109,9 +109,16 @@
 	.tip a {
 		text-decoration: none;
 	}
+
+	.ui-autocomplete-loading {
+		background: white url("${rc.contextPath}/scripts/jquery/jqueryUI/imgs/ui-anim_basic_16x16.gif") right center no-repeat;
+	}
 	</style>
 
 	<#-- jquery -->
+	<#--
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryJstree/libs/jquery.js"></script>
+	 -->
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jquery.json-2.4.min.js"></script>
 
@@ -127,9 +134,9 @@
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.dialog.js"></script>
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.mouse.js"></script>
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.sortable.js"></script>
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.autocomplete.js"></script>
 	-->
 	<script src="${rc.contextPath}/scripts/jquery/jqueryUI/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
-
 
 
 

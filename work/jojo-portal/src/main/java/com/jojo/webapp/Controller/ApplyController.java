@@ -111,7 +111,8 @@ public class ApplyController extends BaseController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+//            e.printStackTrace();
+            logger.error("query createApply list failed. [{}]",e);
         }
         return null;
     }

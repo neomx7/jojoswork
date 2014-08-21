@@ -23,7 +23,6 @@
 														<div class="v-label v-label-h1 h1 v-label-logo " style="width: 100%;"></div>
 													</div>
 												</div>
-
 												<#-- 这里放置用户信息 -->
 												<div style="height: 54px; overflow: hidden; float: left; padding-left: 0px; padding-top: 0px;">
 													<div style="float: left; margin-left: 649px;">
