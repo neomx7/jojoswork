@@ -290,3 +290,41 @@ COMMENT ON COLUMN jojo_attach.attach_id IS '附件文件的指纹';
 COMMENT ON COLUMN jojo_attach.attach_content IS '附件内容，二进制流';
 
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+---物料申请表
+-- Table: jojo_mtr_apply
+
+-- DROP TABLE jojo_mtr_apply;
+
+CREATE TABLE jojo_mtr_apply
+(
+  t_id character varying(64) NOT NULL, -- 逻辑主键
+  t_title character varying(256), -- 申请的标题
+  t_status smallint, -- 状态 0草稿 1流程处理中
+  t_status_dsc character varying(1024), -- 状态信息的描述，针对流程节点，取值为流程的备注信息，如 ”安技部经理审核“
+  t_remark character varying(128), -- 备注
+  crt_usr character varying(64), -- CRT_USR
+  crt_time timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  crt_usr_name character varying(64), -- 创建者姓名
+  upd_usr character varying(64), -- 更新者id
+  upd_time timestamp without time zone, -- 更新时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  upd_usr_name character varying(64), -- 更新者姓名
+  CONSTRAINT jojo_mtr_apply_pkey PRIMARY KEY (t_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE jojo_mtr_apply
+  OWNER TO postgres;
+COMMENT ON COLUMN jojo_mtr_apply.t_id IS '逻辑主键';
+COMMENT ON COLUMN jojo_mtr_apply.t_title IS '申请的标题';
+COMMENT ON COLUMN jojo_mtr_apply.t_status IS '状态 0草稿 1流程处理中';
+COMMENT ON COLUMN jojo_mtr_apply.t_status_dsc IS '状态信息的描述，针对流程节点，取值为流程的备注信息，如 ”安技部经理审核“';
+COMMENT ON COLUMN jojo_mtr_apply.t_remark IS '备注';
+COMMENT ON COLUMN jojo_mtr_apply.crt_usr IS 'CRT_USR';
+COMMENT ON COLUMN jojo_mtr_apply.crt_time IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN jojo_mtr_apply.crt_usr_name IS '创建者姓名';
+COMMENT ON COLUMN jojo_mtr_apply.upd_usr IS '更新者id';
+COMMENT ON COLUMN jojo_mtr_apply.upd_time IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN jojo_mtr_apply.upd_usr_name IS '更新者姓名';
+
