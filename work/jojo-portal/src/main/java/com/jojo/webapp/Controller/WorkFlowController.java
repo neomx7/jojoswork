@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jojo.biz.CommonBiz;
 import com.jojo.dal.common.postgre.domain.AttachDO;
-import com.jojo.facade.workflow.WorkFlowExecutor;
+import com.jojo.integration.workflow.WorkFlowExecutor;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
 import com.jojo.util.pojo.ProcessTask;

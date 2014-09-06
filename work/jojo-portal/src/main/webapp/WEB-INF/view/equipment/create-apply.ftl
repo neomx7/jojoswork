@@ -6,7 +6,7 @@
 <script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryJstree/jquery.address-1.6.js"></script>
 <script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryJstree/vakata.js"></script>
  -->
-<script type="text/javascript" src="${rc.contextPath}/scripts/portal/equipment/equipment.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/scripts/portal/equipment/apply.js"></script>
 
 <!-- 树形菜单js -->
 
@@ -27,15 +27,12 @@
 					<div class="form-header">
 						发起新物料申请
 					</div>
-					<form action="${rc.contextPath}/equipment/applyEquipment" method="post">
-						<#if form.resultCode==200>
-							<div class="field succ">物料申请发起成功！ </div>
-						<#elseif form.resultCode !=0>
-							<div class="field error">${form.errors["result_error"]!}&nbsp;</div>
-						</#if>
+					<form id="targetForm" method="post">
+							<div id="succ_tip" class="field succ" style="display:none;">物料申请发起成功！ </div>
+							<div id="err_tip" class="field error" style="display:none;"></div>
 						<div class="field">
 							<label for="theName">申请名称　</label>
-							<input id="theName" name="theName" type="text" value="" />
+							<input id="theName" name="theName" type="text" value="" class="validate[required] text-input"/>
 						</div>
 
 						<div class="field">
@@ -44,20 +41,16 @@
 						</div>
 
 						<div class="field">
-							<label for=theRemark>申请附件</label>
-							<input id="theRemark" name="theRemark" type="text" value="" />
+							<label for=theAttach>申请附件</label>
+							<input id="theAttach" name="" type="text" value="" />
 						</div>
-
-						<div id="btn-nav">
-							<button id="okBtn">确定</button>
-						</div>
-
-
-
-
 					</form>
 				</div>
-				<div class="ui-widget">
+				<div id="btn-nav">
+					<button id="saveBtn">保存草稿</button>
+					<button id="submitBtn">提交申请</button>
+				</div>
+				<div id="setNextUser" class="ui-widget" style="display:none;">
 				  <label for="nextUser">人员姓名: </label>
 				  <input id="nextUser" name="nextUser"/>
 				</div>

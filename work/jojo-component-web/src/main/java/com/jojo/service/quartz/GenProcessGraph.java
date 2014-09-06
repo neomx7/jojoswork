@@ -7,7 +7,7 @@ package com.jojo.service.quartz;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.jojo.facade.workflow.WorkFlowExecutor;
+import com.jojo.integration.workflow.WorkFlowExecutor;
 
 /**
  * <summary>

@@ -5,6 +5,7 @@
  */
 package com.jojo.webapp.form;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,11 @@ import com.jojo.web.common.context.AppContextHolder;
  * @author jojo
  *
  */
-public class BaseForm
+public class BaseForm implements Serializable
 {
+    /**   */
+    private static final long serialVersionUID = -5741199782580229224L;
+
     /**
      * 错误信息的key,页面使用
      */
@@ -31,7 +35,7 @@ public class BaseForm
     private String theId;
     private String theName;
     private String theRemark;
-    private String status;
+    private int status = 0;
     private String crtUserId;
     private String crtUserName;
     // 17位定长,精确到毫秒
@@ -146,12 +150,12 @@ public class BaseForm
         this.theRemark = theRemark;
     }
 
-    public String getStatus()
+    public int getStatus()
     {
         return status;
     }
 
-    public void setStatus(String status)
+    public void setStatus(int status)
     {
         this.status = status;
     }

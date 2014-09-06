@@ -15,6 +15,9 @@ package com.jojo.webapp.form;
  */
 public class LogInOutForm extends BaseForm
 {
+    /**   */
+    private static final long serialVersionUID = -2046019223784409143L;
+
     private String userId;
 
     private String userName;

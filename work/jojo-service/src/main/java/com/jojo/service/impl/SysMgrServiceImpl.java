@@ -16,7 +16,7 @@ import com.jojo.dal.common.postgre.domain.OrgUserDO;
 import com.jojo.dal.common.postgre.domain.RoleDO;
 import com.jojo.dal.common.postgre.domain.UserDO;
 import com.jojo.dal.common.postgre.domain.UserResourcesDO;
-import com.jojo.facade.service.SysMgrService;
+import com.jojo.service.SysMgrService;
 
 /**
  * <summary>

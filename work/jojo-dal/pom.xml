@@ -168,6 +168,16 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
+			<version>2.1.2</version>
+		</dependency>
 	</dependencies>
 
 
@@ -188,8 +198,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<!-- <version>2.5.1</version> -->
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.6</source>
+					<target>1.6</target>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
@@ -212,8 +222,10 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/applicationContext-resources-${ex.sourceType}.xml</exclude>
+				</excludes>
 			</resource>
-			<!-- <excludes> <exclude>**/applicationContext-resources-${ex.sourceType}.xml</exclude> </excludes> -->
 		</resources>
 		<testResources>
 			<testResource>
@@ -223,7 +235,5 @@
 		</testResources>
 
 	</build>
-
-
 
 </project>

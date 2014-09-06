@@ -31,6 +31,12 @@
 			<artifactId>jojo-facade</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<!-- 增加对jojo-integration的依赖 -->
+		<dependency>
+			<groupId>com.jojo</groupId>
+			<artifactId>jojo-integration</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>

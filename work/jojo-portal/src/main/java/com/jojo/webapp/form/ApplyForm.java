@@ -17,5 +17,8 @@ package com.jojo.webapp.form;
 public class ApplyForm extends BaseForm
 {
 
+    /**   */
+    private static final long serialVersionUID = 2874084372707416681L;
+
 
 }

@@ -8,24 +8,34 @@ package com.jojo.webapp.Controller;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.jojo.biz.ApplyBiz;
+import com.jojo.dal.common.postgre.domain.MaterialApplyDO;
 import com.jojo.util.CommonUtils;
 import com.jojo.util.biz.bo.ApplyBO;
 import com.jojo.util.biz.bo.PageResultBO;
+import com.jojo.util.biz.bo.UserBO;
+import com.jojo.util.common.DateUtils;
 import com.jojo.util.constants.JOJOConstants;
 import com.jojo.util.pojo.DataRequest;
+import com.jojo.util.pojo.DataRequest4Apply;
 import com.jojo.util.pojo.DataResponse;
 import com.jojo.util.pojo.PageQuery;
 import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
@@ -46,6 +56,62 @@ public class ApplyController extends BaseController
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    private ApplyBiz applyBiz;
+
+
+//    @RequestMapping(value = "/equipment/saveApply")
+//    @ResponseBody
+//    public DataResponse<MaterialApplyDO> saveApply(@RequestBody ApplyForm form){
+//        System.out.println("saveApply........");
+//        DataResponse<MaterialApplyDO> dataResponse = new DataResponse<MaterialApplyDO>();
+//        return dataResponse;
+//    }
+
+    /**
+     *
+     * <summary>
+     * [保存申请草稿]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param form
+     * @return
+     */
+    @RequestMapping(value = "/equipment/saveApply")
+    @ResponseBody
+    public DataResponse<MaterialApplyDO> saveApply(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse, @RequestBody ApplyForm form)
+    {
+        logger.info("match url 4 '/equipment/saveApply'");
+        DataResponse<MaterialApplyDO> dataResponse = new DataResponse<MaterialApplyDO>();
+
+        MaterialApplyDO applyDO = new MaterialApplyDO();
+
+        applyDO.setTheId(UUID.randomUUID().toString());
+        applyDO.setTheName(form.getTheName());
+        applyDO.setTheRemark(form.getTheRemark());
+        applyDO.setCrtTime(DateUtils.getCurrentDateTimeMs());
+
+        applyDO.setCrtUserId(getLoginUsrId(httpServletRequest, httpServletResponse));
+
+        try
+        {
+            applyDO.setStatus(0);
+            applyBiz.addApply(applyDO);
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip(e.getMessage());
+            dataResponse.setTipDesc(ExceptionUtils.getStackTrace(e));
+        }
+        return dataResponse;
+    }
+
     /**
      *
      * <summary>
@@ -59,9 +125,17 @@ public class ApplyController extends BaseController
      * @return
      */
     @RequestMapping(value = "/equipment/toApplyEquipment")
-    public String toCreateApply(@ModelAttribute("form") ApplyForm form){
+    public String toCreateApply(@ModelAttribute("form") ApplyForm form)
+    {
         logger.info("match url 4 '/equipment/toApplyEquipment'");
         return "view/equipment/create-apply";
+    }
+
+    @RequestMapping(value = "/equipment/toListEquipment")
+    public String toListEquipment(@ModelAttribute("form") ApplyForm form)
+    {
+        logger.info("match url 4 '/equipment/toListEquipment'");
+        return "view/equipment/apply-list";
     }
 
     /**
@@ -84,35 +158,39 @@ public class ApplyController extends BaseController
      * @param httpServletRequest
      * @return
      */
-    @RequestMapping(value = "/process/createApplyList")
+    @RequestMapping(value = "/equipment/listEquipment")
     @ResponseBody
-    public DataResponse<ApplyBO> queryApply(
-            @RequestParam(defaultValue = "1", value = "page") String page,
-            @RequestParam(defaultValue = "20", value = "rows") String rows,
-            @RequestParam("sidx") String sidx,
-            @RequestParam("sord") String sord,
+    public DataResponse<MaterialApplyDO> queryApply(
+            @RequestParam(required = false, defaultValue = "1", value = "page") String page,
+            @RequestParam(required = false, defaultValue = "20", value = "rows") String rows,
+            @RequestParam(required = false, value = "sidx") String sidx,
+            @RequestParam(required = false, value = "sord") String sord,
             // @RequestParam("_search") boolean search,
             @RequestParam(required = false, value = "searchField") String searchField,
             @RequestParam(required = false, value = "searchOper") String searchOper,
             @RequestParam(required = false, value = "searchString") String searchString,
-            @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest)
+            @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse)
     {
         try
         {
-            DataRequest request = new DataRequest();
-            request.setPage(StringUtils.isEmpty(page) ? 1 : Integer.valueOf(page));
-            request.setRows(StringUtils.isEmpty(rows) ? 20 : Integer.valueOf(rows));
+            DataRequest4Apply request = new DataRequest4Apply();
+            request.setPage(StringUtils.isBlank(page) ? 1 : Integer.valueOf(page));
+            request.setRows(StringUtils.isBlank(rows) ? 20 : Integer.valueOf(rows));
             request.setSidx(sidx);
             request.setSord(sord);
             request.setSearchField(searchField);
             request.setSearchOper(searchOper);
             request.setSearchString(searchString);
-            return null;
+
+            request.setOperatorId(getLoginUsrId(httpServletRequest, httpServletResponse));
+
+            return findResult(request, MaterialApplyDO.class, applyBiz, "queryPage");
         }
         catch (Exception e)
         {
-//            e.printStackTrace();
-            logger.error("query createApply list failed. [{}]",e);
+            // e.printStackTrace();
+            logger.error("query createApply list failed. [{}]", e);
         }
         return null;
     }
@@ -148,7 +226,8 @@ public class ApplyController extends BaseController
             @RequestParam(required = false, value = "searchField") String searchField,
             @RequestParam(required = false, value = "searchOper") String searchOper,
             @RequestParam(required = false, value = "searchString") String searchString,
-            @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse)
+            @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse)
     {
         DataResponse<WorkFlowTaskDTO> dataResponse = new DataResponse<WorkFlowTaskDTO>();
         try
@@ -164,18 +243,19 @@ public class ApplyController extends BaseController
 
             WorkFlowQuery query = new WorkFlowQuery();
             query.setTaskMode(JOJOConstants.WORKFLOW_TASKMODE_TODO);
-            //TODO 从session中得到当前用户
-            query.setOperId("jojo");
+            // TODO 从session中得到当前用户
+            query.setOperId(getLoginUsrId(httpServletRequest, httpServletResponse));
 
-
-            return findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowTODOTask",
-                    query,WorkFlowQuery.class, dataResponse);
+            return findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowTODOTask", query,
+                    WorkFlowQuery.class, dataResponse
+            // ,httpServletRequest,httpServletResponse
+            );
 
         }
         catch (Exception e)
         {
-          logger.error("调用工作流服务出错",e);
-          redirectGolbalErr(dataResponse, e);
+            logger.error("调用工作流服务出错", e);
+            redirectGolbalErr(dataResponse, e);
         }
         return dataResponse;
     }
@@ -183,46 +263,44 @@ public class ApplyController extends BaseController
     @SuppressWarnings("unchecked")
     public <T> DataResponse<T> findWorkFlowResult(DataRequest request, String qryBean, String qryMethodName,
             PageQuery qryParamObj
-//            ,Class<T> cls
-            ,Class<?> cls
-            ,DataResponse<T> response
-//            ,HttpServletRequest httpServletRequest
-//            ,HttpServletResponse httpServletResponse
-            ) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+            // ,Class<T> cls
+            , Class<?> cls, DataResponse<T> response
+    // ,HttpServletRequest httpServletRequest
+    // ,HttpServletResponse httpServletResponse
+    ) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException
     {
-            Object wfService = (ContextHolder.getBean(qryBean));// "workFlowServiceProxy"
+        Object wfService = (ContextHolder.getBean(qryBean));// "workFlowServiceProxy"
 
-            int count = 0;// 总记录数
-            int limit = request.getRows() <= 0 ? 20 : request.getRows();// 每页显示数量
-            int totalPages = 0;// 总页数
-            int page = request.getPage() <= 0 ? 1 : request.getPage();// 当前显示页码
+        int count = 0;// 总记录数
+        int limit = request.getRows() <= 0 ? 20 : request.getRows();// 每页显示数量
+        int totalPages = 0;// 总页数
+        int page = request.getPage() <= 0 ? 1 : request.getPage();// 当前显示页码
 
-            qryParamObj.setPageLimit(limit);
-            qryParamObj.setCurPage(page);
-            //从session中得到公用户
-            qryParamObj.setOperId("jojo");
+        qryParamObj.setPageLimit(limit);
+        qryParamObj.setCurPage(page);
 
-            // 反射通过查询方法得到对象
-            PageResultBO<T> resultBO = null;
+        // 反射通过查询方法得到对象
+        PageResultBO<T> resultBO = null;
 
-            Class<? extends Object> clazz = wfService.getClass();
-            Method qryMethod = null;
-            qryMethod = clazz.getDeclaredMethod(qryMethodName, cls);
-            resultBO =  (PageResultBO<T>)(qryMethod.invoke(wfService, qryParamObj));
+        Class<? extends Object> clazz = wfService.getClass();
+        Method qryMethod = null;
+        qryMethod = clazz.getDeclaredMethod(qryMethodName, cls);
+        resultBO = (PageResultBO<T>) (qryMethod.invoke(wfService, qryParamObj));
 
-            int currPage = resultBO.getCurPage();
-//            count = resultBO.getTotalCount();
-//            totalPages = (int) Math.ceil((double) count / limit);
-//            int currPage = Math.min(totalPages, page);
-//            qryParamObj.setCurPage(currPage);
-//
-//            int start = currPage * limit - limit;
-//            start = start < 0 ? 0 : start;
+        int currPage = resultBO.getCurPage();
+        // count = resultBO.getTotalCount();
+        // totalPages = (int) Math.ceil((double) count / limit);
+        // int currPage = Math.min(totalPages, page);
+        // qryParamObj.setCurPage(currPage);
+        //
+        // int start = currPage * limit - limit;
+        // start = start < 0 ? 0 : start;
 
-            response.setRecords(count);
-            response.setTotal(totalPages);
-            response.setPage(currPage);
-            response.setRows(resultBO.getResults());
+        response.setRecords(count);
+        response.setTotal(totalPages);
+        response.setPage(currPage);
+        response.setRows(resultBO.getResults());
 
         return response;
     }

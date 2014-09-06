@@ -5,8 +5,11 @@
  */
 package com.jojo.util.common;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +42,28 @@ public class DateUtils {
 
     public static final FastDateFormat fastDateFormat4MillSeconds = FastDateFormat.getInstance(DATE_TIME_PATTERN_NUM_MS);
 
+    public static final FastDateFormat fastDateFormat4Seconds = FastDateFormat.getInstance(DATE_TIME_PATTERN_STR_SEC);
+
     public static String getCurrentDateTimeMs()
     {
         return fastDateFormat4MillSeconds.format(new Date());
     }
 
+    public static String parseDateTimeMs2Sec(String orgiTimeMs) throws ParseException{
+        if (StringUtils.isBlank(orgiTimeMs))
+        {
+            return null;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_TIME_PATTERN_NUM_MS);
+        return fastDateFormat4Seconds.format( dateFormat.parse(orgiTimeMs) );
+    }
+
+    public static String parseDateTimeMsPostgre2Sec(String orgiTimePostgreMs){
+        if (StringUtils.isBlank(orgiTimePostgreMs))
+        {
+            return null;
+        }
+        return StringUtils.split(orgiTimePostgreMs, ".")[0];
+    }
 
 }

@@ -8,7 +8,7 @@ package com.jojo.service.process;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jojo.facade.workflow.WorkFlowTaskFormDataParser;
+import com.jojo.integration.workflow.WorkFlowTaskFormDataParser;
 import com.jojo.util.dal.domain.ProcessTaskFormDO;
 
 /**

@@ -38,7 +38,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 
-import com.jojo.facade.workflow.WorkFlowExecutor;
+import com.jojo.integration.workflow.WorkFlowExecutor;
 import com.jojo.process.dal.postgre.AttachMgrMapper;
 import com.jojo.process.dal.postgre.ProcessMgrMapper;
 import com.jojo.util.biz.bo.PageResultBO;

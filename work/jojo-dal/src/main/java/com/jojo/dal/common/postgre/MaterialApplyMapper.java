@@ -63,6 +63,20 @@ public interface MaterialApplyMapper
     /**
      *
      * <summary>
+     * [获取一个申请]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param params
+     * @return
+     */
+    public MaterialApplyDO select(Map<String, Object> params);
+
+    /**
+     *
+     * <summary>
      * [查询，翻页]<br>
      * <br>
      * </summary>

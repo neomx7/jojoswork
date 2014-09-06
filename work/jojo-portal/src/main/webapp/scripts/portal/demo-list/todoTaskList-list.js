@@ -87,8 +87,8 @@ $(function()
                             /** 增加数据行的操作按钮 */
                             gridComplete : function()
                             {
-//                                var userData = (currGrid.jqGrid('getGridParam', 'userData'));
-//                                alert(userData.status);
+                                // var userData = (currGrid.jqGrid('getGridParam', 'userData'));
+                                // alert(userData.status);
 
                                 var ids = $('#todoTaskGrid').jqGrid('getDataIDs');
                                 if (ids)
@@ -118,7 +118,21 @@ $(function()
                                 // datajson = $.toJSON(datajson);
 
                             }
+
+
+
                         });
+
+        currGrid.jqGrid('navGrid', '#todoTaskGridPager',
+        {
+            add : false,
+            edit : false,
+            del : false,
+            refresh : true,
+            search : true,
+            refreshtitle : "刷新",
+            searchtitle : "搜索"
+        });
 
     }
     catch (e)

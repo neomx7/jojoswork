@@ -6,7 +6,9 @@
 package com.jojo.util.pojo;
 
 import java.io.Serializable;
+import java.text.ParseException;
 
+import com.jojo.util.common.DateUtils;
 import com.jojo.util.constants.JOJOConstants;
 
 /**
@@ -25,7 +27,7 @@ public class BasePOJO implements Serializable
     private String theId;
     private String theName;
     private String theRemark;
-    private String status;
+    private int status = 0;
     private String crtUserId;
     private String crtUserName;
     // 17位定长,精确到毫秒
@@ -43,6 +45,10 @@ public class BasePOJO implements Serializable
     private String operId;
     private int number = 0;
 
+    // 页面显示的格式化日期
+    private String formatCrtTime;
+    private String formatUpdTime;
+
     /**
      *
      * <summary>
@@ -56,7 +62,7 @@ public class BasePOJO implements Serializable
      */
     public boolean isValid()
     {
-        return getStatus() != null ? (getStatus().trim().equals(JOJOConstants.VALID_STATUS)) : true;
+        return getStatus() == (JOJOConstants.VALID_STATUS_FLG);
     }
 
     public String getTheId()
@@ -211,12 +217,12 @@ public class BasePOJO implements Serializable
         return builder.toString();
     }
 
-    public String getStatus()
+    public int getStatus()
     {
         return status;
     }
 
-    public void setStatus(String status)
+    public void setStatus(int status)
     {
         this.status = status;
     }
@@ -280,4 +286,15 @@ public class BasePOJO implements Serializable
     {
         this.number = number;
     }
+
+    public String getFormatCrtTime()
+    {
+        return DateUtils.parseDateTimeMsPostgre2Sec(getCrtTime());
+    }
+
+    public String getFormatUpdTime()
+    {
+        return DateUtils.parseDateTimeMsPostgre2Sec(getUpdTime());
+    }
+
 }

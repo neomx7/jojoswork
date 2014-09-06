@@ -18,14 +18,11 @@
 			<artifactId>activiti-engine</artifactId>
 		</dependency>
 		<!-- activiti5 example -->
-<!-- 		<dependency>
+		<!-- <dependency> <groupId>org.activiti</groupId> <artifactId>activiti-engine-examples</artifactId> </dependency> -->
+		<dependency>
 			<groupId>org.activiti</groupId>
-			<artifactId>activiti-engine-examples</artifactId>
-		</dependency> -->
-			<dependency>
-			        <groupId>org.activiti</groupId>
-			        <artifactId>activiti-cdi</artifactId>
-			</dependency>
+			<artifactId>activiti-cdi</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.activiti</groupId>
@@ -111,11 +108,13 @@
 		</dependency>
 
 		<!-- 增加对jojo-util的依赖 -->
-<!-- 		<dependency>
+		<!-- <dependency> <groupId>com.jojo</groupId> <artifactId>jojo-dal</artifactId> <version>0.0.1-SNAPSHOT</version> </dependency> -->
+
+		<dependency>
 			<groupId>com.jojo</groupId>
-			<artifactId>jojo-dal</artifactId>
+			<artifactId>jojo-integration</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency> -->
+		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -438,17 +437,7 @@
 			</exclusions>
 		</dependency>
 
-<!-- 		<dependency>
-		        <groupId>org.codehaus.plexus</groupId>
-		        <artifactId>plexus-archiver</artifactId>
-		</dependency> -->
-
-		<!-- 增加对jojo-facade的依赖 -->
-		<dependency>
-			<groupId>com.jojo</groupId>
-			<artifactId>jojo-facade</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		<!-- <dependency> <groupId>org.codehaus.plexus</groupId> <artifactId>plexus-archiver</artifactId> </dependency> -->
 
 	</dependencies>
 

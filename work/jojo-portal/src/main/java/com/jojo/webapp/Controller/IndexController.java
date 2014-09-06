@@ -202,7 +202,7 @@ public class IndexController extends BaseController
 
         for (int i = 0; i < 10; i++)
         {
-            list.add((T) createOneUser(String.valueOf(i), "userName" + i, "1"));
+            list.add((T) createOneUser(String.valueOf(i), "userName" + i, 1));
         }
         response.setRecords(count);
         response.setTotal(totalPages);
@@ -212,7 +212,7 @@ public class IndexController extends BaseController
         return response;
     }
 
-    private UserBO createOneUser(String id, String userName, String status)
+    private UserBO createOneUser(String id, String userName, int status)
     {
         UserBO userModel = new UserBO();
         userModel.setId(id);

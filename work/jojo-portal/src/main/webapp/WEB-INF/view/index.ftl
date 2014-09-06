@@ -97,6 +97,21 @@
 		</div>
 	</div>
 </div>
+<!--hidden success message -->
+<div id="globalSucDiv" style="display:none;">
+	<div class="tip">
+		<div class="tipTitle">
+			系统处理成功
+		</div>
+		<div class="tipContentSucc">
+			<span class="h5">详细信息如下：</span>
+			</br>
+			<span id="tip_suc"></span>
+			<span id="tipDesc_suc"></span>
+		</div>
+	</div>
+</div>
+
 
 
 <!-- #RightPane -->

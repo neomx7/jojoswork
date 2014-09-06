@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jojo.util.common.CookieUtil;
 import com.jojo.util.common.ExceptionUtil;
+import com.jojo.util.pojo.BasePOJO;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
 import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
@@ -166,6 +167,12 @@ public class BaseController
         }
         // 转换成list对象
         list = (List<T>) resultList;
+        for (int i=0;i<list.size();i++)
+        {
+            BasePOJO pojo = (BasePOJO)(list.get(i));
+            pojo.setNumber(i);
+        }
+
 
         response.setRecords(count);
         response.setTotal(totalPages);

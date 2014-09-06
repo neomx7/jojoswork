@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jojo.biz.CommonBiz;
 import com.jojo.dal.common.postgre.domain.AttachDO;
-import com.jojo.facade.service.CommonService;
+import com.jojo.service.CommonService;
 
 /**
  * <summary>

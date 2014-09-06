@@ -37,5 +37,5 @@ public class JOJOConstants
     public static final int NUM_ONE = 1;
 
     public static final String VALID_STATUS = "1";
-
+    public static final int VALID_STATUS_FLG = 1;
 }

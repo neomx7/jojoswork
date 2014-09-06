@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.jojo.biz.MenuBiz;
-import com.jojo.facade.service.MenuService;
+import com.jojo.service.MenuService;
 import com.jojo.util.biz.bo.MenuBO;
 import com.jojo.util.service.model.MenuMO;
 

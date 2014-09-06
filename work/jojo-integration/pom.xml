@@ -19,19 +19,7 @@
 			<artifactId>jojo-util</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<!-- 增加对jojo-facade的依赖 -->
-		<dependency>
-			<groupId>com.jojo</groupId>
-			<artifactId>jojo-facade</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>		
-		<!-- 增加对jojo-biz的依赖 -->
-		<dependency>
-			<groupId>com.jojo</groupId>
-			<artifactId>jojo-biz</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>		
-	
+
 		<!-- quartz -->
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
@@ -73,7 +61,7 @@
 			</exclusions>
 		</dependency>
 
-		
+
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -103,83 +91,4 @@
 
 	</dependencies>
 
-
-	<build>
-		<defaultGoal>install</defaultGoal>
-		<finalName>jojo</finalName>
-
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.zeroturnaround</groupId>
-					<artifactId>javarebel-maven-plugin</artifactId>
-					<version>1.0.5</version>
-					<executions>
-						<execution>
-							<id>generate-rebel-xml</id>
-							<phase>process-resources</phase>
-							<goals>
-								<goal>generate</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>native2ascii-maven-plugin</artifactId>
-					<version>1.0-beta-1</version>
-					<executions>
-						<execution>
-							<id>native2ascii</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>native2ascii</goal>
-							</goals>
-							<configuration>
-								<encoding>utf-8</encoding>
-								<includes>
-									<include>ApplicationResource.properties</include>
-								</includes>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-
-		<plugins>
-
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-		</plugins>
-
-
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
-	</build>
-
-</project>	
+</project>

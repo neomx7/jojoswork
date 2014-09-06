@@ -88,7 +88,7 @@ var stateResetSettings =
 // 先隐藏右边栏
 };
 
-var tabTemplate = "<li id='#{li_id}'><a href='#{href}'>#{label}</a><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
+var tabTemplate = "<li id='#li_id'><a href='#href'>#label</a><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
 // 增加新标签
 // actual addTab function: adds new tab using the input from the form above
 function addTab(tabs, tabLabel, tabContentHtml, theId)
@@ -98,31 +98,24 @@ function addTab(tabs, tabLabel, tabContentHtml, theId)
     var newTabId = "tabs-" + theId;
     if ($("#" + newTabId).length)
     {
+        $("#" + newTabId).remove();
         // 首先检查一下是否已经加载过了同样的id的tab，如果加载过，则删除原来的，重新生成
         tabCounter = (tabCounter - 1);
         // close icon: removing the tab on click
         $("#tabs_Li_" + theId).children("span.ui-icon-close").trigger("click");
-
     }
 
-    var li = $(tabTemplate.replace(/#\{li_id\}/g, "tabs_Li_" + theId).replace(/#\{href\}/g, "#" + newTabId).replace(
-            /#\{label\}/g, label));
-    // mainTabs.find( ".ui-tabs-nav" ).append( li );
-    // mainTabs.append( "<div id='" + newTabId + "' style='width:98%;'>" + tabContentHtml + "</div>" );
-    // mainTabs.find( ".ui-tabs-nav" ).append( li );
-    $('#tabsUL').append(li);
+    var liContent = tabTemplate.replace(/#li_id/g, 'tabs_Li_' + theId).replace(/#href/g, '#' + newTabId).replace(/#label/g, label).replaceAll("\n","").replaceAll("\r","");
+    var liObj = $(liContent);
+    $('#tabsUL').append(liObj);
     $('#tabs').append("<div id='" + newTabId + "' style='width:98%;'>" + tabContentHtml + "</div>");
 
     tabCounter = (tabCounter + 1);
     mainTabs.tabs("refresh");
     // 焦点指向这里
-    // var activeLiA = ( $("#tabs ul li[id='"+newTabId+"'] A"));
-    // activeLiA.trigger("click");
-    // mainTabs.tabs('select', '#' + newTabId);
-    // mainTabs.tabs("select" , '#' + newTabId);
     $("#tabs").selectTabByID(newTabId);// worked.
-    // 重新加载css样式
-    // $("#tabs").trigger("create");
+
+    $('#tabs_Li_' + theId).trigger("dblclick");
 }
 
 $(document).ready(function()
@@ -302,13 +295,13 @@ function bindMenuEvents()
 /**
  * 打开模态对话框，显示错误信息
  */
-function showErrMessage(errHtml)
+function showTipMessage(errHtml,dlgTitle)
 {
     var consoleDlg = $("#consoleDlg");
     consoleDlg.empty();
     var infoV = errHtml;// $("#globalErrDiv").html();
     consoleDlg.append(infoV);
-    consoleDlg.dialog("option", "title", "错误信息").dialog("open");
+    consoleDlg.dialog("option", "title", dlgTitle).dialog("open");
 
 }
 
@@ -345,7 +338,6 @@ function bind2LvMenuEvents()
                     // 这里把ajax的结果(html内容)通过js替换dom中的元素
                     // 通过 jquery-UI 放入新的标签内
                     addTab(tabs, menuName, dataResult, theId);
-                    // addMainTab(menuName, dataResult, theId);
                     // do sth more...
 
                 },
@@ -513,7 +505,7 @@ function initLayout()
 /**
  * <summary> 生成 jqGird 的富客户端可编辑 list 表格, </summary>
  *
- * @param tblId
+ * @param girdId
  *            表格dom元素的 id
  * @param listAction
  *            展示列表内容的 url
@@ -530,10 +522,10 @@ function initLayout()
  * @param caption
  *            表格标题
  */
-function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, btns, editUrl, clickEl)
+function initJqGird(girdId, listAction, colNames, colModel, sortname, caption, btns, editUrl, clickEl)
 {
 
-    $('#' + tblId).jqGrid(
+    $('#' + girdId).jqGrid(
             { // jqGrid固定的写法:$("#list").jqGrid({参数})
                 contentType : 'application/json',
                 datatype : "json", // 将这里改为使用JSON数据
@@ -567,7 +559,7 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
                 // 表格结构定义
                 colNames : colNames,
                 colModel : colModel,
-                pager : "#pager", // 分页工具栏
+                pager : "#"+ girdId + "Pager", // 分页工具栏
                 // imgpath : "themes/redmond/images", // 图片路径
                 autoWidth : true,
                 // rownumbers : true, // 是否显示列数
@@ -587,14 +579,14 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
                 ,
                 gridComplete : function(jqXHR, textStatus)
                 {
-                    var ids = $('#' + tblId).jqGrid('getDataIDs');
+                    var ids = $('#' + girdId).jqGrid('getDataIDs');
                     if (ids && btns)
                     {
                         for (var i = 0; i < ids.length; i++)
                         {
                             var cl = ids[i];
                             var be = btns.replaceAll("#rowid", cl);
-                            $('#' + tblId).jqGrid('setRowData', ids[i],
+                            $('#' + girdId).jqGrid('setRowData', ids[i],
                             {
                                 act : be
                             // + se + ce
@@ -609,7 +601,7 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
                 },
                 onSelectRow : function(rowid)
                 { // 单击选择行
-                    var rowdata = $("#" + tblId).jqGrid('getRowData', rowid);
+                    var rowdata = $("#" + girdId).jqGrid('getRowData', rowid);
                     var key = rowdata.theId;
                     var datajson = {};
                     datajson['proDefId'] = (key);
@@ -652,7 +644,7 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
                         $("#tip").html((data.tip));
                         $("#tipDesc").html((data.tipDesc));
                         var errHtml = $("#globalErrDiv").html();
-                        showErrMessage(errHtml);
+                        showTipMessage(errHtml);
                     }
                 }
 
@@ -660,11 +652,11 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
                 ,
                 loadError : function(jqXHR, textStatus, errorThrown)
                 {
-                    // alert('HTTP status code: ' + jqXHR.status + '\n' +
-                    // 'textStatus: ' + textStatus + '\n' +
-                    // 'errorThrown: ' + errorThrown);
+                     alert('HTTP status code: ' + jqXHR.status + '\n' +
+                     'textStatus: ' + textStatus + '\n' +
+                     'errorThrown: ' + errorThrown);
 
-                    alert('HTTP message body (jqXHR.responseText): ' + '\n' + jqXHR.responseText);
+//                    alert('HTTP message body (jqXHR.responseText): ' + '\n' + jqXHR.responseText);
                 }
 
                 ,
@@ -672,19 +664,19 @@ function initJqGird(tblId, listAction, colNames, colModel, sortname, caption, bt
             });
     // 定义默认按键的显示
     // ,refresh刷新按钮是否显示、edit编辑按钮是否显示、add添加按钮是否显示、del删除按钮是否显示、refreshtitle刷新按钮提示信息
-    $('#' + tblId).jqGrid('navGrid', '#pager',
-    {
-        refresh : true,
-        edit : true,
-        add : true,
-        del : true,
-        search : true,
-        refreshtitle : "刷新",
-        edittitle : "修改",
-        addtitle : "添加",
-        deltitle : "删除",
-        searchtitle : "搜索"
-    });
+//    $('#' + girdId).jqGrid('navGrid', '#pager',
+//    {
+//        refresh : true,
+////        edit : true,
+////        add : true,
+//        del : true,
+//        search : true,
+//        refreshtitle : "刷新",
+////        edittitle : "修改",
+////        addtitle : "添加",
+//        deltitle : "删除",
+//        searchtitle : "搜索"
+//    });
 }
 
 /**
@@ -762,3 +754,37 @@ var Utf8 =
     }
 
 }
+
+
+/**
+*
+* @param {jqObject} the field where the validation applies
+* @param {Array[String]} validation rules for this field
+* @param {int} rule index
+* @param {Map} form options
+* @return an error string if validation failed
+*/
+function checkAvbVal(field, rules, i, options,avbVal){
+    if (field.val() != avbVal) {
+        // this allows to use i18 for the error msgs
+        return options.allrules.validate2fields.alertText;
+    }
+}
+
+
+//将一个表单的数据返回成JSON对象
+$.fn.serializeObject = function() {
+  var o = {};
+  var a = this.serializeArray();
+  $.each(a, function() {
+    if (o[this.name]) {
+      if (!o[this.name].push) {
+        o[this.name] = [ o[this.name] ];
+      }
+      o[this.name].push(this.value || '');
+    } else {
+      o[this.name] = this.value || '';
+    }
+  });
+  return o;
+};

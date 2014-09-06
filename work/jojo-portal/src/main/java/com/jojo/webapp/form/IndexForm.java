@@ -21,6 +21,9 @@ import com.jojo.util.biz.bo.MenuBO;
  */
 public class IndexForm extends BaseForm
 {
+    /**   */
+    private static final long serialVersionUID = -8854231721028598633L;
+
     List<MenuBO> menus = new ArrayList<MenuBO>();
 
     private String menuId;

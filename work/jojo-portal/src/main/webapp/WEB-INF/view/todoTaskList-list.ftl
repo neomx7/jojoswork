@@ -9,7 +9,7 @@
 				<tr>
 					<td>
 						<table id="todoTaskGrid"></table>
-						<div id="pager"></div>
+						<div id="todoTaskGridPager"></div>
 					</td>
 				</tr>
 			</table>

@@ -7,35 +7,38 @@ package com.jojo.util.pojo;
 
 /**
  * <summary>
- * 
+ *
  * </summary>
- * 
+ *
  * @author jojo
- * 
+ *
  */
-public class DataRequest implements java.io.Serializable {  
-    
-      
+public class DataRequest implements java.io.Serializable {
+
+
     /**   */
     private static final long serialVersionUID = -375556306545378363L;
-    //当前页码  
-    private int page;  
-    //页面可显示行数  
-    private int rows;  
-    //用于排序的列名  
-    private String sidx;  
-    //排序的方式desc/asc  
-    private String sord;  
-    //是否是搜索请求  
-    private boolean search;  
-    //已经发送的请求的次数  
+    /**当前页码，从1开始 */
+    private int page = 0;
+    /**页面可显示行数 */
+    private int rows;
+    /**用于排序的列名*/
+    private String sidx;
+    /**排序的方式desc/asc*/
+    private String sord;
+    /**是否是搜索请求*/
+    private boolean search;
+    /**已经发送的请求的次数*/
     private String nd;
-    
-    private String searchField;  
-    private String searchOper;  
-    private String searchString;  
-    
-    
+
+    /**
+     * 操作员id，通常是登录的用户名
+     */
+    private String operatorId;
+
+    private String searchField;
+    private String searchOper;
+    private String searchString;
     public int getPage()
     {
         return page;
@@ -84,7 +87,15 @@ public class DataRequest implements java.io.Serializable {
     {
         this.nd = nd;
     }
-    public String isSearchField()
+    public String getOperatorId()
+    {
+        return operatorId;
+    }
+    public void setOperatorId(String operatorId)
+    {
+        this.operatorId = operatorId;
+    }
+    public String getSearchField()
     {
         return searchField;
     }
@@ -92,7 +103,7 @@ public class DataRequest implements java.io.Serializable {
     {
         this.searchField = searchField;
     }
-    public String isSearchOper()
+    public String getSearchOper()
     {
         return searchOper;
     }
@@ -100,12 +111,14 @@ public class DataRequest implements java.io.Serializable {
     {
         this.searchOper = searchOper;
     }
-    public String isSearchString()
+    public String getSearchString()
     {
         return searchString;
     }
     public void setSearchString(String searchString)
     {
         this.searchString = searchString;
-    }  
-}  
+    }
+
+
+}

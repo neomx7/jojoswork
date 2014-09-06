@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jojo.dal.common.postgre.UserMapper">
+<mapper namespace="com.jojo.dal.common.postgre.MaterialApplyMapper" >
 	<resultMap type="com.jojo.dal.common.postgre.domain.MaterialApplyDO" id="materialApplyResultMap">
 		<id property="theId" column="T_ID" />
 		<result property="theName" column="T_TITLE" />
@@ -18,7 +18,7 @@
 	</resultMap>
 
 
-	<insert id="insert" parameterType="com.jojo.dal.common.postgre.domain.MaterialApplyDO">
+	<insert id="insert" parameterType="com.jojo.dal.common.postgre.domain.MaterialApplyDO" >
 		INSERT INTO jojo_mtr_apply(
 		t_id, t_title, t_status, t_status_dsc, t_remark,
 		crt_usr, crt_time,
@@ -26,7 +26,7 @@
 		upd_time, upd_usr_name)
 		VALUES (#{theId}, #{theName}, #{status}, #{statusDsc},
 		#{theRemark}, #{crtUserId},
-		#{crtUserName}, #{updUserId}, #{updUserId}, #{updUserName}, #{updTime})
+		#{crtUserName}, #{crtTime}, #{updUserId}, #{updUserName}, #{updTime})
 	</insert>
 
 	<update id="update" parameterType="java.util.Map">
@@ -59,9 +59,22 @@
 		delete from jojo_mtr_apply where t_id = #{theId}
 	</delete>
 
+	<select id="select" parameterType="java.util.Map" resultMap="materialApplyResultMap">
+		SELECT T.* FROM jojo_mtr_apply T WHERE T.T_ID = #{id}
+	</select>
 
 	<select id="queryPage" parameterType="java.util.Map" resultMap="materialApplyResultMap">
-
+		SELECT T.* FROM jojo_mtr_apply T WHERE 1=1
+		<if test="theId != null and theId != ''">
+			AND T.T_ID = #{id}
+		</if>
+		<if test="status != null and status != ''">
+			AND T.t_status = #{status}
+		</if>
+		<if test="theName != null and theName != ''">
+			AND T.t_title like '%${theName}%'
+		</if>
+		limit ${limitPage} offset ${offset}
 	</select>
 
 </mapper>

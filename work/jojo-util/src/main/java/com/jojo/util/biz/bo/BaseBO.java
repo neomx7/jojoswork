@@ -23,7 +23,6 @@ public class BaseBO extends BasePOJO
 
 
     private String id;
-    private String status;
 
     /**
      * 下一个用户的登录名
@@ -40,14 +39,6 @@ public class BaseBO extends BasePOJO
     public void setId(String id)
     {
         this.id = id;
-    }
-    public String getStatus()
-    {
-        return status;
-    }
-    public void setStatus(String status)
-    {
-        this.status = status;
     }
     public int getNumber()
     {

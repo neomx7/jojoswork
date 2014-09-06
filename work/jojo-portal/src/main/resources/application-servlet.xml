@@ -9,7 +9,7 @@
 	<bean id="workFlowServiceProxy" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
 	<!-- workFlowService workFlowHttpInvokerService-->
 		<property name="serviceUrl" value="http://127.0.0.1:10086/jojo/workFlowService" />
-		<property name="serviceInterface" value="com.jojo.facade.workflow.WorkFlowExecutor" />
+		<property name="serviceInterface" value="com.jojo.integration.workflow.WorkFlowExecutor" />
 	</bean>
 
 

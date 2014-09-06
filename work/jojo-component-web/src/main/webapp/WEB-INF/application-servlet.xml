@@ -11,7 +11,7 @@
 		<property name="service">
 			<ref bean="workFlowService" />
 		</property>
-		<property name="serviceInterface" value="com.jojo.facade.workflow.WorkFlowExecutor">
+		<property name="serviceInterface" value="com.jojo.integration.workflow.WorkFlowExecutor">
 		</property>
 	</bean>
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
@@ -25,7 +25,7 @@
 		lazy-init="false" />
 
 	<!-- <bean name="httpService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"> <property name="service">
-		<ref bean="workFlowService" /> </property> <property name="serviceInterface" value="com.jojo.facade.workflow.WorkFlowExecutor">
+		<ref bean="workFlowService" /> </property> <property name="serviceInterface" value="com.jojo.integration.workflow.WorkFlowExecutor">
 		</property> </bean> -->
 
 	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />

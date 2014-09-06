@@ -9,7 +9,7 @@
 				<tr>
 					<td>
 						<table id="jqGirdList"></table>
-						<div id="pager"></div>
+						<div id="pager4Workflow"></div>
 					</td>
 				</tr>
 			</table>

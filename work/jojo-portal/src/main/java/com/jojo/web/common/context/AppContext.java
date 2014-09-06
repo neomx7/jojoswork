@@ -24,7 +24,7 @@ public class AppContext {
 
     private String       userName;
 
-    private String       userStatus;
+    private int       userStatus;
 
     private boolean      logon;
 
@@ -74,12 +74,12 @@ public class AppContext {
         this.userName = userName;
     }
 
-    public String getUserStatus()
+    public int getUserStatus()
     {
         return userStatus;
     }
 
-    public void setUserStatus(String userStatus)
+    public void setUserStatus(int userStatus)
     {
         this.userStatus = userStatus;
     }

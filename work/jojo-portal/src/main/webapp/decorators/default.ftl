@@ -42,6 +42,11 @@
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/ui.multiselect.css" />
 
 
+	<link rel="stylesheet" href="${rc.contextPath}/scripts/jquery/jqueryValidator/css/validationEngine.jquery.css" type="text/css"/>
+	<link rel="stylesheet" href="${rc.contextPath}/scripts/jquery/jqueryValidator/css/template.css" type="text/css"/>
+
+
+
 	<#-- style -->
 	<style>
 	/** layout css */
@@ -158,6 +163,12 @@
 	<script src="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/ui.multiselect.js" type="text/javascript"></script>
 	<script src="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/jquery.tablednd.js" type="text/javascript"></script>
 	<script src="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/jquery.contextmenu.js" type="text/javascript"></script>
+
+	<#-- validator -->
+	<script src="${rc.contextPath}/scripts/jquery/jqueryValidator/languages/jquery.validationEngine-zh_CN.js" type="text/javascript" charset="utf-8">
+	</script>
+	<script src="${rc.contextPath}/scripts/jquery/jqueryValidator/jquery.validationEngine.js" type="text/javascript" charset="utf-8">
+	</script>
 
 	<#-- index -->
 	<script src="${rc.contextPath}/scripts/jquery/index.js" type="text/javascript"></script>
