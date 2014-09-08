@@ -8,6 +8,8 @@ package com.jojo.webapp.Controller;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jojo.biz.ApplyBiz;
 import com.jojo.dal.common.postgre.domain.MaterialApplyDO;
+import com.jojo.integration.workflow.WorkFlowExecutor;
 import com.jojo.util.CommonUtils;
 import com.jojo.util.biz.bo.ApplyBO;
 import com.jojo.util.biz.bo.PageResultBO;
@@ -59,14 +62,75 @@ public class ApplyController extends BaseController
     @Autowired
     private ApplyBiz applyBiz;
 
+    // @RequestMapping(value = "/equipment/saveApply")
+    // @ResponseBody
+    // public DataResponse<MaterialApplyDO> saveApply(@RequestBody ApplyForm
+    // form){
+    // System.out.println("saveApply........");
+    // DataResponse<MaterialApplyDO> dataResponse = new
+    // DataResponse<MaterialApplyDO>();
+    // return dataResponse;
+    // }
 
-//    @RequestMapping(value = "/equipment/saveApply")
-//    @ResponseBody
-//    public DataResponse<MaterialApplyDO> saveApply(@RequestBody ApplyForm form){
-//        System.out.println("saveApply........");
-//        DataResponse<MaterialApplyDO> dataResponse = new DataResponse<MaterialApplyDO>();
-//        return dataResponse;
-//    }
+    /**
+     *
+     * <summary>
+     * [新增申请草稿]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param form
+     * @return
+     */
+    @RequestMapping(value = "/equipment/addApply")
+    @ResponseBody
+    public DataResponse<MaterialApplyDO> addApply(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse, @RequestBody ApplyForm form)
+    {
+        logger.info("match url 4 '/equipment/addApply'");
+        DataResponse<MaterialApplyDO> dataResponse = new DataResponse<MaterialApplyDO>();
+
+        try
+        {
+            addNewApply(httpServletRequest, httpServletResponse, form);
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip(e.getMessage());
+            dataResponse.setTipDesc(ExceptionUtils.getStackTrace(e));
+        }
+        return dataResponse;
+    }
+
+    /**
+     * <summary>
+     * []<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param form
+     */
+    private void addNewApply(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+            ApplyForm form)
+    {
+        MaterialApplyDO applyDO = new MaterialApplyDO();
+        applyDO.setTheId(UUID.randomUUID().toString());
+        applyDO.setTheName(form.getTheName());
+        applyDO.setTheRemark(form.getTheRemark());
+        applyDO.setCrtTime(DateUtils.getCurrentDateTimeMs());
+        applyDO.setCrtUserId(getLoginUsrId(httpServletRequest, httpServletResponse));
+        applyDO.setStatus(0);
+        applyBiz.addApply(applyDO);
+        form.setTheId(applyDO.getTheId());
+    }
 
     /**
      *
@@ -77,30 +141,44 @@ public class ApplyController extends BaseController
      *
      * @author jojo
      *
+     * @param httpServletRequest
+     * @param httpServletResponse
      * @param form
      * @return
      */
-    @RequestMapping(value = "/equipment/saveApply")
+    @RequestMapping(value = "/equipment/editApply")
     @ResponseBody
-    public DataResponse<MaterialApplyDO> saveApply(HttpServletRequest httpServletRequest,
+    public DataResponse<MaterialApplyDO> editApply(HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse, @RequestBody ApplyForm form)
     {
-        logger.info("match url 4 '/equipment/saveApply'");
+        logger.info("match url 4 '/equipment/editApply'");
         DataResponse<MaterialApplyDO> dataResponse = new DataResponse<MaterialApplyDO>();
+        if (StringUtils.isBlank(form.getTheId()))
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip("未获取到有效的申请id");
+            dataResponse.setTipDesc("无法保存申请：申请id为空。");
+            return dataResponse;
+        }
 
-        MaterialApplyDO applyDO = new MaterialApplyDO();
+        if (form.getStatus() > 0)
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            dataResponse.setTip("当前表单已经在流程中流转，无法保存草稿");
+            dataResponse.setTipDesc("无法保存申请：申请已经提交流程，需等待流程处理结束");
+            return dataResponse;
+        }
 
-        applyDO.setTheId(UUID.randomUUID().toString());
-        applyDO.setTheName(form.getTheName());
-        applyDO.setTheRemark(form.getTheRemark());
-        applyDO.setCrtTime(DateUtils.getCurrentDateTimeMs());
-
-        applyDO.setCrtUserId(getLoginUsrId(httpServletRequest, httpServletResponse));
+        Map<String, Object> params = new HashMap<String, Object>(10);
+        params.put("updUserId", getLoginUsrId(httpServletRequest, httpServletResponse));
+        // params.put("status", form.getStatus());
+        params.put("updTime", DateUtils.getCurrentDateTimeMs());
+        params.put("theName", form.getTheName());
+        params.put("theRemark", form.getTheRemark());
 
         try
         {
-            applyDO.setStatus(0);
-            applyBiz.addApply(applyDO);
+            applyBiz.editApply(params);
         }
         catch (Exception e)
         {
@@ -109,6 +187,80 @@ public class ApplyController extends BaseController
             dataResponse.setTip(e.getMessage());
             dataResponse.setTipDesc(ExceptionUtils.getStackTrace(e));
         }
+        return dataResponse;
+    }
+
+    @RequestMapping(value = "/equipment/startProcess4Apply")
+    @ResponseBody
+    public DataResponse<MaterialApplyDO> startProcess4Apply(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse, @RequestBody ApplyForm form)
+    {
+        logger.info("match url 4 '/equipment/startProcess4Apply'");
+        DataResponse<MaterialApplyDO> dataResponse = new DataResponse<MaterialApplyDO>();
+
+        //启动流程并且同时也设定下一个流程处理人，同时下方代码的variables设置applyUserId
+        if (StringUtils.isBlank(form.getNextUsrId()))
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip("未获取到有效的下一个流程处理人的id");
+            dataResponse.setTipDesc("无法启动申请流程：下一个流程节点的申请人id未设置。");
+            return dataResponse;
+        }
+
+        //检查用户是否为有效用户，无效则抛出异常
+
+        if (!ContextHolder.isValidUsr(form.getNextUsrId()))
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip("所选下一个流程处理人的id无效");
+            dataResponse.setTipDesc("无法启动申请流程：下一个流程节点的申请人id无效。");
+            return dataResponse;
+        }
+
+        try
+        {
+            // 从session中获取operId
+            String operId = getLoginUsrId(httpServletRequest, httpServletResponse);
+            // 没有申请则新建一个
+            if (StringUtils.isBlank(form.getTheId()))
+            {
+                addNewApply(httpServletRequest, httpServletResponse, form);
+            }
+            else
+            {
+                Map<String, Object> params = new HashMap<String, Object>(10);
+                params.put("theId", form.getTheId());
+                params.put("updUserId", operId);
+                params.put("updTime", DateUtils.getCurrentDateTimeMs());
+                params.put("theName", form.getTheName());
+                params.put("theRemark", form.getTheRemark());
+                applyBiz.editApply(params);
+            }
+
+            //启动工作流
+            String businessKey = form.getTheId();
+            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
+            Map<String, Object> variables = new HashMap<String, Object>(2);
+            variables.put("applyUserId", form.getNextUsrId());
+            @SuppressWarnings("unused")
+            String processInstanceId = workFlowExecutor.startProcessInstanceByKey("", operId,
+                    businessKey, variables);
+
+            //更新到申请表中
+            Map<String, Object> params = new HashMap<String, Object>(10);
+            params.put("theId", form.getTheId());
+            params.put("instanceId", form.getInstanceId());
+            applyBiz.editApply(params);
+
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip(e.getMessage());
+            dataResponse.setTipDesc(ExceptionUtils.getStackTrace(e));
+        }
+
         return dataResponse;
     }
 

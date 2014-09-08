@@ -24,6 +24,11 @@ public class MaterialApplyDO extends BasePOJO
      */
     private String statusDsc;
 
+    /**
+     * 流程实例id
+     */
+    private String instanceId;
+
     public String getStatusDsc()
     {
         return statusDsc;
@@ -32,6 +37,16 @@ public class MaterialApplyDO extends BasePOJO
     public void setStatusDsc(String statusDsc)
     {
         this.statusDsc = statusDsc;
+    }
+
+    public String getInstanceId()
+    {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId)
+    {
+        this.instanceId = instanceId;
     }
 
 }

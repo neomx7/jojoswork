@@ -6,6 +6,7 @@
 package com.jojo.biz;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jojo.dal.common.postgre.domain.MaterialApplyDO;
 import com.jojo.util.pojo.DataRequest;
@@ -47,4 +48,17 @@ public interface ApplyBiz
     * @param applyDO
     */
    public void addApply(MaterialApplyDO applyDO);
+
+   /**
+    *
+    * <summary>
+    * [保存物料申请]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param applyDO
+    */
+   public void editApply(Map<String, Object> params);
 }

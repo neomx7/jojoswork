@@ -54,5 +54,11 @@ public class ApplyBizImpl implements ApplyBiz
         mapper.insert(applyDO);
     }
 
+    @Override
+    public void editApply(Map<String, Object> params)
+    {
+        mapper.update(params);
+    }
+
 
 }

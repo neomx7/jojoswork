@@ -20,5 +20,27 @@ public class ApplyForm extends BaseForm
     /**   */
     private static final long serialVersionUID = 2874084372707416681L;
 
+    private String nextUsrId;
 
+    private String instanceId;
+
+    public String getNextUsrId()
+    {
+        return nextUsrId;
+    }
+
+    public void setNextUsrId(String nextUsrId)
+    {
+        this.nextUsrId = nextUsrId;
+    }
+
+    public String getInstanceId()
+    {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId)
+    {
+        this.instanceId = instanceId;
+    }
 }

@@ -21,6 +21,9 @@ public class TaskAssignmentHandler extends TaskHandler
     /**   */
     private static final long serialVersionUID = 6504653808165347949L;
 
+
+
+
     @Override
     public void notify(DelegateTask delegateTask)
     {
@@ -28,7 +31,7 @@ public class TaskAssignmentHandler extends TaskHandler
         // and then for example call following methods:
         //在这里设置之前form中设定好的分派人
 
-        delegateTask.setVariable("formDivId", getFormDivId());
+//        delegateTask.setVariable("formDivId", getFormDivId());//冗余
         delegateTask.setVariable("qryDataBeanId", getQryDataBeanId());
         delegateTask.setVariable("qryDataBeanMethod", getQryDataBeanMethod());
     }
