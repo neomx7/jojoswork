@@ -50,6 +50,9 @@ public class BaseForm implements Serializable
     private int version = 0;
 
     private int resultCode = 0;
+
+    private String errorMsg;
+
     /**
      * 错误信息
      */
@@ -288,5 +291,59 @@ public class BaseForm implements Serializable
     public void setErrors(Map<String, String> errors)
     {
         this.errors = errors;
+    }
+
+    public String getErrorMsg()
+    {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg)
+    {
+        this.errorMsg = errorMsg;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("BaseForm [theId=");
+        builder.append(theId);
+        builder.append(", theName=");
+        builder.append(theName);
+        builder.append(", theRemark=");
+        builder.append(theRemark);
+        builder.append(", status=");
+        builder.append(status);
+        builder.append(", crtUserId=");
+        builder.append(crtUserId);
+        builder.append(", crtUserName=");
+        builder.append(crtUserName);
+        builder.append(", crtTime=");
+        builder.append(crtTime);
+        builder.append(", updUserId=");
+        builder.append(updUserId);
+        builder.append(", updUserName=");
+        builder.append(updUserName);
+        builder.append(", updTime=");
+        builder.append(updTime);
+        builder.append(", key=");
+        builder.append(key);
+        builder.append(", category=");
+        builder.append(category);
+        builder.append(", version=");
+        builder.append(version);
+        builder.append(", resultCode=");
+        builder.append(resultCode);
+        builder.append(", errorMsg=");
+        builder.append(errorMsg);
+        builder.append(", errors=");
+        builder.append(errors);
+        builder.append(", tip=");
+        builder.append(tip);
+        builder.append(", tipDesc=");
+        builder.append(tipDesc);
+        builder.append("]");
+        return builder.toString();
     }
 }

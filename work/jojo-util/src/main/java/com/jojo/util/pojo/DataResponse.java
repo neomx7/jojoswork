@@ -48,6 +48,11 @@ public class DataResponse <T> {
      */
     private String tipDesc;
 
+    /**
+     * 查询的制定对象，1个
+     */
+    private T one;
+
 
     public List<T> getRows()
     {
@@ -127,6 +132,16 @@ public class DataResponse <T> {
     public void setStatus(int status)
     {
         this.status = status;
+    }
+
+    public T getOne()
+    {
+        return one;
+    }
+
+    public void setOne(T one)
+    {
+        this.one = one;
     }
 
 }

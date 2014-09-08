@@ -190,6 +190,35 @@ public class ApplyController extends BaseController
         return dataResponse;
     }
 
+    @RequestMapping(value = "/equipment/showApply")
+    public String showApply(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse, @ModelAttribute("form") ApplyForm form)
+    {
+        logger.info("match url 4 '/equipment/showApply'");
+//        DataResponse<MaterialApplyDO> dataResponse = new DataResponse<MaterialApplyDO>();
+        if (StringUtils.isBlank(form.getTheId()))
+        {
+//            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//            dataResponse.setTip("未获取到有效的申请id");
+//            dataResponse.setTipDesc("无法展示流程：申请id未设置。");
+//            return dataResponse;
+            form.setErrorMsg("未获取到有效的申请id");
+            return "view/common/common-error";
+        }
+
+        //
+        Map<String, Object> params = new HashMap<String, Object>(2);
+        params.put("theId", form.getTheId().trim());
+        MaterialApplyDO applyDO = applyBiz.findApply(params);
+//        dataResponse.setOne(applyDO);
+//        form.setNextUsrId(nextUsrId);
+        form.setTheName(applyDO.getTheName());
+        form.setTheRemark(applyDO.getTheRemark());
+        form.setStatus(applyDO.getStatus());
+//        return dataResponse;
+        return "view/equipment/create-apply";
+    }
+
     @RequestMapping(value = "/equipment/startProcess4Apply")
     @ResponseBody
     public DataResponse<MaterialApplyDO> startProcess4Apply(HttpServletRequest httpServletRequest,
@@ -198,7 +227,7 @@ public class ApplyController extends BaseController
         logger.info("match url 4 '/equipment/startProcess4Apply'");
         DataResponse<MaterialApplyDO> dataResponse = new DataResponse<MaterialApplyDO>();
 
-        //启动流程并且同时也设定下一个流程处理人，同时下方代码的variables设置applyUserId
+        // 启动流程并且同时也设定下一个流程处理人，同时下方代码的variables设置applyUserId
         if (StringUtils.isBlank(form.getNextUsrId()))
         {
             dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -207,7 +236,7 @@ public class ApplyController extends BaseController
             return dataResponse;
         }
 
-        //检查用户是否为有效用户，无效则抛出异常
+        // 检查用户是否为有效用户，无效则抛出异常
 
         if (!ContextHolder.isValidUsr(form.getNextUsrId()))
         {
@@ -237,16 +266,15 @@ public class ApplyController extends BaseController
                 applyBiz.editApply(params);
             }
 
-            //启动工作流
+            // 启动工作流
             String businessKey = form.getTheId();
             WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
             Map<String, Object> variables = new HashMap<String, Object>(2);
             variables.put("applyUserId", form.getNextUsrId());
             @SuppressWarnings("unused")
-            String processInstanceId = workFlowExecutor.startProcessInstanceByKey("", operId,
-                    businessKey, variables);
+            String processInstanceId = workFlowExecutor.startProcessInstanceByKey("", operId, businessKey, variables);
 
-            //更新到申请表中
+            // 更新到申请表中
             Map<String, Object> params = new HashMap<String, Object>(10);
             params.put("theId", form.getTheId());
             params.put("instanceId", form.getInstanceId());
@@ -395,7 +423,7 @@ public class ApplyController extends BaseController
 
             WorkFlowQuery query = new WorkFlowQuery();
             query.setTaskMode(JOJOConstants.WORKFLOW_TASKMODE_TODO);
-            // TODO 从session中得到当前用户
+            // 从session中得到当前用户
             query.setOperId(getLoginUsrId(httpServletRequest, httpServletResponse));
 
             return findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowTODOTask", query,

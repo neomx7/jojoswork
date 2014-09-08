@@ -295,11 +295,11 @@ function bindMenuEvents()
 /**
  * 打开模态对话框，显示错误信息
  */
-function showTipMessage(errHtml,dlgTitle)
+function showTipMessage(tipHtml,dlgTitle)
 {
     var consoleDlg = $("#consoleDlg");
     consoleDlg.empty();
-    var infoV = errHtml;// $("#globalErrDiv").html();
+    var infoV = tipHtml;// $("#globalErrDiv").html();
     consoleDlg.append(infoV);
     consoleDlg.dialog("option", "title", dlgTitle).dialog("open");
 

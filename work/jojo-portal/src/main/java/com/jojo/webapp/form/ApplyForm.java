@@ -43,4 +43,18 @@ public class ApplyForm extends BaseForm
     {
         this.instanceId = instanceId;
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ApplyForm [nextUsrId=");
+        builder.append(nextUsrId);
+        builder.append(", instanceId=");
+        builder.append(instanceId);
+        builder.append(", toString()=");
+        builder.append(super.toString());
+        builder.append("]");
+        return builder.toString();
+    }
 }

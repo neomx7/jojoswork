@@ -69,14 +69,13 @@
 	</delete>
 
 	<select id="select" parameterType="java.util.Map" resultMap="materialApplyResultMap">
-		SELECT T.* FROM jojo_mtr_apply T WHERE T.T_ID =
-		#{id}
+		SELECT T.* FROM jojo_mtr_apply T WHERE T.T_ID = #{theId}
 	</select>
 
 	<select id="queryPage" parameterType="java.util.Map" resultMap="materialApplyResultMap">
 		SELECT T.* FROM jojo_mtr_apply T WHERE 1=1
 		<if test="theId != null and theId != ''">
-			AND T.T_ID = #{id}
+			AND T.T_ID = #{theId}
 		</if>
 		<if test="status != null and status != ''">
 			AND T.t_status = #{status}

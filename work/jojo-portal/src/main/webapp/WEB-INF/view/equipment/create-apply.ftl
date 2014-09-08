@@ -28,16 +28,18 @@
 						发起新物料申请
 					</div>
 					<form id="targetForm" method="post">
+							<#--
 							<div id="succ_tip" class="field succ" style="display:none;">物料申请发起成功！ </div>
 							<div id="err_tip" class="field error" style="display:none;"></div>
+							-->
 						<div class="field">
 							<label for="theName">申请名称　</label>
-							<input id="theName" name="theName" type="text" value="" class="validate[required] text-input"/>
+							<input id="theName" name="theName" type="text" value="${form.theName}" class="validate[required] text-input"/>
 						</div>
 
 						<div class="field">
 							<label for=theRemark>备注</label>
-							<input id="theRemark" name="theRemark" type="text" value="" />
+							<input id="theRemark" name="theRemark" type="text" value="${form.theRemark}" />
 						</div>
 
 						<div class="field">

@@ -60,5 +60,11 @@ public class ApplyBizImpl implements ApplyBiz
         mapper.update(params);
     }
 
+    @Override
+    public MaterialApplyDO findApply(Map<String, Object> params)
+    {
+        return mapper.select(params);
+    }
+
 
 }

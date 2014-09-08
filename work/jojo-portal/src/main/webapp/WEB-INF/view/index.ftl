@@ -111,6 +111,9 @@
 		</div>
 	</div>
 </div>
+<!--hidden info message -->
+<div id="globalFormDiv" style="display:none;">
+</div>
 
 
 

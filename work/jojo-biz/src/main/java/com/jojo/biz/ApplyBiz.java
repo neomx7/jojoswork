@@ -25,6 +25,20 @@ public interface ApplyBiz
     /**
      *
      * <summary>
+     * [根据条件找到申请对象，1条]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param params
+     * @return
+     */
+    public MaterialApplyDO findApply(Map<String, Object> params);
+
+    /**
+     *
+     * <summary>
      * [翻页查询，物料申请列表]<br>
      * <br>
      * </summary>
