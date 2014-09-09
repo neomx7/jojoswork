@@ -9,12 +9,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -24,7 +26,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,9 +35,9 @@ import com.jojo.integration.workflow.WorkFlowExecutor;
 import com.jojo.util.CommonUtils;
 import com.jojo.util.biz.bo.ApplyBO;
 import com.jojo.util.biz.bo.PageResultBO;
-import com.jojo.util.biz.bo.UserBO;
 import com.jojo.util.common.DateUtils;
 import com.jojo.util.constants.JOJOConstants;
+import com.jojo.util.pojo.BasePOJO;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataRequest4Apply;
 import com.jojo.util.pojo.DataResponse;
@@ -170,9 +171,10 @@ public class ApplyController extends BaseController
         }
 
         Map<String, Object> params = new HashMap<String, Object>(10);
+        params.put("theId", form.getTheId());
         params.put("updUserId", getLoginUsrId(httpServletRequest, httpServletResponse));
         // params.put("status", form.getStatus());
-        params.put("updTime", DateUtils.getCurrentDateTimeMs());
+        params.put("updTime", new Date());
         params.put("theName", form.getTheName());
         params.put("theRemark", form.getTheRemark());
 
@@ -216,7 +218,7 @@ public class ApplyController extends BaseController
         form.setTheRemark(applyDO.getTheRemark());
         form.setStatus(applyDO.getStatus());
 //        return dataResponse;
-        return "view/equipment/create-apply";
+        return "view/equipment/edit-apply";
     }
 
     @RequestMapping(value = "/equipment/startProcess4Apply")
@@ -260,7 +262,7 @@ public class ApplyController extends BaseController
                 Map<String, Object> params = new HashMap<String, Object>(10);
                 params.put("theId", form.getTheId());
                 params.put("updUserId", operId);
-                params.put("updTime", DateUtils.getCurrentDateTimeMs());
+                params.put("updTime", new Date());
                 params.put("theName", form.getTheName());
                 params.put("theRemark", form.getTheRemark());
                 applyBiz.editApply(params);
@@ -271,13 +273,19 @@ public class ApplyController extends BaseController
             WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
             Map<String, Object> variables = new HashMap<String, Object>(2);
             variables.put("applyUserId", form.getNextUsrId());
-            @SuppressWarnings("unused")
-            String processInstanceId = workFlowExecutor.startProcessInstanceByKey("", operId, businessKey, variables);
+            @SuppressWarnings("unused")//lishengProcess1:8:15904
+            String processInstanceId = workFlowExecutor.startProcessInstanceByKey("lishengProcess1", operId, businessKey, variables);
+
+            WorkFlowTaskDTO flowTaskDTO = workFlowExecutor.getProcessActivity(processInstanceId);
 
             // 更新到申请表中
             Map<String, Object> params = new HashMap<String, Object>(10);
             params.put("theId", form.getTheId());
-            params.put("instanceId", form.getInstanceId());
+            params.put("updUserId", operId);
+            params.put("updTime", new Date());
+            params.put("instanceId", processInstanceId);
+            params.put("status", JOJOConstants.WORKFLOW_TASKMODE_DOING);
+            params.put("statusDsc", flowTaskDTO.getTheName());
             applyBiz.editApply(params);
 
         }
@@ -476,11 +484,22 @@ public class ApplyController extends BaseController
         //
         // int start = currPage * limit - limit;
         // start = start < 0 ? 0 : start;
+        List<T> list = resultBO.getResults();
+
+        if (CollectionUtils.isNotEmpty(list))
+        {
+            for (int i=0;i<list.size();i++)
+            {
+                BasePOJO pojo = (BasePOJO)(list.get(i));
+                pojo.setNumber(i);
+            }
+        }
+
 
         response.setRecords(count);
         response.setTotal(totalPages);
         response.setPage(currPage);
-        response.setRows(resultBO.getResults());
+        response.setRows(list);
 
         return response;
     }

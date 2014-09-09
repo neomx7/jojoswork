@@ -115,7 +115,7 @@ function addTab(tabs, tabLabel, tabContentHtml, theId)
     // 焦点指向这里
     $("#tabs").selectTabByID(newTabId);// worked.
 
-    $('#tabs_Li_' + theId).trigger("dblclick");
+//    $('#tabs_Li_' + theId).trigger("dblclick");
 }
 
 $(document).ready(function()
@@ -788,3 +788,12 @@ $.fn.serializeObject = function() {
   });
   return o;
 };
+
+function split(val)
+{
+    return val.split(/,\s*/);
+}
+function extractLast(term)
+{
+    return split(term).pop();
+}

@@ -213,6 +213,41 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         return null;
     }
 
+
+    /**
+     * 得到当前激活的task节点
+     * @return
+     */
+    @Override
+    public WorkFlowTaskDTO getProcessActivity(String processInstanceId) {
+        WorkFlowTaskDTO workFlowTaskDTO = new WorkFlowTaskDTO();
+        try {
+            Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
+            Object property = PropertyUtils.getProperty(execution, "activityId");
+            String activityId = "";
+            if (property != null) {
+                activityId = property.toString();
+            }
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+            ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+                    .getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
+            List<ActivityImpl> activitiList = processDefinition.getActivities();//获得当前任务的所有节点
+            for (ActivityImpl activityImpl : activitiList) {
+                String id = activityImpl.getId();
+                if (id.equals(activityId)) {//获得执行到那个节点
+
+                    workFlowTaskDTO.setTheId(id);
+                    workFlowTaskDTO.setTheName(String.valueOf(activityImpl.getProperty("name")));
+                    return workFlowTaskDTO;
+                }
+            }
+//            Struts2Utils.renderJson(activityImageInfo);
+        } catch (Exception e) {
+            logger.error("查看流程跟踪图出错：[{}]",e);
+        }
+        return null;
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -255,6 +290,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
             identityService.setAuthenticatedUserId(operId);
             processInstance = runtimeService.startProcessInstanceByKey(processKey, businessKey,
                     variables);
+
         }
         finally
         {

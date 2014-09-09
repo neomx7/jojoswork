@@ -45,7 +45,7 @@ $(function()
         index : "act",
         sortable : false,
         align : "center",
-        width : "35%"
+        width : "20%"
     },
     {
         name : "processDefinitionId",
@@ -53,23 +53,23 @@ $(function()
         sortable : false,
         hidden : true,
         align : "center",
-        width : 1
+        width : "5%"
     },
     {
         name : "processInstanceId",
         index : "processInstanceId",
         sortable : false,
-        hidden : true,
+        hidden : false,
         align : "center",
-        width : 1
+        width : "5%"
     },
     {
         name : "taskId",
         index : "taskId",
         sortable : false,
-        hidden : true,
+        hidden : false,
         align : "center",
-        width : 1
+        width : "5%"
     }
     ];
     try
@@ -98,10 +98,10 @@ $(function()
                                             + "<input style='height:22px;width:120px;' type='button' value='查看流程' onClick='viewProcessInfo(\"todoTaskGrid\",\"#rowid\")'/>";
                                     for (var i = 0; i < ids.length; i++)
                                     {
-                                        var cl = ids[i];
+                                        var rowdata = currGrid.jqGrid('getRowData', ids[i]);// 行数据
                                         // 按钮的html内容
-                                        btnHtml = btnHtml.replaceAll("#rowid", cl);
-                                        $('#todoTaskGrid').jqGrid('setRowData', ids[i],
+                                        btnHtml = btnHtml.replaceAll("#rowid", rowdata.taskId);
+                                        $('#todoTaskGrid').jqGrid('setRowData', rowdata.processInstanceId,
                                         {
                                             act : btnHtml
                                         });

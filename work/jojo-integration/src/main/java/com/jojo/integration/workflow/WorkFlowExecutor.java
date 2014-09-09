@@ -84,6 +84,9 @@ public interface WorkFlowExecutor
      */
     public String startProcessInstanceByKey(String processKey,String operId,String buinessKey, Map<String, Object> variables);
 
+
+    public WorkFlowTaskDTO getProcessActivity(String processInstanceId);
+
     /**
      *
      * <summary>

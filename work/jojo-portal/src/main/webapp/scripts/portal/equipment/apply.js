@@ -1,5 +1,7 @@
 $(function()
 {
+    $("#setNextUser").show();
+
     $("button[id='saveBtn']").button(
     {
         icons :
@@ -16,7 +18,7 @@ $(function()
         {
             type : 'POST',
             contentType : 'application/json',
-            url : 'equipment/saveApply',
+            url : 'equipment/addApply',
             data : dataRequest,
             dataType : 'json', // 'json'
             success : function(dataResult)
@@ -31,8 +33,6 @@ $(function()
                 }
                 else
                 {
-                    // $("#err_tip").text(josnResult.tipDesc);
-                    // $("#err_tip").show();
                     $("#tip").html(josnResult.tip);
                     $("#tipDesc").html(josnResult.tipDesc);
                     var errHtml = $("#globalErrDiv").html();
@@ -58,12 +58,110 @@ $(function()
         // event.preventDefault();
     });
 
+
+
+    $("button[id='saveBtnE']").button(
+            {
+                icons :
+                {
+                    primary : "ui-icon-gear"
+                },
+                text : true
+            }).click(function(event)
+            {
+                // event.preventDefault();
+                var dataRequest = $.toJSON($('#targetFormE').serializeObject());
+                // ajax提交
+                $.ajax(
+                {
+                    type : 'POST',
+                    contentType : 'application/json',
+                    url : 'equipment/editApply',
+                    data : dataRequest,
+                    dataType : 'json', // 'json'
+                    success : function(dataResult)
+                    {
+                        var josnResult = eval(dataResult);
+                        $("#err_tip").empty();
+                        if (josnResult.status == 200)
+                        {
+                            //刷新列表
+                            $('#jqGirdList4Apply').trigger( 'reloadGrid' );
+                            $("#tip_suc").html("保存成功");
+                            var targetHtml = $("#globalSucDiv").html();
+                            showTipMessage(targetHtml);
+                        }
+                        else
+                        {
+                            $("#tip").html(josnResult.tip);
+                            $("#tipDesc").html(josnResult.tipDesc);
+                            var errHtml = $("#globalErrDiv").html();
+                            showTipMessage(errHtml);
+                        }
+                    },
+                    error : function(XMLHttpRequest, textStatus, errorThrown)
+                    {
+                        alert("提交失败，错误信息为 :" + XMLHttpRequest.responseText);
+                        // alert("提交失败，错误信息为 :" + errorThrown);
+                    }
+                });
+            });
+
+
+    $("button[id='submitBtnE']").button(
+            {
+                icons :
+                {
+                    primary : "ui-icon-gear"
+                },
+                text : true
+            }).click(function(event)
+            {
+                // event.preventDefault();
+                var dataRequest = $.toJSON($('#targetFormE').serializeObject());
+                // ajax提交
+                $.ajax(
+                {
+                    type : 'POST',
+                    contentType : 'application/json',
+                    url : 'equipment/startProcess4Apply',
+                    data : dataRequest,
+                    dataType : 'json',
+                    success : function(dataResult)
+                    {
+                        var josnResult = eval(dataResult);
+                        $("#err_tip").empty();
+                        if (josnResult.status == 200)
+                        {
+                            //刷新列表
+                            $('#jqGirdList4Apply').trigger( 'reloadGrid' );
+                            $("#tip_suc").html("提交成功，当前申请已经进入流程处理,请到待办列表中查看");
+                            var targetHtml = $("#globalSucDiv").html();
+                            showTipMessage(targetHtml);
+                        }
+                        else
+                        {
+                            $("#tip").html(josnResult.tip);
+                            $("#tipDesc").html(josnResult.tipDesc);
+                            var errHtml = $("#globalErrDiv").html();
+                            showTipMessage(errHtml);
+                        }
+                    },
+                    error : function(XMLHttpRequest, textStatus, errorThrown)
+                    {
+                        alert("提交失败，错误信息为 :" + XMLHttpRequest.responseText);
+                        // alert("提交失败，错误信息为 :" + errorThrown);
+                    }
+                });
+            });
+
+
     // binds form submission and fields to the validation engine
     $("#targetForm").validationEngine();
 
     try
     {
-        var colNames = [ "id", "编号", "申请名称", "创建时间", "备注", "操作"
+        var colNames = [ "id", "编号", "申请名称", "创建时间","状态","状态信息", "备注", "操作"
         ];
         var colModel = [
         {
@@ -92,6 +190,20 @@ $(function()
             width : "10%",
             sorttype : "string"
         },
+        {
+            name : "status",
+            index : "status",
+            width : "10%",
+            sorttype : "int"
+        },
+        {
+            name : "statusDsc",
+            index : "statusDsc",
+            width : "10%",
+            sorttype : "string"
+        },
+
+
         {
             name : "theRemark",
             index : "theRemark",
@@ -151,6 +263,55 @@ $(function()
         alert("............" + e);
     }
 
+    try
+    {
+        $("#nextUserE").autocomplete(
+        {
+            source : function(request, response)
+            {
+                var obj = {};
+                obj.userName = request.term;
+                var param = JSON.stringify(obj);
+                $.ajax(
+                {
+                    url : "user/search",
+                    contentType : "application/json; charset=utf-8",
+                    type : "post",
+                    dataType : "json",
+                    data : param,
+                    success : function( data, status, xhr )
+                    {
+                        //json 数组
+//                        var jsonArr = eval(data);
+                        response( data );
+                    },
+                    error : function(err)
+                    {
+                        alert("error info: "+ e);
+                    }
+                });
+            },
+
+            minLength : 1,
+            select : function(event, ui)
+            {
+                // log( ui.item ?
+                // "Selected: " + ui.item.value + " aka " + ui.item.id :
+                // "Nothing selected, input was " + this.value );
+                if (ui.item)
+                {
+                   // alert("Selected: " + ui.item.value + "; itemId: " + ui.item.id);
+//                    $("#nextUser").val(ui.item.label)
+                }
+            }
+        });
+
+    }
+    catch (e)
+    {
+        alert("catch error info: "+ e);
+    }
+
 });
 
 /**
@@ -185,6 +346,10 @@ function handleF(id)
             // alert("提交失败，错误信息为 :" + errorThrown);
         }
     });
+
+
+
+
 
 }
 function viewF(id)
