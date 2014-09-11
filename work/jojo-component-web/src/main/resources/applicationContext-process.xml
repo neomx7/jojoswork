@@ -27,6 +27,8 @@
 		<!-- 发布流程图时，是否自动生成流程图片 -->
 		<property name="createDiagramOnDeploy" value="true"></property>
 		<property name="deploymentName" value="processDeploymentName"></property>
+
+		 <property name="history" value="full"></property>
 	</bean>
 
 	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">

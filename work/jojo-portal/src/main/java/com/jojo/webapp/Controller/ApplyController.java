@@ -218,7 +218,48 @@ public class ApplyController extends BaseController
         form.setTheRemark(applyDO.getTheRemark());
         form.setStatus(applyDO.getStatus());
 //        return dataResponse;
+
+
+        //把流程审批记录也拿到
+
         return "view/equipment/edit-apply";
+    }
+
+
+    /**
+     *
+     * <summary>
+     * [查看表单内容，进入流程task后查看]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param form
+     * @return
+     */
+    @RequestMapping(value = "/equipment/viewApply4WorkFlow")
+    public String viewApply(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse, @ModelAttribute("form") ApplyForm form)
+    {
+        logger.info("match url 4 '/equipment/viewApply'");
+        if (StringUtils.isBlank(form.getTheId()))
+        {
+            form.setErrorMsg("未获取到有效的申请id");
+            return "view/common/common-error";
+        }
+
+        //
+        Map<String, Object> params = new HashMap<String, Object>(2);
+        params.put("theId", form.getTheId().trim());
+        MaterialApplyDO applyDO = applyBiz.findApply(params);
+        form.setTheName(applyDO.getTheName());
+        form.setTheRemark(applyDO.getTheRemark());
+        form.setStatus(applyDO.getStatus());
+
+        return "view/equipment/viw-apply";
     }
 
     @RequestMapping(value = "/equipment/startProcess4Apply")
@@ -269,11 +310,14 @@ public class ApplyController extends BaseController
             }
 
             // 启动工作流
-            String businessKey = form.getTheId();
-            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean("workFlowServiceProxy"));
+            String businessKey = form.getTheId().trim();
+            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean(JOJOConstants.WORKFLOW_SERVICE));
             Map<String, Object> variables = new HashMap<String, Object>(2);
-            variables.put("applyUserId", form.getNextUsrId());
-            @SuppressWarnings("unused")//lishengProcess1:8:15904
+            variables.put(JOJOConstants.WORKFLOW_PROCESSINST_NEXT_ASSIGNEE, form.getNextUsrId());
+            //直接给url，这样就不用转换spring bean和方法来查看表单内容了
+            variables.put(JOJOConstants.WORKFLOW_PROCESSINST_BIZ_KEY_URL, "/equipment/viewApply4WorkFlow?theId="+businessKey);
+
+           //lishengProcess1:8:15904 //TODO 需要把里面写死的procDefKey换成动态改变的
             String processInstanceId = workFlowExecutor.startProcessInstanceByKey("lishengProcess1", operId, businessKey, variables);
 
             WorkFlowTaskDTO flowTaskDTO = workFlowExecutor.getProcessActivity(processInstanceId);
@@ -287,7 +331,6 @@ public class ApplyController extends BaseController
             params.put("status", JOJOConstants.WORKFLOW_TASKMODE_DOING);
             params.put("statusDsc", flowTaskDTO.getTheName());
             applyBiz.editApply(params);
-
         }
         catch (Exception e)
         {
@@ -458,7 +501,7 @@ public class ApplyController extends BaseController
     ) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException
     {
-        Object wfService = (ContextHolder.getBean(qryBean));// "workFlowServiceProxy"
+        Object wfService = (ContextHolder.getBean(qryBean));// JOJOConstants.WORKFLOW_SERVICE
 
         int count = 0;// 总记录数
         int limit = request.getRows() <= 0 ? 20 : request.getRows();// 每页显示数量

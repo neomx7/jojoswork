@@ -56,6 +56,39 @@ $(function()
     }).click(function(event)
     {
         // event.preventDefault();
+        var dataRequest = $.toJSON($('#targetForm').serializeObject());
+        // ajax提交
+        $.ajax(
+        {
+            type : 'POST',
+            contentType : 'application/json',
+            url : 'equipment/startProcess4Apply',
+            data : dataRequest,
+            dataType : 'json', // 'json'
+            success : function(dataResult)
+            {
+                var josnResult = eval(dataResult);
+                $("#err_tip").empty();
+                if (josnResult.status == 200)
+                {
+                    $("#tip_suc").html("保存成功");
+                    var errHtml = $("#globalSucDiv").html();
+                    showTipMessage(errHtml);
+                }
+                else
+                {
+                    $("#tip").html(josnResult.tip);
+                    $("#tipDesc").html(josnResult.tipDesc);
+                    var errHtml = $("#globalErrDiv").html();
+                    showTipMessage(errHtml);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown)
+            {
+                alert("提交失败，错误信息为 :" + XMLHttpRequest.responseText);
+                // alert("提交失败，错误信息为 :" + errorThrown);
+            }
+        });
     });
 
 

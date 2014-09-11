@@ -3,7 +3,7 @@
   <process id="lishengProcess1" name="Material management process" isExecutable="true">
     <startEvent id="theStart" activiti:initiator="applyUserId"></startEvent>
     <sequenceFlow id="startFlow" sourceRef="theStart" targetRef="applyShipSparePartsTask"></sequenceFlow>
-    <userTask id="applyShipSparePartsTask" name="apply for ship spare parts" activiti:assignee="${applyUserId}" >
+    <userTask id="applyShipSparePartsTask" name="apply for ship spare parts" activiti:assignee="${nextAssignee}" >
       <documentation>The chief engineer will apply for ship spare parts.</documentation>
 
       <extensionElements>
@@ -19,7 +19,7 @@
       </extensionElements>
     </userTask>
     <sequenceFlow id="assgin2MgtCompanyDirector" sourceRef="applyShipSparePartsTask" targetRef="checkShipSparePartsTask"></sequenceFlow>
-    <userTask id="checkShipSparePartsTask" name="check for ship spare parts" activiti:assignee="${nextAssignee}">
+    <userTask id="checkShipSparePartsTask" name="check for ship spare parts" activiti:assignee="${nextAssignee}" >
       <documentation>The Management Company Director will check for ship spare parts.</documentation>
       <extensionElements>
         <activiti:taskListener event="create" class="com.jojo.service.process.usertask.listener.TaskAssignmentHandler">

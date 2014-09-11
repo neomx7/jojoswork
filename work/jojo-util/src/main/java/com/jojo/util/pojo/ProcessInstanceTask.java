@@ -6,16 +6,18 @@
 package com.jojo.util.pojo;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <summary>
- *
+ * 流程实例中的task节点对象
  * </summary>
  *
  * @author jojo
  *
  */
-public class ProcessTask extends BasePOJO
+public class ProcessInstanceTask extends BasePOJO
 {
 
     /**   */
@@ -43,6 +45,8 @@ public class ProcessTask extends BasePOJO
 
     //下个节点审批人
     private String nextAssignee;
+
+    private Map<String, Object> localVariables = new HashMap<String, Object>();
 
     public int getRevision()
     {
@@ -195,6 +199,61 @@ public class ProcessTask extends BasePOJO
     public void setNextAssignee(String nextAssignee)
     {
         this.nextAssignee = nextAssignee;
+    }
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ProcessTask [revision=");
+        builder.append(revision);
+        builder.append(", owner=");
+        builder.append(owner);
+        builder.append(", assignee=");
+        builder.append(assignee);
+        builder.append(", initialAssignee=");
+        builder.append(initialAssignee);
+        builder.append(", parentTaskId=");
+        builder.append(parentTaskId);
+        builder.append(", taskName=");
+        builder.append(taskName);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(", priority=");
+        builder.append(priority);
+        builder.append(", createTime=");
+        builder.append(createTime);
+        builder.append(", dueDate=");
+        builder.append(dueDate);
+        builder.append(", suspensionState=");
+        builder.append(suspensionState);
+        builder.append(", category=");
+        builder.append(category);
+        builder.append(", executionId=");
+        builder.append(executionId);
+        builder.append(", processDefinitionId=");
+        builder.append(processDefinitionId);
+        builder.append(", processInstanceId=");
+        builder.append(processInstanceId);
+        builder.append(", tenantId=");
+        builder.append(tenantId);
+        builder.append(", taskDefinitionKey=");
+        builder.append(taskDefinitionKey);
+        builder.append(", taskId=");
+        builder.append(taskId);
+        builder.append(", nextAssignee=");
+        builder.append(nextAssignee);
+        builder.append(", toString()=");
+        builder.append(super.toString());
+        builder.append("]");
+        return builder.toString();
+    }
+    public Map<String, Object> getLocalVariables()
+    {
+        return localVariables;
+    }
+    public void setLocalVariables(Map<String, Object> localVariables)
+    {
+        this.localVariables = localVariables;
     }
 
 }

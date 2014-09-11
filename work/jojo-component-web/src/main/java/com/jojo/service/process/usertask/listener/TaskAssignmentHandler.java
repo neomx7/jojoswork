@@ -32,8 +32,11 @@ public class TaskAssignmentHandler extends TaskHandler
         //在这里设置之前form中设定好的分派人
 
 //        delegateTask.setVariable("formDivId", getFormDivId());//冗余
-        delegateTask.setVariable("qryDataBeanId", getQryDataBeanId());
-        delegateTask.setVariable("qryDataBeanMethod", getQryDataBeanMethod());
+//        delegateTask.setVariable("qryDataBeanId", getQryDataBeanId());
+//        delegateTask.setVariable("qryDataBeanMethod", getQryDataBeanMethod());
+        System.out.println(delegateTask.getId());
+        System.out.println(delegateTask.getTaskDefinitionKey());
+        System.out.println(delegateTask.getVariables());
     }
 
 }

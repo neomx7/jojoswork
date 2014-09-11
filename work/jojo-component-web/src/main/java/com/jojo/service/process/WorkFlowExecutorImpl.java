@@ -8,6 +8,7 @@ package com.jojo.service.process;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -29,6 +31,7 @@ import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -44,8 +47,7 @@ import com.jojo.process.dal.postgre.ProcessMgrMapper;
 import com.jojo.util.biz.bo.PageResultBO;
 import com.jojo.util.constants.JOJOConstants;
 import com.jojo.util.pojo.DataRequest;
-import com.jojo.util.pojo.ProcessTask;
-import com.jojo.util.pojo.ProcessTaskForm;
+import com.jojo.util.pojo.ProcessInstanceTask;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefineGraph;
 import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
@@ -329,7 +331,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * java.lang.String)
      */
     @Override
-    public void completeTask(ProcessTask processTask)
+    public void completeTask(ProcessInstanceTask processTask)
     {
 
 
@@ -338,7 +340,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         Map<String, Object> variables = new HashMap<String, Object>();
         if (StringUtils.isNotBlank(processTask.getNextAssignee()))
         {
-            variables.put(JOJOConstants.NEXT_ASSIGNEE, processTask.getNextAssignee());
+            variables.put(JOJOConstants.WORKFLOW_PROCESSINST_NEXT_ASSIGNEE, processTask.getNextAssignee());
         }
 //        runtimeService.setVariable(processTask.getExecutionId(),
 //                JOJOConstants.NEXT_ASSIGNEE, processTask.getNextAssignee());
@@ -367,10 +369,25 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * com.jojo.facade.workflow.WorkFlowExecutor#getTaskForm(java.lang.String)
      */
     @Override
-    public ProcessTaskForm getTaskForm(String taskId)
+    public ProcessInstanceTask getProcessInstanceTask(String taskId)
     {
-        // TODO Auto-generated method stub
-        return null;
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        ProcessInstanceTask processInstanceTask = new ProcessInstanceTask();
+        processInstanceTask.setTaskId(task.getId());
+        processInstanceTask.setTaskName(task.getName());
+        processInstanceTask.setAssignee(task.getAssignee());
+        processInstanceTask.setExecutionId(task.getExecutionId());
+        processInstanceTask.setOwner(task.getOwner());
+        processInstanceTask.setParentTaskId(task.getParentTaskId());
+//        processInstanceTask.setInitialAssignee(task.get);
+        processInstanceTask.setTaskDefinitionKey(task.getTaskDefinitionKey());
+        processInstanceTask.setProcessDefinitionId(task.getProcessDefinitionId());
+        processInstanceTask.setProcessInstanceId(task.getProcessInstanceId());
+
+        Map<String, Object> localVariables = task.getTaskLocalVariables();
+        processInstanceTask.setLocalVariables(localVariables);
+
+        return processInstanceTask;
     }
 
     @Override
@@ -549,7 +566,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      *            用户ID
      */
     @Transactional(readOnly = true)
-    public List<ProcessTask> createUnsignedTaskQuery(String userId, String processDefKey)
+    public List<ProcessInstanceTask> createUnsignedTaskQuery(String userId, String processDefKey)
     {
         TaskQuery taskCandidateUserQuery = taskService.createTaskQuery().processDefinitionKey(processDefKey)
                 .taskCandidateUser(userId);
@@ -568,7 +585,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      *            用户ID
      */
     @Transactional(readOnly = true)
-    public List<ProcessTask> createTodoTaskQuery(String userId, String processDefKey)
+    public List<ProcessInstanceTask> createTodoTaskQuery(String userId, String processDefKey)
     {
         TaskQuery taskAssigneeQuery = taskService.createTaskQuery().processDefinitionKey(processDefKey)
                 .taskAssignee(userId);
@@ -591,15 +608,15 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * @param tasks
      * @return
      */
-    private List<ProcessTask> getProcessTaskList(List<Task> tasks)
+    private List<ProcessInstanceTask> getProcessTaskList(List<Task> tasks)
     {
-        List<ProcessTask> processTasks = null;
+        List<ProcessInstanceTask> processTasks = null;
         if (tasks != null && !tasks.isEmpty())
         {
-            processTasks = new ArrayList<ProcessTask>(tasks.size());
+            processTasks = new ArrayList<ProcessInstanceTask>(tasks.size());
             for (Task task : tasks)
             {
-                ProcessTask processTask = tranferTask(task);
+                ProcessInstanceTask processTask = tranferTask(task);
                 processTasks.add(processTask);
             }
 
@@ -617,9 +634,9 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      *
      * @param task
      */
-    private ProcessTask tranferTask(Task task)
+    private ProcessInstanceTask tranferTask(Task task)
     {
-        ProcessTask processTask = new ProcessTask();
+        ProcessInstanceTask processTask = new ProcessInstanceTask();
         processTask.setCategory(task.getCategory());
         processTask.setCreateTime(task.getCreateTime());
         processTask.setDescription(task.getDescription());
@@ -632,6 +649,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         processTask.setProcessInstanceId(task.getProcessDefinitionId());
         processTask.setProcessInstanceId(task.getProcessInstanceId());
         processTask.setTenantId(task.getTenantId());
+
         return processTask;
     }
 
@@ -706,6 +724,21 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         resultBO.setCurPage(currPage);
 
         return resultBO;
+    }
+
+    @Override
+    public com.jojo.util.pojo.ProcessInstance getProcessInstance(String processInstanceId)
+    {
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+
+        com.jojo.util.pojo.ProcessInstance result = new com.jojo.util.pojo.ProcessInstance();
+        result.setBusinessKey(processInstance.getBusinessKey());
+        result.setProcessDefinitionId(processInstance.getProcessDefinitionId());
+        result.setProcessInstanceId(processInstance.getProcessInstanceId());
+        result.setTenantId(processInstance.getTenantId());
+        result.setProcessVariables(runtimeService.getVariables(processInstanceId));
+
+        return result;
     }
 
 }

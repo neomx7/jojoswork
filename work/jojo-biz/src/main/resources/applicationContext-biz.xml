@@ -23,6 +23,6 @@
 	<!-- Scans the classpath of this application for @Components to deploy as beans -->
 	<context:component-scan base-package="com.jojo.biz.impl" />
 
-
+	<bean id="applyBiz" class="com.jojo.biz.impl.ApplyBizImpl"></bean>
 
 </beans>

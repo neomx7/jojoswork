@@ -1,6 +1,6 @@
 package com.jojo.util.ui.vo.workflow;
 
-import com.jojo.util.pojo.ProcessTask;
+import com.jojo.util.pojo.ProcessInstanceTask;
 
 /**
  *
@@ -12,7 +12,7 @@ import com.jojo.util.pojo.ProcessTask;
  * @author jojo
  *
  */
-public class WorkFlowTaskDTO extends ProcessTask
+public class WorkFlowTaskDTO extends ProcessInstanceTask
 {
 
     /**   */

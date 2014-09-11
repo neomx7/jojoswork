@@ -6,7 +6,6 @@
 package com.jojo.util.pojo;
 
 import java.io.Serializable;
-import java.text.ParseException;
 
 import com.jojo.util.common.DateUtils;
 import com.jojo.util.constants.JOJOConstants;

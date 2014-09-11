@@ -23,38 +23,9 @@ public abstract class TaskHandler implements TaskListener
     /**   */
     private static final long serialVersionUID = 5603774273648788216L;
 
-    private FixedValue formDivId;
-    private FixedValue qryDataBeanId;
-    private FixedValue qryDataBeanMethod;
+//    private FixedValue formDivId;
+//    private FixedValue qryDataBeanId;
+//    private FixedValue qryDataBeanMethod;
 
-    public FixedValue getFormDivId()
-    {
-        return formDivId;
-    }
-
-    public void setFormDivId(FixedValue formDivId)
-    {
-        this.formDivId = formDivId;
-    }
-
-    public FixedValue getQryDataBeanId()
-    {
-        return qryDataBeanId;
-    }
-
-    public void setQryDataBeanId(FixedValue qryDataBeanId)
-    {
-        this.qryDataBeanId = qryDataBeanId;
-    }
-
-    public FixedValue getQryDataBeanMethod()
-    {
-        return qryDataBeanMethod;
-    }
-
-    public void setQryDataBeanMethod(FixedValue qryDataBeanMethod)
-    {
-        this.qryDataBeanMethod = qryDataBeanMethod;
-    }
 
 }

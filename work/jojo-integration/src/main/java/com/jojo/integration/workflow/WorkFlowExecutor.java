@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.jojo.util.biz.bo.PageResultBO;
 import com.jojo.util.pojo.DataRequest;
-import com.jojo.util.pojo.ProcessTask;
-import com.jojo.util.pojo.ProcessTaskForm;
+import com.jojo.util.pojo.ProcessInstance;
+import com.jojo.util.pojo.ProcessInstanceTask;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefineGraph;
 import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
@@ -109,7 +109,7 @@ public interface WorkFlowExecutor
      *
      * @param processTask
      */
-    public void completeTask(ProcessTask processTask);
+    public void completeTask(ProcessInstanceTask processTask);
 
     /**
      *
@@ -124,18 +124,8 @@ public interface WorkFlowExecutor
      */
     public void pendProcessByKey(String processKey,String operId);
 
-    /**
-     *
-     * <summary>
-     * <p>得到任务绑定的 form 表单对象</p>
-     * </summary>
-     *
-     * @author jojo
-     *
-     * @param taskId
-     * @return
-     */
-    public ProcessTaskForm getTaskForm(String taskId);
+
+    public ProcessInstanceTask getProcessInstanceTask(String taskId);
 
     /**
      *
@@ -169,13 +159,13 @@ public interface WorkFlowExecutor
      * 获取未签收的任务查询对象
      * @param userId    用户ID
      */
-    public List<ProcessTask> createUnsignedTaskQuery(String userId,String processDefKey);
+    public List<ProcessInstanceTask> createUnsignedTaskQuery(String userId,String processDefKey);
 
     /**
      * 获取正在处理的任务查询对象
      * @param userId    用户ID
      */
-    public List<ProcessTask> createTodoTaskQuery(String userId, String processDefKey) ;
+    public List<ProcessInstanceTask> createTodoTaskQuery(String userId, String processDefKey) ;
 
 //    /**
 //     * 获取未经完成的流程实例查询对象
@@ -200,6 +190,20 @@ public interface WorkFlowExecutor
      * @return
      */
     public Map<String, Object> traceProcess(String processInstanceId);
+
+    /**
+     *
+     * <summary>
+     * [获取流程实例对象]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param processInstanceId
+     * @return
+     */
+    public ProcessInstance getProcessInstance(String processInstanceId);
 
 }
 

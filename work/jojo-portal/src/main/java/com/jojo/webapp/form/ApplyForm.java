@@ -24,6 +24,8 @@ public class ApplyForm extends BaseForm
 
     private String instanceId;
 
+    private String instanceTaskId;
+
     public String getNextUsrId()
     {
         return nextUsrId;
@@ -56,5 +58,15 @@ public class ApplyForm extends BaseForm
         builder.append(super.toString());
         builder.append("]");
         return builder.toString();
+    }
+
+    public String getInstanceTaskId()
+    {
+        return instanceTaskId;
+    }
+
+    public void setInstanceTaskId(String instanceTaskId)
+    {
+        this.instanceTaskId = instanceTaskId;
     }
 }
