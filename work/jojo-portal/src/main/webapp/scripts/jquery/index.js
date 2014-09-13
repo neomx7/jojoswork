@@ -21,6 +21,118 @@ String.prototype.replaceAll = function(regexp, replaceSTR)
 {
     return this.replace(new RegExp(regexp, "gm"), replaceSTR);
 }
+/**
+ * UTF-8 data encode / decode http://www.webtoolkit.info/
+ */
+
+var Utf8 =
+{
+
+    // public method for url encoding
+    encode : function(string)
+    {
+        string = string.replace(/\r\n/g, "\n");
+        var utftext = "";
+
+        for (var n = 0; n < string.length; n++)
+        {
+
+            var c = string.charCodeAt(n);
+
+            if (c < 128)
+            {
+                utftext += String.fromCharCode(c);
+            }
+            else if ((c > 127) && (c < 2048))
+            {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+            else
+            {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+
+        }
+
+        return utftext;
+    },
+
+    // public method for url decoding
+    decode : function(utftext)
+    {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+        while (i < utftext.length)
+        {
+            c = utftext.charCodeAt(i);
+            if (c < 128)
+            {
+                string += String.fromCharCode(c);
+                i++;
+            }
+            else if ((c > 191) && (c < 224))
+            {
+                c2 = utftext.charCodeAt(i + 1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            }
+            else
+            {
+                c2 = utftext.charCodeAt(i + 1);
+                c3 = utftext.charCodeAt(i + 2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+        }
+        return string;
+    }
+}
+/**
+*
+* @param {jqObject} the field where the validation applies
+* @param {Array[String]} validation rules for this field
+* @param {int} rule index
+* @param {Map} form options
+* @return an error string if validation failed
+*/
+function checkAvbVal(field, rules, i, options,avbVal){
+    if (field.val() != avbVal) {
+        // this allows to use i18 for the error msgs
+        return options.allrules.validate2fields.alertText;
+    }
+}
+
+
+//将一个表单的数据返回成JSON对象
+$.fn.serializeObject = function() {
+var o = {};
+var arr = this.serializeArray();
+$.each(arr, function() {
+  if (o[this.name]) {
+    if (!o[this.name].push) {
+      o[this.name] = [ o[this.name] ];
+    }
+    o[this.name].push(this.value || '');
+  } else {
+    o[this.name] = this.value || '';
+  }
+});
+return o;
+};
+
+function split(val)
+{
+  return val.split(/,\s*/);
+}
+function extractLast(term)
+{
+  return split(term).pop();
+}
+
 // ### 页面布局排版 部分 ### //
 var myLayout = null;
 // 作用不明
@@ -295,12 +407,16 @@ function bindMenuEvents()
 /**
  * 打开模态对话框，显示错误信息
  */
-function showTipMessage(tipHtml,dlgTitle)
+function showTipMessage(tipHtml,dlgTitle,extMsg)
 {
     var consoleDlg = $("#consoleDlg");
     consoleDlg.empty();
     var infoV = tipHtml;// $("#globalErrDiv").html();
     consoleDlg.append(infoV);
+    if (extMsg)
+    {
+        consoleDlg.append("<p class='errorTip'>"+extMsg+"</p>");
+    }
     consoleDlg.dialog("option", "title", dlgTitle).dialog("open");
 
 }
@@ -679,121 +795,8 @@ function initJqGird(girdId, listAction, colNames, colModel, sortname, caption, b
 //    });
 }
 
-/**
- * UTF-8 data encode / decode http://www.webtoolkit.info/
- */
-
-var Utf8 =
-{
-
-    // public method for url encoding
-    encode : function(string)
-    {
-        string = string.replace(/\r\n/g, "\n");
-        var utftext = "";
-
-        for (var n = 0; n < string.length; n++)
-        {
-
-            var c = string.charCodeAt(n);
-
-            if (c < 128)
-            {
-                utftext += String.fromCharCode(c);
-            }
-            else if ((c > 127) && (c < 2048))
-            {
-                utftext += String.fromCharCode((c >> 6) | 192);
-                utftext += String.fromCharCode((c & 63) | 128);
-            }
-            else
-            {
-                utftext += String.fromCharCode((c >> 12) | 224);
-                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                utftext += String.fromCharCode((c & 63) | 128);
-            }
-
-        }
-
-        return utftext;
-    },
-
-    // public method for url decoding
-    decode : function(utftext)
-    {
-        var string = "";
-        var i = 0;
-        var c = c1 = c2 = 0;
-
-        while (i < utftext.length)
-        {
-
-            c = utftext.charCodeAt(i);
-
-            if (c < 128)
-            {
-                string += String.fromCharCode(c);
-                i++;
-            }
-            else if ((c > 191) && (c < 224))
-            {
-                c2 = utftext.charCodeAt(i + 1);
-                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-                i += 2;
-            }
-            else
-            {
-                c2 = utftext.charCodeAt(i + 1);
-                c3 = utftext.charCodeAt(i + 2);
-                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-                i += 3;
-            }
-
-        }
-        return string;
-    }
-
-}
 
 
-/**
-*
-* @param {jqObject} the field where the validation applies
-* @param {Array[String]} validation rules for this field
-* @param {int} rule index
-* @param {Map} form options
-* @return an error string if validation failed
-*/
-function checkAvbVal(field, rules, i, options,avbVal){
-    if (field.val() != avbVal) {
-        // this allows to use i18 for the error msgs
-        return options.allrules.validate2fields.alertText;
-    }
-}
 
 
-//将一个表单的数据返回成JSON对象
-$.fn.serializeObject = function() {
-  var o = {};
-  var a = this.serializeArray();
-  $.each(a, function() {
-    if (o[this.name]) {
-      if (!o[this.name].push) {
-        o[this.name] = [ o[this.name] ];
-      }
-      o[this.name].push(this.value || '');
-    } else {
-      o[this.name] = this.value || '';
-    }
-  });
-  return o;
-};
 
-function split(val)
-{
-    return val.split(/,\s*/);
-}
-function extractLast(term)
-{
-    return split(term).pop();
-}

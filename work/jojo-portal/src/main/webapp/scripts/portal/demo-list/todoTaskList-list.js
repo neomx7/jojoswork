@@ -137,7 +137,7 @@ $(function()
     }
     catch (e)
     {
-        alert(e);
+        showTipMessage(e,"出错了~~");
     }
 });
 
@@ -174,7 +174,8 @@ function toProcessTODOTask(gridId,instanceId,taskId)
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {
-            alert("error info :" + errorThrown)
+//            alert("error info :" + errorThrown)
+            showTipMessage(XMLHttpRequest.responseText,"出错了~~");
         }
     });
 }
@@ -211,7 +212,7 @@ function comleteTODOTask(tblId, rowid)
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {
-            alert("error info :" + errorThrown)
+            showTipMessage(XMLHttpRequest.responseText,"出错了~~");
         }
     });
 }
@@ -252,6 +253,10 @@ function viewProcessInfo(tblId, rowid)
             // alert(infoV);
             consoleDlg.append(infoV);
             consoleDlg.dialog("option", "title", "查看流程信息").dialog("open");
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown)
+        {
+            showTipMessage(XMLHttpRequest.responseText,"出错了~~");
         }
     });
 }
@@ -287,7 +292,7 @@ function processTODOTask()
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {
-            alert("error info :" + errorThrown)
+            showTipMessage(XMLHttpRequest.responseText,"出错了~~");
         }
     });
 }

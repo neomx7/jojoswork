@@ -29,6 +29,7 @@ public class JOJOConstants
     public static final String SESSION_KEY_LOGINUSER = "loginUser";
 
     public static final String COMMA = ",";
+    public static final String UNDERLINE = "_";
 
     public static final int NUM_ONE = 1;
 

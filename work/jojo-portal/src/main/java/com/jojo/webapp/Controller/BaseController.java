@@ -1,6 +1,6 @@
 /**
  *
- * 汇付天下有限公司
+ * 有限公司
  * Copyright (c) 2006-2013 ChinaPnR,Inc.All Rights Reserved.
  */
 package com.jojo.webapp.Controller;
@@ -38,13 +38,13 @@ public class BaseController
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public String getLoginUsrId(HttpServletRequest request, HttpServletResponse response)
+    public String getLoginUsrId(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {
         String loginUserId = null;
         if (AppContextHolder.get() == null)
         {
             // 获取登录用户名
-            CookieUtil cookieUtil = new CookieUtil(request, response);
+            CookieUtil cookieUtil = new CookieUtil(httpServletRequest, httpServletResponse);
             final JOJOCid appCid = new JOJOCid(
                     StringUtils.trimToEmpty(cookieUtil.getCookie(AuthenticationUtil.APP_CID)));
 

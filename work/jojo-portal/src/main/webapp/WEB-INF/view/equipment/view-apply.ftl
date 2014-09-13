@@ -22,10 +22,6 @@
 							<input id="theAttach" name="" type="text" value="" readOnly="readOnly" />
 						</div>
 				</div>
-				<div id="setNextUser" class="ui-widget" style="display:none;">
-				  <label for="nextUser">人员姓名: </label>
-				  <input id="nextUser" name="nextUsrId"  value="${form.nextUsrId}" readOnly="readOnly" />
-				</div>
 			</div>
 		</div>
 	</div>

@@ -5,6 +5,7 @@
  */
 package com.jojo.webapp.form;
 
+import com.jojo.dal.common.postgre.domain.WorkFlowTaskApprovalDO;
 import com.jojo.util.pojo.ProcessInstanceTask;
 
 /**
@@ -36,6 +37,15 @@ public class ProcessInstanceTaskForm extends BaseForm
      */
     private String theTaskId;
     private String theInstId;
+    private String nextAssignee;
+
+
+    private String apprvContent;
+    private int apprvFlg;
+
+    /**
+     */
+    private WorkFlowTaskApprovalDO approvalDO = new WorkFlowTaskApprovalDO();
 
 
     public ProcessInstanceTask getProcessInstanceTask()
@@ -95,6 +105,54 @@ public class ProcessInstanceTaskForm extends BaseForm
     public void setTheInstId(String theInstId)
     {
         this.theInstId = theInstId;
+    }
+
+
+    public WorkFlowTaskApprovalDO getApprovalDO()
+    {
+        return approvalDO;
+    }
+
+
+    public void setApprovalDO(WorkFlowTaskApprovalDO approvalDO)
+    {
+        this.approvalDO = approvalDO;
+    }
+
+
+    public String getNextAssignee()
+    {
+        return nextAssignee;
+    }
+
+
+    public void setNextAssignee(String nextAssignee)
+    {
+        this.nextAssignee = nextAssignee;
+    }
+
+
+    public String getApprvContent()
+    {
+        return apprvContent;
+    }
+
+
+    public void setApprvContent(String apprvContent)
+    {
+        this.apprvContent = apprvContent;
+    }
+
+
+    public int getApprvFlg()
+    {
+        return apprvFlg;
+    }
+
+
+    public void setApprvFlg(int apprvFlg)
+    {
+        this.apprvFlg = apprvFlg;
     }
 
 

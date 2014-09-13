@@ -25,8 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jojo.biz.CommonBiz;
+import com.jojo.biz.WorkFlowBiz;
 import com.jojo.dal.common.postgre.domain.AttachDO;
+import com.jojo.dal.common.postgre.domain.WorkFlowTaskApprovalDO;
 import com.jojo.integration.workflow.WorkFlowExecutor;
+import com.jojo.util.common.DateUtils;
 import com.jojo.util.constants.JOJOConstants;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
@@ -55,6 +58,9 @@ public class WorkFlowController extends BaseController
 
     @Autowired
     private CommonBiz commonBiz;
+
+    @Autowired
+    private WorkFlowBiz workFlowBiz;
 
     /**
      *
@@ -113,6 +119,7 @@ public class WorkFlowController extends BaseController
         catch (Exception e)
         {
             logger.error("queryDefines 4 workflow failed. exception info: [{}]", e);
+
         }
 
         return null;
@@ -275,7 +282,7 @@ public class WorkFlowController extends BaseController
 
         if (result != null && result.get("height") != null)
         {
-            location.setHeight(Integer.valueOf(result.get("height").toString()) );
+            location.setHeight(Integer.valueOf(result.get("height").toString()));
             location.setWidth(Integer.valueOf(result.get("width").toString()));
             location.setX(Integer.valueOf(result.get("x").toString()));
             location.setY(Integer.valueOf(result.get("y").toString()));
@@ -285,7 +292,6 @@ public class WorkFlowController extends BaseController
 
         return location;
     }
-
 
     /**
      *
@@ -304,7 +310,7 @@ public class WorkFlowController extends BaseController
     @ResponseBody
     public ResultInfo processTODOTask(@RequestBody ProcessInstanceTaskForm form)
     {
-        ResultInfo  resultInfo = new ResultInfo();
+        ResultInfo resultInfo = new ResultInfo();
         if (StringUtils.isBlank(form.getProcessInstanceTask().getTaskId()))
         {
             logger.error("can not processTODOTask cause taskId is null");
@@ -327,7 +333,6 @@ public class WorkFlowController extends BaseController
         return resultInfo;
     }
 
-
     /**
      *
      * <summary>
@@ -343,7 +348,7 @@ public class WorkFlowController extends BaseController
     public String toMyTaskList()
     {
         logger.info("match url 4 '/process/toTODOTaskList'");
-     // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
+        // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
         return "view/workflow/todoTaskList-list";
     }
 
@@ -361,16 +366,14 @@ public class WorkFlowController extends BaseController
      * @return
      */
     @RequestMapping(value = "/process/toProcessTask")
-    public String toProcessTaskList(@RequestBody ProcessInstanceTaskForm form,@ModelAttribute("form") ProcessInstanceTaskForm model)
+    public String toProcessTaskList(@RequestBody ProcessInstanceTaskForm form,
+            @ModelAttribute("form") ProcessInstanceTaskForm model)
     {
         logger.info("match url 4 '/process/toProcessTask'");
         model.getProcessInstanceTask().setTaskId(form.getProcessInstanceTask().getTaskId());
-     // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
+        // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
         return "view/workflow/processTask";
     }
-
-
-
 
     /**
      *
@@ -387,12 +390,13 @@ public class WorkFlowController extends BaseController
      * @return
      */
     @RequestMapping(value = "/workflow/showTask")
-    public String showTask(HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse, @ModelAttribute("form") ProcessInstanceTaskForm form){
+    public String showTask(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+            @ModelAttribute("form") ProcessInstanceTaskForm form)
+    {
         String processInstanceId = form.getTheInstId();
         String instTaskId = form.getTheTaskId();
 
-        if (StringUtils.isBlank(processInstanceId) || StringUtils.isBlank(instTaskId) )
+        if (StringUtils.isBlank(processInstanceId) || StringUtils.isBlank(instTaskId))
         {
             form.setErrorMsg("未获取到有效的流程taskid");
             return "view/common/common-error";
@@ -403,14 +407,86 @@ public class WorkFlowController extends BaseController
         if (instanceTask != null && processInstance != null)
         {
             form.setBusinessKey(processInstance.getBusinessKey());
+            form.setBusinessKeyURL(String.valueOf(processInstance.getProcessVariables().get(
+                    JOJOConstants.WORKFLOW_PROCESSINST_BIZ_KEY_URL)));
             form.getProcessInstanceTask().setProcessDefinitionId(processInstance.getProcessDefinitionId());
             form.getProcessInstanceTask().setProcessInstanceId(processInstanceId);
             form.getProcessInstanceTask().setTenantId(processInstance.getTenantId());
-            form.setBusinessKeyURL(String.valueOf(processInstance.getProcessVariables().get(JOJOConstants.WORKFLOW_PROCESSINST_BIZ_KEY_URL)));
             form.getProcessInstanceTask().setTaskId(instanceTask.getTaskId());
             form.getProcessInstanceTask().setTaskName(instanceTask.getTaskName());
         }
 
         return "view/workflow/edit-workflow";
+    }
+
+    /**
+     *
+     * <summary>
+     * [结束当前流程]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param form
+     * @return
+     */
+    @RequestMapping(value = "/workflow/completeTask")
+    @ResponseBody
+    public DataResponse<ProcessInstanceTaskForm> completeTask(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse, @RequestBody ProcessInstanceTaskForm form)
+    {
+        logger.info("match url 4 '/workflow/completeTask'");
+        DataResponse<ProcessInstanceTaskForm> dataResponse = new DataResponse<ProcessInstanceTaskForm>();
+
+        try
+        {
+            // 启动流程并且同时也设定下一个流程处理人，同时下方代码的variables设置applyUserId
+            if (StringUtils.isBlank(form.getTheTaskId()))
+            {
+                dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                dataResponse.setTip("未获取到当前流程task的id");
+                dataResponse.setTipDesc("无法继续流程：前流程task的id未设置。");
+                return dataResponse;
+            }
+            if (StringUtils.isBlank(form.getNextAssignee()))
+            {
+                dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                dataResponse.setTip("未获取到有效的下一个流程处理人的id");
+                dataResponse.setTipDesc("无法继续流程：下一个流程节点的申请人id未设置。");
+                return dataResponse;
+            }
+            String operId = getLoginUsrId(httpServletRequest, httpServletResponse);
+            // TODO 保存任务审批记录
+            String instanceId = form.getTheInstId();
+            String taskId = form.getTheTaskId();
+            WorkFlowTaskApprovalDO approvalDO = new WorkFlowTaskApprovalDO();
+            approvalDO.setApprvContent(form.getApprvContent());
+            approvalDO.setApprvFlg(form.getApprvFlg());
+            approvalDO.setBusinessKey(form.getBusinessKey());
+            approvalDO.setInstanceId(instanceId);
+            approvalDO.setInstTaskId(taskId);
+            approvalDO.setTheId(instanceId + JOJOConstants.UNDERLINE + taskId);
+            approvalDO.setAssigner(operId);
+            approvalDO.setCrtTime(DateUtils.getCurrentDateTimeMs());
+            approvalDO.setCrtUserId(operId);
+            workFlowBiz.addTaskApproval(approvalDO);
+
+
+            // 结束流程
+            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean(JOJOConstants.WORKFLOW_SERVICE));
+            ProcessInstanceTask task = new ProcessInstanceTask();
+            task.setNextAssignee(form.getNextAssignee());
+            task.setProcessInstanceId(form.getTheInstId());
+            task.setTaskId(form.getTheTaskId());
+            workFlowExecutor.completeTask(task);
+
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
+
+        return dataResponse;
     }
 }

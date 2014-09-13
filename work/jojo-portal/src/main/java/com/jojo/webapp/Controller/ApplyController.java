@@ -259,7 +259,7 @@ public class ApplyController extends BaseController
         form.setTheRemark(applyDO.getTheRemark());
         form.setStatus(applyDO.getStatus());
 
-        return "view/equipment/viw-apply";
+        return "view/equipment/view-apply";
     }
 
     @RequestMapping(value = "/equipment/startProcess4Apply")

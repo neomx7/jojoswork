@@ -299,6 +299,7 @@ COMMENT ON COLUMN jojo_attach.attach_content IS '附件内容，二进制流';
 CREATE TABLE jojo_mtr_apply
 (
   t_id character varying(64) NOT NULL, -- 逻辑主键
+  t_instance_id  character varying(64) ,     --流程实例id
   t_title character varying(256), -- 申请的标题
   t_status smallint, -- 状态 0草稿 1流程处理中
   t_status_dsc character varying(1024), -- 状态信息的描述，针对流程节点，取值为流程的备注信息，如 ”安技部经理审核“
@@ -317,6 +318,7 @@ WITH (
 ALTER TABLE jojo_mtr_apply
   OWNER TO postgres;
 COMMENT ON COLUMN jojo_mtr_apply.t_id IS '逻辑主键';
+COMMENT ON COLUMN jojo_mtr_apply.t_instance_id IS '流程实例ID';
 COMMENT ON COLUMN jojo_mtr_apply.t_title IS '申请的标题';
 COMMENT ON COLUMN jojo_mtr_apply.t_status IS '状态 0草稿 1流程处理中';
 COMMENT ON COLUMN jojo_mtr_apply.t_status_dsc IS '状态信息的描述，针对流程节点，取值为流程的备注信息，如 ”安技部经理审核“';
@@ -327,4 +329,48 @@ COMMENT ON COLUMN jojo_mtr_apply.crt_usr_name IS '创建者姓名';
 COMMENT ON COLUMN jojo_mtr_apply.upd_usr IS '更新者id';
 COMMENT ON COLUMN jojo_mtr_apply.upd_time IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
 COMMENT ON COLUMN jojo_mtr_apply.upd_usr_name IS '更新者姓名';
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+---流程评审表
+-- Table: jojo_task_apprv
+
+-- DROP TABLE jojo_task_apprv;
+
+CREATE TABLE jojo_task_apprv
+(
+  t_id character varying(64) NOT NULL, -- 逻辑主键
+  t_task_id character varying(64), -- 流程task实例id
+  t_instance_id character varying(64), -- 流程实例id
+  t_bus_key character varying(64), -- 工作流中的业务主键
+  t_assigner character varying(64), -- 任务审批人,对应用户的登录名
+  t_apprv_content character varying(1024), -- 审批意见，针对流程通过或驳回，如“同意。并xxx”
+  t_apprv_flg smallint, -- 审批标识位  1通过; 2驳回
+  t_remark character varying(128), -- 备注
+  crt_usr character varying(64), -- 创建者id
+  crt_time timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  crt_usr_name character varying(64), -- 创建者姓名
+  upd_usr character varying(64), -- 更新者id
+  upd_time timestamp without time zone, -- 更新时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  upd_usr_name character varying(64), -- 更新者姓名
+  CONSTRAINT jojo_task_apprv_pkey PRIMARY KEY (t_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE jojo_task_apprv OWNER TO postgres;
+COMMENT ON COLUMN jojo_task_apprv.t_id IS '逻辑主键';
+COMMENT ON COLUMN jojo_task_apprv.t_task_id IS '流程task实例id';
+COMMENT ON COLUMN jojo_task_apprv.t_instance_id IS '流程实例id';
+COMMENT ON COLUMN jojo_task_apprv.t_bus_key IS '工作流中的业务主键';
+COMMENT ON COLUMN jojo_task_apprv.t_assigner IS '任务审批人,对应用户的登录名';
+COMMENT ON COLUMN jojo_task_apprv.t_apprv_content IS '审批意见，针对流程通过或驳回，如“同意。并xxx”';
+COMMENT ON COLUMN jojo_task_apprv.t_apprv_flg IS '审批标识位  1通过; 2驳回';
+COMMENT ON COLUMN jojo_task_apprv.t_remark IS '备注';
+COMMENT ON COLUMN jojo_task_apprv.crt_usr IS '创建者id';
+COMMENT ON COLUMN jojo_task_apprv.crt_time IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN jojo_task_apprv.crt_usr_name IS '创建者姓名';
+COMMENT ON COLUMN jojo_task_apprv.upd_usr IS '更新者id';
+COMMENT ON COLUMN jojo_task_apprv.upd_time IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
+COMMENT ON COLUMN jojo_task_apprv.upd_usr_name IS '更新者姓名';
 

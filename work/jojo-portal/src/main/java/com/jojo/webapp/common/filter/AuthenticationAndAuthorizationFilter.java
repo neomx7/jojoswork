@@ -1,6 +1,6 @@
 /**
  *
- * 汇付天下有限公司
+ * 有限公司
  *
  */
 package com.jojo.webapp.common.filter;
@@ -122,7 +122,8 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
             // 修改，如果 已登录&&没有菜单权限，则在当前页面提示；未登录，则直接转向重新登录页面。
             if (sc.hasLogined() && !sc.getUri().equals("/index"))
             {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "unavailable URI");
+                response.setContentType("text/html;charset=UTF-8");
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "unavailable URI: current User have no privilege 4 this url : [" + sc.getUri() + "]");
             }
             else if (sc.hasLogined())
             {
@@ -144,7 +145,7 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
             // URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e),
             // "UTF-8"));
             response.sendRedirect(request.getContextPath() + "/tip/exception?tip="
-                    + URLEncoder.encode(e.getMessage(), "UTF-8") + "&tipDesc="
+                    + URLEncoder.encode("当前用户没有该菜单权限，错误信息: " +  e.getMessage(), "UTF-8") + "&tipDesc="
                     + URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
 
         }

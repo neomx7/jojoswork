@@ -17,7 +17,7 @@
 					<#if form?exists>
 						您好 ${form.contextUserName}，温馨提示：您没有权限访问此页面（功能）！
 					<#else>
-						您好${userName}，汇付天下温馨提示：系统错误，请稍后再试！
+						您好${userName}，温馨提示：系统错误，请稍后再试！
 					</#if>
 				</div>
 				<div class="tipContent">

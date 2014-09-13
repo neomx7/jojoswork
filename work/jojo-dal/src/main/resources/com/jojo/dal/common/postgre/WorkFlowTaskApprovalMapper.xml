@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jojo.dal.common.postgre.WorkFlowTaskApprovalMapper">
+	<resultMap type="com.jojo.dal.common.postgre.domain.WorkFlowTaskApprovalDO" id="workFlowTaskApprovalResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="instTaskId" column="t_task_id" />
+		<result property="instanceId" column="t_instance_id" />
+		<result property="businessKey" column="t_bus_key" />
+		<result property="assigner" column="t_assigner" />
+		<result property="apprvContent" column="t_apprv_content" />
+		<result property="apprvFlg" column="t_apprv_flg" />
+
+		<result property="theRemark" column="T_REMARK" />
+		<result property="crtUserId" column="CRT_USR" />
+		<result property="crtUserName" column="CRT_USR_NAME" />
+		<result property="crtTime" column="CRT_TIME" />
+		<result property="updUserId" column="UPD_USR" />
+		<result property="updUserName" column="UPD_USR_NAME" />
+		<result property="updTime" column="UPD_TIME" />
+
+	</resultMap>
+
+
+	<insert id="insert" parameterType="com.jojo.dal.common.postgre.domain.WorkFlowTaskApprovalDO">
+		INSERT INTO
+		jojo_task_apprv(
+			t_id, t_task_id, t_instance_id, t_bus_key, t_assigner, t_apprv_content,
+            t_apprv_flg, t_remark, crt_usr, crt_time, crt_usr_name, upd_usr,
+            upd_time, upd_usr_name)
+		VALUES (#{theId},#{instanceId}, #{instTaskId}, #{businessKey}, #{assigner}, #{apprvContent}, #{apprvFlg},
+		#{theRemark}, #{crtUserId},
+		#{crtUserName},
+		#{crtTime}, #{updUserId}, #{updUserName}, #{updTime})
+	</insert>
+
+	<update id="update" parameterType="java.util.Map">
+		update jojo_task_apprv
+		set
+		upd_time = #{updTime}
+		<if test="apprvContent != null and apprvContent != ''">
+			,t_apprv_content = #{apprvContent}
+		</if>
+
+		<if test="apprvFlg != null and apprvFlg != ''">
+			,t_apprv_flg = #{apprvFlg}
+		</if>
+
+		<if test="updUserId != null and updUserId != ''">
+			, upd_usr = #{updUserId}
+		</if>
+		<if test="updUserName != null and updUserName != ''">
+			, upd_usr_name = #{updUserName}
+		</if>
+		where 1=1
+		and t_id = #{theId}
+	</update>
+
+	<delete id="delete" parameterType="java.util.Map">
+		delete from jojo_task_apprv where t_id = #{theId}
+	</delete>
+
+	<select id="select" parameterType="java.util.Map" resultMap="workFlowTaskApprovalResultMap">
+		SELECT T.* FROM jojo_task_apprv T WHERE T.T_ID = #{theId}
+	</select>
+
+	<select id="query" parameterType="java.util.Map" resultMap="workFlowTaskApprovalResultMap">
+		SELECT T.* FROM jojo_task_apprv T WHERE 1=1
+		<if test="businessKey != null and businessKey != ''">
+			AND T.t_bus_key = #{businessKey}
+		</if>
+	</select>
+
+</mapper>
