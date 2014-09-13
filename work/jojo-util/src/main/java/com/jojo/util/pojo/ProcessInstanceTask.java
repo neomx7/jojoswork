@@ -43,6 +43,8 @@ public class ProcessInstanceTask extends BasePOJO
     private String taskDefinitionKey;
     private String taskId;
 
+
+    private String dueTimeStr;
     //下个节点审批人
     private String nextAssignee;
 
@@ -254,6 +256,14 @@ public class ProcessInstanceTask extends BasePOJO
     public void setLocalVariables(Map<String, Object> localVariables)
     {
         this.localVariables = localVariables;
+    }
+    public String getDueTimeStr()
+    {
+        return dueTimeStr;
+    }
+    public void setDueTimeStr(String dueTimeStr)
+    {
+        this.dueTimeStr = dueTimeStr;
     }
 
 }

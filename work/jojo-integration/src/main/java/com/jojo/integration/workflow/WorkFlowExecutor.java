@@ -167,6 +167,20 @@ public interface WorkFlowExecutor
      */
     public List<ProcessInstanceTask> createTodoTaskQuery(String userId, String processDefKey) ;
 
+    /**
+     *
+     * <summary>
+     * [根据流程实例id获取任务列表]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param instanceId
+     * @return
+     */
+    public List<ProcessInstanceTask> getInstTasks(String instanceId);
+
 //    /**
 //     * 获取未经完成的流程实例查询对象
 //     * @param userId    用户ID

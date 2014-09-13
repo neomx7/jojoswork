@@ -6,6 +6,8 @@
 package com.jojo.util.pojo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import com.jojo.util.common.DateUtils;
 import com.jojo.util.constants.JOJOConstants;
@@ -31,10 +33,12 @@ public class BasePOJO implements Serializable
     private String crtUserName;
     // 17位定长,精确到毫秒
     private String crtTime;
+    private Timestamp crtTimestamp;
     private String updUserId;
     private String updUserName;
     // 17位定长,精确到毫秒
     private String updTime;
+    private Timestamp updTimestamp;
 
     private String key;
     private String category;
@@ -294,6 +298,26 @@ public class BasePOJO implements Serializable
     public String getFormatUpdTime()
     {
         return DateUtils.parseDateTimeMsPostgre2Sec(getUpdTime());
+    }
+
+    public Timestamp getCrtTimestamp()
+    {
+        return crtTimestamp;
+    }
+
+    public void setCrtTimestamp(Timestamp crtTimestamp)
+    {
+        this.crtTimestamp = crtTimestamp;
+    }
+
+    public Timestamp getUpdTimestamp()
+    {
+        return updTimestamp;
+    }
+
+    public void setUpdTimestamp(Timestamp updTimestamp)
+    {
+        this.updTimestamp = updTimestamp;
     }
 
 }

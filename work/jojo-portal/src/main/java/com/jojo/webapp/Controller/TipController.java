@@ -8,7 +8,6 @@ package com.jojo.webapp.Controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.jojo.webapp.form.BaseForm;
 
@@ -19,17 +18,18 @@ import com.jojo.webapp.form.BaseForm;
 @Controller
 public class TipController extends BaseController {
 
-    @RequestMapping(value = "/tip/auth", method = RequestMethod.GET)
+    //, method = RequestMethod.GET
+    @RequestMapping(value = "/tip/auth")
     public String auth(@ModelAttribute("form") BaseForm form) {
 
-        return "WEB-INF/tip/auth";
+        return "view/tip/auth";
 
     }
 
-    @RequestMapping(value = "/tip/exception", method = RequestMethod.GET)
+    @RequestMapping(value = "/tip/exception")
     public String exception(@ModelAttribute("form") BaseForm form) {
 
-        return "WEB-INF/tip/exception";
+        return "view/tip/exception";
 
     }
 

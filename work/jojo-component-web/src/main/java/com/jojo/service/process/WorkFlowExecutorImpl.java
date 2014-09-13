@@ -8,7 +8,6 @@ package com.jojo.service.process;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +18,10 @@ import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
@@ -31,7 +30,6 @@ import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -45,6 +43,7 @@ import com.jojo.integration.workflow.WorkFlowExecutor;
 import com.jojo.process.dal.postgre.AttachMgrMapper;
 import com.jojo.process.dal.postgre.ProcessMgrMapper;
 import com.jojo.util.biz.bo.PageResultBO;
+import com.jojo.util.common.DateUtils;
 import com.jojo.util.constants.JOJOConstants;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.ProcessInstanceTask;
@@ -372,6 +371,24 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     public ProcessInstanceTask getProcessInstanceTask(String taskId)
     {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        ProcessInstanceTask processInstanceTask = convert2WFTask(task,0);
+
+        return processInstanceTask;
+    }
+
+    /**
+     * <summary>
+     * []<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param task
+     * @return
+     */
+    private ProcessInstanceTask convert2WFTask(Task task,int listIndex)
+    {
         ProcessInstanceTask processInstanceTask = new ProcessInstanceTask();
         processInstanceTask.setTaskId(task.getId());
         processInstanceTask.setTaskName(task.getName());
@@ -383,10 +400,50 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         processInstanceTask.setTaskDefinitionKey(task.getTaskDefinitionKey());
         processInstanceTask.setProcessDefinitionId(task.getProcessDefinitionId());
         processInstanceTask.setProcessInstanceId(task.getProcessInstanceId());
+        processInstanceTask.setPriority(task.getPriority());
+        processInstanceTask.setNumber(listIndex);
+//        processInstanceTask.set
+        processInstanceTask.setCrtTime(DateUtils.parseDateTime2Ms(task.getCreateTime()));
+
+        //任务到期时间
+        processInstanceTask.setDueTimeStr(DateUtils.parseDateTime2Ms(task.getDueDate()));
+
+        //待处理状态 TODO 此处状态还可细分为pending和 resolved，以后再说。
+        processInstanceTask.setStatus(JOJOConstants.WORKFLOW_TASKMODE_DOING);
 
         Map<String, Object> localVariables = task.getTaskLocalVariables();
         processInstanceTask.setLocalVariables(localVariables);
+        return processInstanceTask;
+    }
 
+
+    private ProcessInstanceTask convert2WFHistoricTask(HistoricTaskInstance historicTask,int listIndex )
+    {
+        ProcessInstanceTask processInstanceTask = new ProcessInstanceTask();
+        processInstanceTask.setTaskId(historicTask.getId());
+        processInstanceTask.setTaskName(historicTask.getName());
+        processInstanceTask.setAssignee(historicTask.getAssignee());
+        processInstanceTask.setExecutionId(historicTask.getExecutionId());
+        processInstanceTask.setOwner(historicTask.getOwner());
+        processInstanceTask.setParentTaskId(historicTask.getParentTaskId());
+//        processInstanceTask.setInitialAssignee(task.get);
+        processInstanceTask.setTaskDefinitionKey(historicTask.getTaskDefinitionKey());
+        processInstanceTask.setProcessDefinitionId(historicTask.getProcessDefinitionId());
+        processInstanceTask.setProcessInstanceId(historicTask.getProcessInstanceId());
+        processInstanceTask.setPriority(historicTask.getPriority());
+
+//        processInstanceTask.set
+        processInstanceTask.setCrtTime(DateUtils.parseDateTime2Ms(historicTask.getStartTime()));
+        processInstanceTask.setUpdTime(DateUtils.parseDateTime2Ms(historicTask.getEndTime()));
+        //任务到期时间
+        processInstanceTask.setDueTimeStr(DateUtils.parseDateTime2Ms(historicTask.getDueDate()));
+        processInstanceTask.setNumber(listIndex);
+
+            //已处理
+        processInstanceTask.setStatus(JOJOConstants.WORKFLOW_TASKMODE_DONE);
+
+        Map<String, Object> localVariables = historicTask.getTaskLocalVariables();
+        processInstanceTask.setLocalVariables(localVariables);
         return processInstanceTask;
     }
 
@@ -739,6 +796,35 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         result.setProcessVariables(runtimeService.getVariables(processInstanceId));
 
         return result;
+    }
+
+    @Override
+    public List<ProcessInstanceTask> getInstTasks(String instanceId)
+    {
+        List<ProcessInstanceTask> list = new ArrayList<ProcessInstanceTask>();
+        // 设置当前任务信息
+        List<HistoricTaskInstance> historicTasks = historyService.createHistoricTaskInstanceQuery().processInstanceId(instanceId).orderByHistoricTaskInstanceEndTime().asc().list();
+        List<Task> tasks = taskService.createTaskQuery().processInstanceId(instanceId).orderByTaskCreateTime().asc().list();
+        int historicSize = 0;
+        if (historicTasks != null && !historicTasks.isEmpty())
+        {
+            for (int i =0;i<historicTasks.size();i++)
+            {
+                ProcessInstanceTask processInstanceTask = convert2WFHistoricTask(historicTasks.get(i),i);
+                list.add(processInstanceTask);
+            }
+            historicSize = historicTasks.size();
+        }
+
+        if (tasks != null && !tasks.isEmpty())
+        {
+            for (int i =0;i<tasks.size();i++)
+            {
+                ProcessInstanceTask processInstanceTask = convert2WFTask(tasks.get(i),i+historicSize);
+                list.add(processInstanceTask);
+            }
+        }
+        return list;
     }
 
 }

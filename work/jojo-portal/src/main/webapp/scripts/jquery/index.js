@@ -638,9 +638,8 @@ function initLayout()
  * @param caption
  *            表格标题
  */
-function initJqGird(girdId, listAction, colNames, colModel, sortname, caption, btns, editUrl, clickEl)
+function initJqGird(girdId, listAction, colNames, colModel, sortname, caption, btns, editUrl, clickEl,extDataRequest)
 {
-
     $('#' + girdId).jqGrid(
             { // jqGrid固定的写法:$("#list").jqGrid({参数})
                 contentType : 'application/json',
@@ -670,7 +669,7 @@ function initJqGird(girdId, listAction, colNames, colModel, sortname, caption, b
                 },
 
                 height : "auto", // 表格高度
-                width : 900, // 表格宽度
+                width : 900,//$('#' + girdId).width(), // 表格宽度
                 autowidth : true,
                 // 表格结构定义
                 colNames : colNames,
@@ -690,6 +689,22 @@ function initJqGird(girdId, listAction, colNames, colModel, sortname, caption, b
                 emptyrecords : "无数据",// 空记录时的提示信息
                 loadtext : "获取数据中...",// 获得数据时的提示信息
                 pgtext : "跳转第几页 {0} 总页数 {1}"// 页数显示格式
+
+                ,beforeRequest: function() {
+                    if (extDataRequest)
+                    {
+                        var postData = $('#' + girdId).jqGrid('getGridParam','postData');
+                        for ( var dataKey in extDataRequest)
+                        {
+                            if (extDataRequest[dataKey] && !postData[dataKey])
+                            {
+                                postData[dataKey] = extDataRequest[dataKey];
+                            }
+                        }
+                        postData = $.toJSON(postData);
+                        $('#' + girdId).jqGrid("setGridParam",postData);
+                    }
+                  }
 
                 /** 增加数据行的操作按钮 */
                 ,
@@ -768,11 +783,11 @@ function initJqGird(girdId, listAction, colNames, colModel, sortname, caption, b
                 ,
                 loadError : function(jqXHR, textStatus, errorThrown)
                 {
-                     alert('HTTP status code: ' + jqXHR.status + '\n' +
-                     'textStatus: ' + textStatus + '\n' +
-                     'errorThrown: ' + errorThrown);
-
+//                     alert('HTTP status code: ' + jqXHR.status + '\n' +
+//                     'textStatus: ' + textStatus + '\n' +
+//                     'errorThrown: ' + errorThrown);
 //                    alert('HTTP message body (jqXHR.responseText): ' + '\n' + jqXHR.responseText);
+                    showTipMessage(jqXHR.responseText + "<p>" +  errorThrown,"出错了~~");
                 }
 
                 ,
@@ -796,7 +811,84 @@ function initJqGird(girdId, listAction, colNames, colModel, sortname, caption, b
 }
 
 
-
-
-
-
+///**
+//*
+//* @param obj all values are Array
+//* @param options value can be string or Array
+//*/
+//function concatJson(obj, options) {
+// obj = formatSegment(obj);
+// options = formatSegment(options);
+//
+// for (var i in options) {
+//   // obj[key] exist and type is array
+//   if (obj[i]) {
+//     obj[i] = setConcat(obj[i], options[i]);
+//   } else {
+//     obj[i] = options[i];
+//   }
+// }
+// return obj;
+//}
+//
+///**
+//*
+//* @param obj all values are Array
+//* @param options value can be string or Array
+//*/
+//function spliceJson(obj, options) {
+// obj = formatSegment(obj);
+// options = formatSegment(options);
+//
+// for (var i in options) {
+//   if (obj[i]) {
+//     for (var j in options[i]) {﻿﻿
+//       for (var k in obj[i]) {
+//         if (obj[i][k] == options[i][j]) {
+//           obj[i].splice(k, 1);
+//           break;
+//         }
+//       }
+//     }
+//   }
+// }
+// return obj;
+//}
+//
+///**
+//* {key: value}, all values should be Array
+//* @param obj
+//* @returns {*}
+//*/
+//function formatSegment(obj) {
+// for (var i in obj) {
+//   if (!(obj[i] instanceof Array)) {
+//     obj[i] = [obj[i]];
+//   }
+// }
+// return obj;
+//}
+//
+///**
+//* filter duplicate element
+//* @param arr1
+//* @param arr2
+//* @returns {*}
+//*/
+//function setConcat(arr1, arr2) {
+// if ((arr1 instanceof Array) && (arr2 instanceof Array)) {
+//   var moreArr = [];
+//   for (var i = 0; i < arr1.length; i++) {
+//     for (var j = 0; j < arr2.length; j++) {
+//       if (arr1[i] == arr2[j]) {
+//         break;
+//       }
+//       if (j == arr2.length - 1) {
+//         moreArr.push(arr1[i]);
+//       }
+//     }
+//   }
+//   return arr2.concat(moreArr);
+// }
+// return null;
+//}

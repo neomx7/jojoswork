@@ -16,13 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.jojo.dal.common.postgre.domain.UserDO;
 import com.jojo.util.common.CookieUtil;
-import com.jojo.util.common.ExceptionUtil;
 import com.jojo.util.common.IPUtil;
 import com.jojo.web.common.authenticate.AuthenticationUtil;
 import com.jojo.web.common.context.AppContext;
@@ -145,8 +145,9 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
             // URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e),
             // "UTF-8"));
             response.sendRedirect(request.getContextPath() + "/tip/exception?tip="
-                    + URLEncoder.encode("当前用户没有该菜单权限，错误信息: " +  e.getMessage(), "UTF-8") + "&tipDesc="
-                    + URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
+                    + URLEncoder.encode(e.getMessage(), "UTF-8") + "&tipDesc="
+                    + URLEncoder.encode(ExceptionUtils.getStackTrace(e), "UTF-8")
+                    );
 
         }
         finally

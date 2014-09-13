@@ -5,11 +5,16 @@
  */
 package com.jojo.webapp.Controller;
 
+import javax.annotation.Resource;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractRefreshableApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.jojo.web.common.context.ContextHolder;
+import com.jojo.web.common.context.SystemMgrCtxHolder;
 import com.jojo.webapp.form.BaseForm;
 
 /**
@@ -18,6 +23,9 @@ import com.jojo.webapp.form.BaseForm;
  */
 @Controller
 public class OperationController extends BaseController {
+
+    @Resource(name="systemMgrCtxHolder")
+    private SystemMgrCtxHolder systemMgrCtxHolder;
 
     /**
      *
@@ -31,10 +39,10 @@ public class OperationController extends BaseController {
      * @param form
      * @return
      */
-    @RequestMapping(value = "/operation/reloadPrivilege", method = RequestMethod.GET)
+    @RequestMapping(value = "/operation/reloadPrivilege")
     public String reloadPrivilege(@ModelAttribute("form") BaseForm form) {
-
-        return "WEB-INF/operation/privilege";
+        systemMgrCtxHolder.init();
+        return "view/operation/privilege";
 
     }
 
@@ -50,10 +58,14 @@ public class OperationController extends BaseController {
      * @param form
      * @return
      */
-    @RequestMapping(value = "/operation/reloadContext", method = RequestMethod.GET)
+    @RequestMapping(value = "/operation/reloadContext")
     public String reloadContext(@ModelAttribute("form") BaseForm form) {
-
-        return "WEB-INF/operation/context";
+        ApplicationContext context = ContextHolder.getApplicationContext();
+        if (context != null)
+        {
+            ((AbstractRefreshableApplicationContext) context).refresh();
+        }
+        return "view/operation/context";
 
     }
 

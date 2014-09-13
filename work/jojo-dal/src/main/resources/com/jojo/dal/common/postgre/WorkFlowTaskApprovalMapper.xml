@@ -13,10 +13,10 @@
 		<result property="theRemark" column="T_REMARK" />
 		<result property="crtUserId" column="CRT_USR" />
 		<result property="crtUserName" column="CRT_USR_NAME" />
-		<result property="crtTime" column="CRT_TIME" />
+		<result property="crtTimestamp" column="CRT_TIME" typeHandler="org.apache.ibatis.type.SqlTimestampTypeHandler"/>
 		<result property="updUserId" column="UPD_USR" />
 		<result property="updUserName" column="UPD_USR_NAME" />
-		<result property="updTime" column="UPD_TIME" />
+		<result property="updTimestamp" column="UPD_TIME" typeHandler="org.apache.ibatis.type.SqlTimestampTypeHandler"/>
 
 	</resultMap>
 
@@ -25,12 +25,12 @@
 		INSERT INTO
 		jojo_task_apprv(
 			t_id, t_task_id, t_instance_id, t_bus_key, t_assigner, t_apprv_content,
-            t_apprv_flg, t_remark, crt_usr, crt_time, crt_usr_name, upd_usr,
-            upd_time, upd_usr_name)
+            t_apprv_flg,
+            t_remark, crt_usr, crt_usr_name, crt_time,
+             upd_usr,upd_usr_name,upd_time)
 		VALUES (#{theId},#{instanceId}, #{instTaskId}, #{businessKey}, #{assigner}, #{apprvContent}, #{apprvFlg},
-		#{theRemark}, #{crtUserId},
-		#{crtUserName},
-		#{crtTime}, #{updUserId}, #{updUserName}, #{updTime})
+		#{theRemark}, #{crtUserId}, #{crtUserName},	#{crtTimestamp},
+		#{updUserId}, #{updUserName}, #{updTimestamp})
 	</insert>
 
 	<update id="update" parameterType="java.util.Map">
@@ -68,6 +68,7 @@
 		<if test="businessKey != null and businessKey != ''">
 			AND T.t_bus_key = #{businessKey}
 		</if>
+		order by T.t_id asc
 	</select>
 
 </mapper>

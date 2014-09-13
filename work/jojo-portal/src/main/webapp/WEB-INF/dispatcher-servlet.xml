@@ -17,7 +17,7 @@
 	</bean>
 
 	<!-- com.huifu.webapp.exception.SaturnMappingExceptionResolver -->
-	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+<!-- 	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
 				<prop key="org.springframework.dao.DataAccessException">
@@ -28,7 +28,32 @@
 				</prop>
 			</props>
 		</property>
-	</bean>
+	</bean> -->
+	 <!-- 全局异常配置 start -->
+     <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+         <property name="exceptionMappings">
+             <props>
+                 <prop key="java.lang.Exception">view/common/500err</prop>
+                 <prop key="java.lang.Throwable">view/common/500err</prop>
+                 <prop key="java.lang.RuntimeException">view/common/500err</prop>
+                 <prop key="java.sql.SQLException">view/common/dataAccessFailure</prop>
+             </props>
+         </property>
+<!--          <property name="statusCodes">
+             <props>
+                 <prop key="500err">500</prop>
+                 <prop key="500err">404</prop>
+             </props>
+         </property> -->
+         <!-- 设置日志输出级别，不定义则默认不输出警告等错误日志信息 -->
+         <property name="warnLogCategory" value="WARN" />
+         <!-- 默认错误页面，当找不到上面mappings中指定的异常对应视图时，使用本默认配置 -->
+         <property name="defaultErrorView" value="500err" />
+         <!-- 默认HTTP状态码 -->
+         <property name="defaultStatusCode" value="500" />
+     </bean>
+     <!-- 全局异常配置 end -->
+
 
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="2097152" />

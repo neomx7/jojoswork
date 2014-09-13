@@ -16,10 +16,10 @@
 		<result property="theRemark" column="T_REMARK" />
 		<result property="crtUserId" column="CRT_USR" />
 		<result property="crtUserName" column="CRT_USR_NAME" />
-		<result property="crtTime" column="CRT_TIME" />
+		<result property="crtTimestamp" column="CRT_TIME" typeHandler="org.apache.ibatis.type.SqlTimestampTypeHandler"/>
 		<result property="updUserId" column="UPD_USR" />
 		<result property="updUserName" column="UPD_USR_NAME" />
-		<result property="updTime" column="UPD_TIME" />
+		<result property="updTimestamp" column="UPD_TIME" typeHandler="org.apache.ibatis.type.SqlTimestampTypeHandler"/>
 
 	</resultMap>
 

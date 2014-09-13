@@ -21,10 +21,13 @@ public class JOJOConstants
      */
     public static final String WORKFLOW_SERVICE = "workFlowServiceProxy";
 
+    public static final int PAGE_STARTPAGE_DEFAULT = 1;
+    public static final int PAGE_LIMIT_DEFAULT = 20;
+
 
     public static final Integer WORKFLOW_TASKMODE_TODO = 1;
-    public static final Integer WORKFLOW_TASKMODE_DOING = 1;
-    public static final Integer WORKFLOW_TASKMODE_TDONE = 1;
+    public static final Integer WORKFLOW_TASKMODE_DOING = 2;
+    public static final Integer WORKFLOW_TASKMODE_DONE = 9;
 
     public static final String SESSION_KEY_LOGINUSER = "loginUser";
 
