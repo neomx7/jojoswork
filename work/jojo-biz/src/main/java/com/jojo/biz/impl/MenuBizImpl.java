@@ -5,11 +5,9 @@
  */
 package com.jojo.biz.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.jojo.biz.MenuBiz;
 import com.jojo.service.MenuService;
 import com.jojo.util.biz.bo.MenuBO;
+import com.jojo.util.common.ExtBeanUtils;
 import com.jojo.util.service.model.MenuMO;
 
 /**
@@ -50,18 +49,7 @@ public class MenuBizImpl implements MenuBiz
         for (MenuMO mo : mos)
         {
             MenuBO bo = new MenuBO();
-            try
-            {
-                BeanUtils.copyProperties(bo, mo);
-            }
-            catch (IllegalAccessException e)
-            {
-                logger.error("parse MenuBO failed . exception info: [{}]",e);
-            }
-            catch (InvocationTargetException e)
-            {
-                logger.error("parse MenuBO failed . exception info: [{}]",e);
-            }
+            ExtBeanUtils.copyProperties(bo, mo);
             list.add(bo);
         }
         return list;

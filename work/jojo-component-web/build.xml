@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jojoworkflow">
+	<property name="workflow.definition" value="./src/main/resources/diagrams" />
+	<property name="workflow.deployments" value="./src/main/resources/deployments" />
+	<target name="workflow.package.jojo.apply">
+		<echo>打包流程定义及流程图::物料申请</echo>
+
+		<zip encoding="UTF-8" destfile="${workflow.deployments}/processfile/apply/targetDeployments.bar" basedir="${workflow.definition}/processfile/apply" update="true" includes="*.xml,*.png" />
+	</target>
+</project>

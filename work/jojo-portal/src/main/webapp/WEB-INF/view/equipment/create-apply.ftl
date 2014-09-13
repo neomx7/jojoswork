@@ -9,7 +9,6 @@
 <script type="text/javascript" src="${rc.contextPath}/scripts/portal/equipment/apply.js"></script>
 
 <!-- 树形菜单js -->
-
 <#--
 <script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryJstree/jstree.min.js"></script>
 <script type="text/javascript" src="${rc.contextPath}/scripts/portal/common/deprt-tree.js"></script>

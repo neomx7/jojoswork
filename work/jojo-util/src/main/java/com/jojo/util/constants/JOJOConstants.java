@@ -21,10 +21,13 @@ public class JOJOConstants
      */
     public static final String WORKFLOW_SERVICE = "workFlowServiceProxy";
 
+    public static final int PAGE_STARTPAGE_DEFAULT = 1;
+    public static final int PAGE_LIMIT_DEFAULT = 20;
+
 
     public static final Integer WORKFLOW_TASKMODE_TODO = 1;
-    public static final Integer WORKFLOW_TASKMODE_DOING = 1;
-    public static final Integer WORKFLOW_TASKMODE_TDONE = 1;
+    public static final Integer WORKFLOW_TASKMODE_DOING = 2;
+    public static final Integer WORKFLOW_TASKMODE_DONE = 9;
 
     public static final String SESSION_KEY_LOGINUSER = "loginUser";
 
@@ -46,4 +49,47 @@ public class JOJOConstants
      */
     public static final String WORKFLOW_PROCESSINST_BIZ_KEY_URL = "processInstanceBusinessKeyURL";
 
+
+    /**
+     *  流程taks详情跟踪的键值对中的键 ：是否活跃流程（true 待办 ; false已办）
+     */
+    public static final String WORKFLOW_PROCESSINST_TASK_ACTIVITI = "currentActiviti";
+    /**
+     *  流程taks详情跟踪的键值对中的键 ：流程图开始的x坐标
+     */
+    public static final String WORKFLOW_PROCESSINST_TASK_GRH_X = "x";
+    /**
+     *  流程taks详情跟踪的键值对中的键 ：流程图开始的y坐标
+     */
+    public static final String WORKFLOW_PROCESSINST_TASK_GRH_Y = "y";
+    /**
+     *  流程taks详情跟踪的键值对中的键 ：流程图的宽度
+     */
+    public static final String WORKFLOW_PROCESSINST_TASK_GRH_WIDTH = "width";
+    /**
+     *  流程taks详情跟踪的键值对中的键 ：流程图的高度
+     */
+    public static final String WORKFLOW_PROCESSINST_TASK_GRH_HEIGHT = "height";
+    /**
+     * 流程相关参数的键
+     */
+    public static final String WORKFLOW_PROCESSINST_VARS_KEY ="vars";
+    /**
+     * 流程相关参数:task名称
+     */
+    public static final String WORKFLOW_PROCESSINST_VALS_TASK_TIP = "taskTip";
+    /**
+     * 流程相关参数:task描述
+     */
+    public static final String WORKFLOW_PROCESSINST_VALS_TASK_DESC = "taskDesc";
+
+    /**
+     * 流程相关参数:task处理人
+     */
+    public static final String WORKFLOW_PROCESSINST_VALS_TASK_ASSIGNEE = "taskAssignee";
+
+    /**
+     * 任务类型
+     */
+    public static final String WORKFLOW_PROCESSINST_VALS_TASK_TYPE = "taskType";
 }

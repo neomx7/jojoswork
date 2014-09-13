@@ -1,6 +1,9 @@
 $(function()
 {
-    $("button[id='submitBtn_"+$("#todoInstTaskId").val()+"']").button(
+    var instanceId = $("#todoInstId").val();
+    var taskInstId = $("#todoInstTaskId").val();
+    $("#taskTODOform_" + taskInstId).validationEngine();
+    $("input[id='submitBtn_" + taskInstId + "']").button(
     {
         icons :
         {
@@ -9,12 +12,18 @@ $(function()
         text : true
     }).click(function(event)
     {
-        completeTask();
+        if ($("#taskTODOform_" + taskInstId).validationEngine('validate'))
+        {
+            completeTask(taskInstId);
+        }
     });
+    // 页签展示流程图和流程记录
+    $('#taskTabs_' + taskInstId).tabs();
 
     // 展示提交的表单
     var showTaskURL = $("#taskFormInfo").attr("showURL");
     showTaskURL = $.trim(showTaskURL);
+
     // 过滤掉第一个'/'
     showTaskURL = showTaskURL.replace(/[/]{1,10}/, "");
     if (showTaskURL)
@@ -36,12 +45,15 @@ $(function()
             }
         });
     }
+    showAllTasks(instanceId, taskInstId);
+    viewProcessGraghInfo(instanceId, taskInstId);
 
+    // 绑定form的验证方法,ajax方式验证
 });
 
-function completeTask()
+function completeTask(taskInstId)
 {
-    var dataRequest = $.toJSON($('#taskTODOform').serializeObject());
+    var dataRequest = $.toJSON($('#taskTODOform_' + taskInstId).serializeObject());
     $.ajax(
     {
         type : 'POST',
@@ -69,7 +81,238 @@ function completeTask()
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {
-            showTipMessage(XMLHttpRequest.responseText,"出错了~~",errorThrown);
+            showTipMessage(XMLHttpRequest.responseText, "出错了~~", errorThrown);
+        }
+    });
+}
+
+function showAllTasks(instanceId, taskInstId)
+{
+    if (!instanceId)
+    {
+        showTipMessage("<span>未获取到有效的流程实例id</span>", "出错了~~");
+    }
+    // 展示当前的流程处理记录
+    var colNames = [ "编号", "Task节点名称", "Task节点备注", "处理人", "到达时间", "处理时间", "流程定义ID", "流程实例ID", "taskID", "节点状态"
+    ];
+    var colModel = [
+    {
+        name : "number",
+        index : "number",
+        width : "5%",
+        sorttype : "int"
+    },
+    {
+        name : "taskName",
+        index : "taskName",
+        width : "20%",
+        sorttype : "string"
+    },
+    {
+        name : "taskRemark",
+        index : "taskRemark",
+        width : "20%",
+        sorttype : "string"
+    },
+
+    {
+        name : "assignee",
+        index : "assignee",
+        width : "10%",
+        sorttype : "string"
+    },
+    {
+        name : "crtTime",
+        index : "crtTime",
+        width : "10%",
+        sorttype : "string"
+    },
+    {
+        name : "updTime",
+        index : "updTime",
+        width : "10%",
+        sorttype : "string"
+    },
+    // {
+    // name : "act",
+    // index : "act",
+    // sortable : false,
+    // align : "center",
+    // width : "20%"
+    // },
+    {
+        name : "processDefinitionId",
+        index : "processDefinitionId",
+        sortable : false,
+        hidden : true,
+        align : "center",
+        width : "5%"
+    },
+    {
+        name : "processInstanceId",
+        index : "processInstanceId",
+        sortable : false,
+        hidden : false,
+        align : "center",
+        width : "5%"
+    },
+    {
+        name : "taskId",
+        index : "taskId",
+        sortable : false,
+        hidden : false,
+        align : "center",
+        width : "5%"
+    },
+    {
+        name : "status",
+        index : "status",
+        sortable : false,
+        hidden : false,
+        align : "center",
+        width : "5%"
+    }
+    ];
+    try
+    {
+        var extDataRequest = [];
+        extDataRequest['instanceId'] = instanceId;
+        // extDataRequest=$.toJSON(extDataRequest);
+        initJqGird('taskHisGrid_' + taskInstId, 'workflow/showAllTasks', colNames, colModel, 'number', '流程处理记录列表',
+                null, "", null, extDataRequest);
+
+        var currGrid = $('#taskHisGrid_' + taskInstId);
+        // 重载jqGrid的事件，单击事件
+        // var jqgridId = currGrid.attr('id'); // jqgrid 的 id
+        currGrid.jqGrid('setGridParam',
+        {
+            /** 增加数据行的操作按钮 */
+            gridComplete : function()
+            {
+                // 选中最后一行
+                var ids = currGrid.jqGrid('getDataIDs');
+                if (ids)
+                {
+                    var idsLength = ids.length;
+                    currGrid.jqGrid('setSelection', (ids[idsLength - 1]), true);
+                }
+            },
+            onSelectRow : function(id)
+            {
+            }
+        });
+
+        // 流程记录不需要翻页
+        // currGrid.jqGrid('navGrid', '#taskHisGrid_' + taskInstId + 'Pager',
+        // {
+        // add : false,
+        // edit : false,
+        // del : false,
+        // search : false,
+        // refresh : true,
+        // refreshtitle : "刷新"
+        // });
+        // 重设宽度
+        // alert(($("#consoleDlg").width()-20));
+        currGrid.jqGrid("setGridWidth", ($(window).width() * 0.8), true);
+    }
+    catch (e)
+    {
+        showTipMessage(e, "出错了~~");
+    }
+}
+
+/**
+ * 查看流程图信息，活跃的task红色框住
+ *
+ * @param tblId
+ * @param rowid
+ */
+function viewProcessGraghInfo(instanceId, taskInstId)
+{
+    if (!instanceId)
+    {
+        showTipMessage("<span>[流程图]未获取到有效的流程实例id</span>", "出错了~~");
+    }
+    if (!taskInstId)
+    {
+        showTipMessage("<span>[流程图]未获取到有效的流程task任务id</span>", "出错了~~");
+    }
+    var jsonData = {};
+    jsonData["proInsId"] = instanceId;
+    jsonData = $.toJSON(jsonData);
+
+    // 弹出页面显示流程信息
+    $.ajax(
+    {
+        type : 'POST',
+        contentType : 'application/json',
+        url : 'workflow/traceProcessDetails',
+        data : jsonData,
+        dataType : 'json',
+        success : function(dataResult)
+        {
+            if (!dataResult)
+            {
+                return;
+            }
+            var infoV = '<img  src=\"'
+            // + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
+            // + proDefId
+            + appRelPath + '/styles/workflow/imgs/lisheng.bpmn20.png'
+
+            + '\" style="border:1px solid #dddddd ;" />';
+            // position:absolute; left:'
+            // + '0' + 'px; top:'
+            // + '0' + 'px;" />';
+
+            // 循环增加 activi的task样式
+            var xPos = 0;
+            var yPos = 0;
+            var widthPos = 0;
+            var heightPos = 0;
+
+            var taskInfo = null;
+            for (var i = 0; i < dataResult.length; i++)
+            {
+                var taskInfo = dataResult[i];
+                if (taskInfo["currentActiviti"])
+                {
+                    xPos = taskInfo["x"];
+                    yPos = taskInfo["y"];
+                    widthPos = taskInfo["width"];
+                    heightPos = taskInfo["height"];
+                    var activiTaskHtml = '<div style="position:absolute; border:2px solid red;left:' + (xPos - 1)
+                            + 'px;top:' + (yPos - 1) + 'px;width:' + (widthPos - 2) + 'px;height:' + (heightPos - 2)
+                            + 'px;"></div>' + '';
+                    infoV = infoV + activiTaskHtml;
+                }
+            }
+            alert(infoV);
+            // for (var taskInfo in taskInfoArr)
+            // {
+            // if (!taskInfo)
+            // {
+            // continue;
+            // }
+            // if (taskInfo["currentActiviti"])
+            // {
+            // xPos = taskInfo["x"];
+            // yPos = taskInfo["y"];
+            // widthPos = taskInfo["width"];
+            // heightPos = taskInfo["height"];
+            // var activiTaskHtml = '<div style="position:absolute; border:2px solid red;left:' + (xPos - 1)
+            // + 'px;top:' + (yPos - 1) + 'px;width:' + (widthPos - 2) + 'px;height:' + (heightPos - 2)
+            // + 'px;"></div>' + '';
+            // infoV = infoV + activiTaskHtml;
+            // }
+            // }
+            $("#taskTabs_" + taskInstId + "-1").html(infoV);
+
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown)
+        {
+            showTipMessage(XMLHttpRequest.responseText, "出错了~~");
         }
     });
 }

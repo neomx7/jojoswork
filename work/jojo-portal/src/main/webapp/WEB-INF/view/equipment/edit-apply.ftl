@@ -32,7 +32,7 @@
 						</div>
 					</form>
 				</div>
-				<div id="btn-nav">
+				<div class="btn-nav">
 					<button id="saveBtnE">保存草稿</button>
 					<button id="submitBtnE">提交申请</button>
 				</div>

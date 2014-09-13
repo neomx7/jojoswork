@@ -8,32 +8,36 @@ package com.jojo.service.process;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +49,7 @@ import com.jojo.integration.workflow.WorkFlowExecutor;
 import com.jojo.process.dal.postgre.AttachMgrMapper;
 import com.jojo.process.dal.postgre.ProcessMgrMapper;
 import com.jojo.util.biz.bo.PageResultBO;
+import com.jojo.util.common.DateUtils;
 import com.jojo.util.constants.JOJOConstants;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.ProcessInstanceTask;
@@ -372,6 +377,24 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     public ProcessInstanceTask getProcessInstanceTask(String taskId)
     {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        ProcessInstanceTask processInstanceTask = convert2WFTask(task,0);
+
+        return processInstanceTask;
+    }
+
+    /**
+     * <summary>
+     * []<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param task
+     * @return
+     */
+    private ProcessInstanceTask convert2WFTask(Task task,int listIndex)
+    {
         ProcessInstanceTask processInstanceTask = new ProcessInstanceTask();
         processInstanceTask.setTaskId(task.getId());
         processInstanceTask.setTaskName(task.getName());
@@ -383,10 +406,50 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         processInstanceTask.setTaskDefinitionKey(task.getTaskDefinitionKey());
         processInstanceTask.setProcessDefinitionId(task.getProcessDefinitionId());
         processInstanceTask.setProcessInstanceId(task.getProcessInstanceId());
+        processInstanceTask.setPriority(task.getPriority());
+        processInstanceTask.setNumber(listIndex);
+//        processInstanceTask.set
+        processInstanceTask.setCrtTime(DateUtils.parseDateTime2Ms(task.getCreateTime()));
+
+        //任务到期时间
+        processInstanceTask.setDueTimeStr(DateUtils.parseDateTime2Ms(task.getDueDate()));
+
+        //待处理状态 TODO 此处状态还可细分为pending和 resolved，以后再说。
+        processInstanceTask.setStatus(JOJOConstants.WORKFLOW_TASKMODE_DOING);
 
         Map<String, Object> localVariables = task.getTaskLocalVariables();
         processInstanceTask.setLocalVariables(localVariables);
+        return processInstanceTask;
+    }
 
+
+    private ProcessInstanceTask convert2WFHistoricTask(HistoricTaskInstance historicTask,int listIndex )
+    {
+        ProcessInstanceTask processInstanceTask = new ProcessInstanceTask();
+        processInstanceTask.setTaskId(historicTask.getId());
+        processInstanceTask.setTaskName(historicTask.getName());
+        processInstanceTask.setAssignee(historicTask.getAssignee());
+        processInstanceTask.setExecutionId(historicTask.getExecutionId());
+        processInstanceTask.setOwner(historicTask.getOwner());
+        processInstanceTask.setParentTaskId(historicTask.getParentTaskId());
+//        processInstanceTask.setInitialAssignee(task.get);
+        processInstanceTask.setTaskDefinitionKey(historicTask.getTaskDefinitionKey());
+        processInstanceTask.setProcessDefinitionId(historicTask.getProcessDefinitionId());
+        processInstanceTask.setProcessInstanceId(historicTask.getProcessInstanceId());
+        processInstanceTask.setPriority(historicTask.getPriority());
+
+//        processInstanceTask.set
+        processInstanceTask.setCrtTime(DateUtils.parseDateTime2Ms(historicTask.getStartTime()));
+        processInstanceTask.setUpdTime(DateUtils.parseDateTime2Ms(historicTask.getEndTime()));
+        //任务到期时间
+        processInstanceTask.setDueTimeStr(DateUtils.parseDateTime2Ms(historicTask.getDueDate()));
+        processInstanceTask.setNumber(listIndex);
+
+            //已处理
+        processInstanceTask.setStatus(JOJOConstants.WORKFLOW_TASKMODE_DONE);
+
+        Map<String, Object> localVariables = historicTask.getTaskLocalVariables();
+        processInstanceTask.setLocalVariables(localVariables);
         return processInstanceTask;
     }
 
@@ -739,6 +802,186 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         result.setProcessVariables(runtimeService.getVariables(processInstanceId));
 
         return result;
+    }
+
+    @Override
+    public List<ProcessInstanceTask> getInstTasks(String instanceId)
+    {
+        List<ProcessInstanceTask> list = new ArrayList<ProcessInstanceTask>();
+        // 设置当前任务信息
+        List<HistoricTaskInstance> historicTasks = historyService.createHistoricTaskInstanceQuery().processInstanceId(instanceId).orderByHistoricTaskInstanceEndTime().asc().list();
+        List<Task> tasks = taskService.createTaskQuery().processInstanceId(instanceId).orderByTaskCreateTime().asc().list();
+        int historicSize = 0;
+        if (historicTasks != null && !historicTasks.isEmpty())
+        {
+            for (int i =0;i<historicTasks.size();i++)
+            {
+                ProcessInstanceTask processInstanceTask = convert2WFHistoricTask(historicTasks.get(i),i);
+                list.add(processInstanceTask);
+            }
+            historicSize = historicTasks.size();
+        }
+
+        if (tasks != null && !tasks.isEmpty())
+        {
+            for (int i =0;i<tasks.size();i++)
+            {
+                ProcessInstanceTask processInstanceTask = convert2WFTask(tasks.get(i),i+historicSize);
+                list.add(processInstanceTask);
+            }
+        }
+        return list;
+    }
+
+
+    @Override
+    public List<Map<String, Object>> traceProcessDetails(String processInstanceId) throws Exception {
+        Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
+        Object property = PropertyUtils.getProperty(execution, "activityId");
+        String activityId = "";
+        if (property != null) {
+            activityId = property.toString();
+        }
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId)
+                .singleResult();
+        ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+                .getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
+        List<ActivityImpl> activitiList = processDefinition.getActivities();//获得当前任务的所有节点
+
+        List<Map<String, Object>> activityInfos = new ArrayList<Map<String, Object>>();
+        for (ActivityImpl activity : activitiList) {
+
+            boolean currentActiviti = false;
+            String id = activity.getId();
+
+            // 当前节点
+            if (id.equals(activityId)) {
+                currentActiviti = true;
+            }
+
+            Map<String, Object> activityImageInfo = packageSingleActivitiInfo(activity, processInstance, currentActiviti);
+
+            activityInfos.add(activityImageInfo);
+        }
+
+        return activityInfos;
+    }
+
+    /**
+     * 封装输出信息，包括：当前节点的X、Y坐标、变量信息、任务类型、任务描述
+     *
+     * @param activity
+     * @param processInstance
+     * @param currentActiviti
+     * @return
+     */
+    private Map<String, Object> packageSingleActivitiInfo(ActivityImpl activity, ProcessInstance processInstance,
+                                                          boolean currentActiviti) throws Exception {
+        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> activityInfo = new HashMap<String, Object>();
+        activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_ACTIVITI, currentActiviti);
+        setPosition(activity, activityInfo);
+        setWidthAndHeight(activity, activityInfo);
+
+        Map<String, Object> properties = activity.getProperties();
+        vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_TYPE, WorkFlowUtils.parseToZhType(properties.get("type").toString()));
+
+        ActivityBehavior activityBehavior = activity.getActivityBehavior();
+        logger.debug("activityBehavior={}", activityBehavior);
+        if (activityBehavior instanceof UserTaskActivityBehavior) {
+            /*
+             * 当前任务的分配角色
+             */
+            UserTaskActivityBehavior userTaskActivityBehavior = (UserTaskActivityBehavior) activityBehavior;
+            TaskDefinition taskDefinition = userTaskActivityBehavior.getTaskDefinition();
+            Set<Expression> candidateGroupIdExpressions = taskDefinition.getCandidateGroupIdExpressions();
+            if (!candidateGroupIdExpressions.isEmpty()) {
+                Task currentTask = null;
+                /*
+                 * 当前节点的task
+                 */
+                if (currentActiviti) {
+                    currentTask = getCurrentTaskInfo(processInstance);
+                }
+                // 任务的处理角色,后续再加
+//                setTaskGroup(vars, candidateGroupIdExpressions);
+
+                // 当前处理人
+                if (currentTask != null) {
+                    ProcessInstanceTask instanceTask = convert2WFTask(currentTask, 0);
+                    setCurrentTaskAssignee(vars, instanceTask);
+                }
+            }
+        }
+
+        vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_TIP, properties.get("documentation"));
+
+        String description = activity.getProcessDefinition().getDescription();
+        vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_DESC, description);
+
+        logger.debug("trace variables: {}", vars);
+        activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_VARS_KEY, vars);
+        return activityInfo;
+    }
+
+    /**
+     * 设置当前处理人信息
+     *
+     * @param vars
+     * @param currentTask
+     */
+    private void setCurrentTaskAssignee(Map<String, Object> vars, ProcessInstanceTask currentTask) {
+        String assignee = currentTask.getAssignee();
+        if (StringUtils.isNotBlank(assignee)) {
+//            User assigneeUser = identityService.createUserQuery().userId(assignee).singleResult();
+//            String userInfo = assigneeUser.getFirstName() + " " + assigneeUser.getLastName();
+            vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_ASSIGNEE, assignee.trim());
+        }
+    }
+
+
+//    /**
+//     * 获取当前节点信息
+//     *
+//     * @param processInstance
+//     * @return
+//     */
+    private Task getCurrentTaskInfo(ProcessInstance processInstance) {
+        Task currentTask = null;
+        try {
+            String activitiId = (String) PropertyUtils.getProperty(processInstance, "activityId");
+            logger.debug("current activity id: {}", activitiId);
+
+            currentTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskDefinitionKey(activitiId)
+                    .singleResult();
+            logger.debug("current task for processInstance: {}", ToStringBuilder.reflectionToString(currentTask));
+
+        } catch (Exception e) {
+            logger.error("can not get property activityId from processInstance: {}", processInstance);
+        }
+        return currentTask;
+    }
+
+    /**
+     * 设置宽度、高度属性
+     *
+     * @param activity
+     * @param activityInfo
+     */
+    private void setWidthAndHeight(ActivityImpl activity, Map<String, Object> activityInfo) {
+        activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_WIDTH, activity.getWidth());
+        activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_HEIGHT, activity.getHeight());
+    }
+
+    /**
+     * 设置坐标位置
+     *
+     * @param activity
+     * @param activityInfo
+     */
+    private void setPosition(ActivityImpl activity, Map<String, Object> activityInfo) {
+        activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_X, activity.getX());
+        activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_Y, activity.getY());
     }
 
 }

@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jojo.util.common.CookieUtil;
-import com.jojo.util.common.ExceptionUtil;
 import com.jojo.util.pojo.BasePOJO;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
@@ -69,7 +69,7 @@ public class BaseController
         {
             httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/tip/exception?tip="
                     + URLEncoder.encode(e.getMessage(), "UTF-8") + "&tipDesc="
-                    + URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
+                    + URLEncoder.encode(ExceptionUtils.getStackTrace(e), "UTF-8"));
         }
         catch (IOException e1)
         {
@@ -85,7 +85,7 @@ public class BaseController
 //            dataResponse.setTip(URLEncoder.encode(e.getMessage() == null ? "" : e.getMessage(), "UTF-8"));
 //            dataResponse.setTipDesc(URLEncoder.encode(ExceptionUtil.getSimpleExceptionStackTrace(e), "UTF-8"));
             dataResponse.setTip( e.getMessage() );
-            dataResponse.setTipDesc( ExceptionUtil.getSimpleExceptionStackTrace(e));
+            dataResponse.setTipDesc( ExceptionUtils.getStackTrace(e));
         }
         catch (Exception e1)
         {

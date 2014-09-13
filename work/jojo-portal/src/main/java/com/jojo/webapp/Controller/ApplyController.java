@@ -270,7 +270,7 @@ public class ApplyController extends BaseController
         logger.info("match url 4 '/equipment/startProcess4Apply'");
         DataResponse<MaterialApplyDO> dataResponse = new DataResponse<MaterialApplyDO>();
 
-        // 启动流程并且同时也设定下一个流程处理人，同时下方代码的variables设置applyUserId
+        // 启动流程并且同时也设定下一个流程处理人，同时下方代码的variables也设置
         if (StringUtils.isBlank(form.getNextUsrId()))
         {
             dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

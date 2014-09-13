@@ -278,6 +278,7 @@ $(function()
                                 }
                             }
                         });
+        //覆盖翻页方法，定制各自的功能
         currGrid.jqGrid('navGrid', '#jqGirdList4ApplyPager',
         {
             refresh : true,

@@ -8,7 +8,10 @@ package com.jojo.webapp.Controller;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,7 +33,6 @@ import com.jojo.biz.WorkFlowBiz;
 import com.jojo.dal.common.postgre.domain.AttachDO;
 import com.jojo.dal.common.postgre.domain.WorkFlowTaskApprovalDO;
 import com.jojo.integration.workflow.WorkFlowExecutor;
-import com.jojo.util.common.DateUtils;
 import com.jojo.util.constants.JOJOConstants;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
@@ -296,6 +299,40 @@ public class WorkFlowController extends BaseController
     /**
      *
      * <summary>
+     * [获取流程跟踪详情]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/workflow/traceProcessDetails")
+    @ResponseBody
+    public List<Map<String, Object>> traceProcessDetails(@RequestBody WorkFlowQuery query)
+    {
+        List<Map<String, Object>> list = null;
+        if (StringUtils.isBlank(query.getProInsId()))
+        {
+            logger.error("can not start process instance cause proInsId is null");
+            return list;
+        }
+        try
+        {
+            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean(JOJOConstants.WORKFLOW_SERVICE));
+            list = workFlowExecutor.traceProcessDetails(query.getProInsId());
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(),e);
+        }
+        return list;
+    }
+
+    /**
+     *
+     * <summary>
      * [结束当前task]<br>
      * <br>
      * </summary>
@@ -422,6 +459,67 @@ public class WorkFlowController extends BaseController
     /**
      *
      * <summary>
+     * [展示任务节点记录列表，只读]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param form
+     * @return
+     */
+    @RequestMapping(value = "/workflow/showAllTasks")
+    @ResponseBody
+    public DataResponse<ProcessInstanceTask> showAllTasks(
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse,
+            @RequestParam(required = false, defaultValue = "1", value = "page") String page,
+            @RequestParam(required = false, defaultValue = "20", value = "rows") String rows,
+            @RequestParam(required = false, value = "sidx") String sidx,
+            @RequestParam(required = false, value = "sord") String sord,
+
+            // @RequestParam("_search") boolean search,
+            @RequestParam(required = false, value = "searchField") String searchField,
+            @RequestParam(required = false, value = "searchOper") String searchOper,
+            @RequestParam(required = false, value = "searchString") String searchString,
+            @RequestParam(required = false, value = "filters") String filters,
+            @RequestParam(required = true, value = "instanceId") String instanceId)
+    {
+        logger.info("match url 4 '/workflow/showAllTasks'");
+        DataResponse<ProcessInstanceTask> dataResponse = new DataResponse<ProcessInstanceTask>();
+
+        String processInstanceId = instanceId;
+
+        if (StringUtils.isBlank(processInstanceId))
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip("未获取到有效的流程实例id");
+            dataResponse.setTipDesc("无法保存申请：未获取到有效的流程实例id");
+            return dataResponse;
+        }
+        // 得到流程实例对应的全部流程task节点
+        try
+        {
+            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder
+                    .getBean(JOJOConstants.WORKFLOW_SERVICE));
+            List<ProcessInstanceTask> list = workFlowExecutor.getInstTasks(processInstanceId);
+            dataResponse.setRows(list);
+        }
+        catch (Exception e)
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip(e.getMessage());
+            dataResponse.setTipDesc(ExceptionUtils.getStackTrace(e));
+            return dataResponse;
+        }
+        return dataResponse;
+    }
+
+    /**
+     *
+     * <summary>
      * [结束当前流程]<br>
      * <br>
      * </summary>
@@ -439,52 +537,72 @@ public class WorkFlowController extends BaseController
         logger.info("match url 4 '/workflow/completeTask'");
         DataResponse<ProcessInstanceTaskForm> dataResponse = new DataResponse<ProcessInstanceTaskForm>();
 
+        // 启动流程并且同时也设定下一个流程处理人，同时下方代码的variables也设置
+        if (StringUtils.isBlank(form.getTheTaskId()))
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip("未获取到当前流程task的id");
+            dataResponse.setTipDesc("无法继续流程：当前流程task的id未设置。");
+            return dataResponse;
+        }
+        if (StringUtils.isBlank(form.getNextAssignee()))
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip("未获取到有效的下一个流程处理人的id");
+            dataResponse.setTipDesc("无法继续流程：下一个流程节点的申请人id未设置。");
+            return dataResponse;
+        }
+        if (StringUtils.isBlank(form.getBusinessKey()))
+        {
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip("未获取到有效的业务键值businessKey");
+            dataResponse.setTipDesc("无法继续流程：未获取到有效的业务键值businessKey。");
+            return dataResponse;
+        }
+        String operId = getLoginUsrId(httpServletRequest, httpServletResponse);
+        // TODO 保存任务审批记录
+        String instanceId = form.getTheInstId();
+        String taskId = form.getTheTaskId();
+        WorkFlowTaskApprovalDO approvalDO = new WorkFlowTaskApprovalDO();
+        approvalDO.setApprvContent(form.getApprvContent());
+        approvalDO.setApprvFlg(form.getApprvFlg());
+        approvalDO.setBusinessKey(form.getBusinessKey());
+        approvalDO.setInstanceId(instanceId);
+        approvalDO.setInstTaskId(taskId);
+        approvalDO.setTheId(instanceId + JOJOConstants.UNDERLINE + taskId);
+        approvalDO.setAssigner(operId);
+        // approvalDO.setCrtTime(DateUtils.getCurrentDateTimeMs());
+        approvalDO.setCrtTimestamp(new Timestamp(new Date().getTime()));
+        approvalDO.setCrtUserId(operId);
         try
         {
-            // 启动流程并且同时也设定下一个流程处理人，同时下方代码的variables设置applyUserId
-            if (StringUtils.isBlank(form.getTheTaskId()))
-            {
-                dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                dataResponse.setTip("未获取到当前流程task的id");
-                dataResponse.setTipDesc("无法继续流程：前流程task的id未设置。");
-                return dataResponse;
-            }
-            if (StringUtils.isBlank(form.getNextAssignee()))
-            {
-                dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                dataResponse.setTip("未获取到有效的下一个流程处理人的id");
-                dataResponse.setTipDesc("无法继续流程：下一个流程节点的申请人id未设置。");
-                return dataResponse;
-            }
-            String operId = getLoginUsrId(httpServletRequest, httpServletResponse);
-            // TODO 保存任务审批记录
-            String instanceId = form.getTheInstId();
-            String taskId = form.getTheTaskId();
-            WorkFlowTaskApprovalDO approvalDO = new WorkFlowTaskApprovalDO();
-            approvalDO.setApprvContent(form.getApprvContent());
-            approvalDO.setApprvFlg(form.getApprvFlg());
-            approvalDO.setBusinessKey(form.getBusinessKey());
-            approvalDO.setInstanceId(instanceId);
-            approvalDO.setInstTaskId(taskId);
-            approvalDO.setTheId(instanceId + JOJOConstants.UNDERLINE + taskId);
-            approvalDO.setAssigner(operId);
-            approvalDO.setCrtTime(DateUtils.getCurrentDateTimeMs());
-            approvalDO.setCrtUserId(operId);
             workFlowBiz.addTaskApproval(approvalDO);
-
-
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage(), e);
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip("系统内部错误");
+            dataResponse.setTipDesc("无法继续流程：系统内部错误:" + ExceptionUtils.getStackTrace(e));
+            return dataResponse;
+        }
+        try
+        {
             // 结束流程
-            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean(JOJOConstants.WORKFLOW_SERVICE));
+            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder
+                    .getBean(JOJOConstants.WORKFLOW_SERVICE));
             ProcessInstanceTask task = new ProcessInstanceTask();
             task.setNextAssignee(form.getNextAssignee());
             task.setProcessInstanceId(form.getTheInstId());
             task.setTaskId(form.getTheTaskId());
             workFlowExecutor.completeTask(task);
-
         }
         catch (Exception e)
         {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
+            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            dataResponse.setTip("系统内部错误");
+            dataResponse.setTipDesc("无法继续流程：工作流错误:" + ExceptionUtils.getStackTrace(e));
         }
 
         return dataResponse;

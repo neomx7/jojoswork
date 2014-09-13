@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jojoworkflow" default="workflow.package.copy">
+	<property name="workflow.definition" value="./src/main/resources/diagrams" />
+	<property name="workflow.deployments" value="./src/main/resources/deployments" />
+
+	<!-- copy zip file to maven classpath -->
+	<target name="workflow.package.copy">
+		<echo message="copy workflow zip to maven classpath">
+		</echo>
+	<!--	<zip encoding="UTF-8" destfile="${workflow.deployments}/processfile/apply/targetDeployments.bar" basedir="${workflow.definition}/processfile/apply"
+			update="true" includes="*.xml,*.png" />
+		<copyfile src="" dest=""/>
+	-->
+	</target>
+
+
+
+</project>

@@ -101,7 +101,7 @@ $(function()
                                         var rowdata = currGrid.jqGrid('getRowData', ids[i]);// 行数据
                                         // 按钮的html内容
                                         var finalHtml = btnHtml.replaceAll("#instanceId", rowdata.processInstanceId).replaceAll("#rowid", rowdata.taskId).replaceAll("#rowindex", ids[i]);
-                                        currGrid.jqGrid('setRowData', ids[i], //rowdata.processInstanceId
+                                        currGrid.jqGrid('setRowData', ids[i], // rowdata.processInstanceId
                                         {
                                             act : finalHtml
                                         });
@@ -139,30 +139,32 @@ $(function()
     {
         showTipMessage(e,"出错了~~");
     }
+//    $(window).resize(function(){　　
+//        $("#todoTaskGrid").jqGrid('setGridWidth',$(window).width()*0.9);　　
+//     });　
 });
 
 /**
- *
  * @param gridId
  * @param taskId
  */
 function toProcessTODOTask(gridId,instanceId,taskId)
 {
-//    var currGrid = $('#' + gridId);
+// var currGrid = $('#' + gridId);
     var dataRequest = 'theInstId='+instanceId + "&theTaskId=" + taskId;
-//    {};
-//    var inst = {};
-//    inst['taskId'] = taskId;
-//    datajson['processInstanceTask'] = inst;
-//    datajson = $.toJSON(datajson);
-//    alert(dataRequest);
+// {};
+// var inst = {};
+// inst['taskId'] = taskId;
+// datajson['processInstanceTask'] = inst;
+// datajson = $.toJSON(datajson);
+// alert(dataRequest);
     $.ajax(
     {
         type : 'POST',
-//        contentType : 'application/x-www-form-urlencoded',
+// contentType : 'application/x-www-form-urlencoded',
         url : 'workflow/showTask',
         data : dataRequest,
-//        dataType : 'html',
+// dataType : 'html',
         success : function(dataResp)
         {
             var consoleDlg = $("#consoleDlg");
@@ -174,7 +176,7 @@ function toProcessTODOTask(gridId,instanceId,taskId)
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {
-//            alert("error info :" + errorThrown)
+// alert("error info :" + errorThrown)
             showTipMessage(XMLHttpRequest.responseText,"出错了~~");
         }
     });
@@ -241,7 +243,7 @@ function viewProcessInfo(tblId, rowid)
             var infoV = '<img  src=\"'
             // + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
             // + proDefId
-            + appRelPath + '/styles/workflow/imgs/lisheng.png'
+            + appRelPath + '/styles/workflow/imgs/lisheng.bpmn20.png'
 
             + '\" style="border:1px solid #dddddd ;position:absolute; left:'
             // +dataResult.defX

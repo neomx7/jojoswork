@@ -81,7 +81,7 @@
 </div>
 
 <!--hidden pane-->
-<div id="consoleDlg" ></div>
+<div id="consoleDlg" style="width:90%;"></div>
 <!-- hidden error message -->
 <div id="globalErrDiv" style="display:none;">
 	<div class="errorTip">
@@ -112,7 +112,7 @@
 	</div>
 </div>
 <!--hidden info message -->
-<div id="globalFormDiv" style="display:none;">
+<div id="globalFormDiv" style="display:none;width:100%;">
 </div>
 
 

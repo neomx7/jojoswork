@@ -6,7 +6,6 @@
 package com.jojo.service.process.usertask.listener;
 
 import org.activiti.engine.delegate.TaskListener;
-import org.activiti.engine.impl.el.FixedValue;
 
 /**
  * <summary>

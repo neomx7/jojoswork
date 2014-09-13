@@ -23,7 +23,9 @@
 		<property name="databaseSchemaUpdate" value="true" />
 		<!-- 只有启用job执行器之后，定时器才会被触发。(jobExecutorActivate需要设置为true， 不过，默认job执行器是关闭的) -->
 		<property name="jobExecutorActivate" value="false" />
-		<property name="deploymentResources" value="classpath*:/processfile/*.bpmn20.xml" />
+
+		<!-- classpath*:/processfile/*.bpmn20.xml targetDeployments.zip-->
+		<property name="deploymentResources" value="classpath*:/deployments/processfile/*/*.bpmn20.xml" />
 		<!-- 发布流程图时，是否自动生成流程图片 -->
 		<property name="createDiagramOnDeploy" value="true"></property>
 		<property name="deploymentName" value="processDeploymentName"></property>
