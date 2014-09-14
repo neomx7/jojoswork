@@ -19,34 +19,6 @@
 					<div id="taskFormInfo" showURL="${form.businessKeyURL}"></div>
 				</div>
 				<div style="width:100%;">
-					<#--
-					<div class="form-header">
-						流程信息
-					</div>
-					<div id="taskTabs" style="width:100%;">
-						<ul id="taskTabsUL_Diagram" >
-							<li><a href="#taskTabs-1">流程图(图形)</a></li>
-						</ul>
-						<div id="taskTabs-1" >
-						</div>
-
-						<ul id="taskTabsUL_List" >
-							<li><a href="#taskTabs-2">流程记录(文字列表)</a></li>
-						</ul>
-						<div id="taskTabs-2" >
-							<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" align="center">
-								<tr>
-									<td>
-										<table id="taskHisGrid"></table>
-										<div id="taskHisGridPager"></div>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-					 -->
-				</div>
-				<div style="width:100%;">
 					<div class="form-header">
 						流程信息
 					</div>

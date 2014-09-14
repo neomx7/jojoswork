@@ -152,21 +152,14 @@ function toProcessTODOTask(gridId,instanceId,taskId)
 {
 // var currGrid = $('#' + gridId);
     var dataRequest = 'theInstId='+instanceId + "&theTaskId=" + taskId;
-// {};
-// var inst = {};
-// inst['taskId'] = taskId;
-// datajson['processInstanceTask'] = inst;
-// datajson = $.toJSON(datajson);
-// alert(dataRequest);
     $.ajax(
     {
         type : 'POST',
-// contentType : 'application/x-www-form-urlencoded',
         url : 'workflow/showTask',
         data : dataRequest,
-// dataType : 'html',
         success : function(dataResp)
         {
+            alert(dataResp);
             var consoleDlg = $("#consoleDlg");
             consoleDlg.empty();
             var infoV = dataResp;
