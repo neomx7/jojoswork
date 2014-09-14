@@ -34,6 +34,4 @@
 			AND T.T_NAME like  '${userName}%'
 		</if>
 	</select>
-
-
 </mapper>

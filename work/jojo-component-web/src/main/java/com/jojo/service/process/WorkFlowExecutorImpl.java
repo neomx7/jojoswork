@@ -833,7 +833,6 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         return list;
     }
 
-
     @Override
     public List<Map<String, Object>> traceProcessDetails(String processInstanceId) throws Exception {
         Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
