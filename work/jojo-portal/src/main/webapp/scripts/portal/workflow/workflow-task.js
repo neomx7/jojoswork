@@ -253,7 +253,9 @@ function viewProcessGraghInfo(instanceId, taskInstId)
             {
                 return;
             }
-            var infoV = '<img  src=\"'
+            var infoV = '<img  '
+            +'id="processGragh_' + instanceId + '"'
+            +'src=\"'
             // + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
             // + proDefId
             + appRelPath + '/styles/workflow/imgs/lisheng.bpmn20.png'
@@ -263,12 +265,16 @@ function viewProcessGraghInfo(instanceId, taskInstId)
             // + '0' + 'px; top:'
             // + '0' + 'px;" />';
 
+            $("#taskTabs_" + taskInstId + "-1").html(infoV);
             // 循环增加 activi的task样式
             var xPos = 0;
             var yPos = 0;
             var widthPos = 0;
             var heightPos = 0;
 
+            //获取左偏移 和 上偏移
+            var graphAbslLeft = $("#processGragh_"+ instanceId).position().left;
+            var graphAbslTop = $("#processGragh_"+ instanceId).position().top;
             var taskInfo = null;
             for (var i = 0; i < dataResult.length; i++)
             {
@@ -279,14 +285,15 @@ function viewProcessGraghInfo(instanceId, taskInstId)
                     yPos = taskInfo["y"];
                     widthPos = taskInfo["width"];
                     heightPos = taskInfo["height"];
-                    var activiTaskHtml = '<div style="position:absolute; border:2px solid red;left:' + (xPos - 1)
-                            + 'px;top:' + (yPos - 1) + 'px;width:' + (widthPos - 2) + 'px;height:' + (heightPos - 2)
+                    // relative  absolute
+                    var activiTaskHtml = '<div style="position:absolute; border:2px solid red;left:' + (xPos - 1+ graphAbslLeft)
+                            + 'px;top:' + (yPos - 1 + graphAbslTop) + 'px;width:' + (widthPos - 2) + 'px;height:' + (heightPos - 2)
                             + 'px;"></div>' + '';
-                    infoV = infoV + activiTaskHtml;
+//                    infoV = infoV + activiTaskHtml;
+                    $("#taskTabs_" + taskInstId + "-1").append(activiTaskHtml);
                 }
             }
-            $("#taskTabs_" + taskInstId + "-1").html(infoV);
-
+            //
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {

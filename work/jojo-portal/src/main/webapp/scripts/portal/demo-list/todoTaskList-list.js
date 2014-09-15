@@ -159,7 +159,6 @@ function toProcessTODOTask(gridId,instanceId,taskId)
         data : dataRequest,
         success : function(dataResp)
         {
-            alert(dataResp);
             var consoleDlg = $("#consoleDlg");
             consoleDlg.empty();
             var infoV = dataResp;
