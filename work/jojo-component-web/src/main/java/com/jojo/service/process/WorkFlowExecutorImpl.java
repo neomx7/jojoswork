@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,7 +70,6 @@ import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
 @Repository
 public class WorkFlowExecutorImpl implements WorkFlowExecutor
 {
-
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -140,69 +140,83 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         }
     }
 
-
     /**
      * 读取资源
      *
      * @return
      */
-    public void loadResource(String processInstanceId,String proDefId) {
-        try {
+    public void loadResource(String processInstanceId, String proDefId)
+    {
+        try
+        {
             InputStream resourceAsStream = null;
-            if (StringUtils.isNotBlank(processInstanceId)) {
-                ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+            if (StringUtils.isNotBlank(processInstanceId))
+            {
+                ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                        .processInstanceId(processInstanceId).singleResult();
                 ProcessDefinition singleResult = repositoryService.createProcessDefinitionQuery()
                         .processDefinitionId(processInstance.getProcessDefinitionId()).singleResult();
                 String resourceName = "";
                 resourceName = singleResult.getDiagramResourceName();
-//                if (resourceType.equals("image")) {
-//                    resourceName = singleResult.getDiagramResourceName();
-//                } else if (resourceType.equals("xml")) {
-//                    resourceName = singleResult.getResourceName();
-//                }
+                // if (resourceType.equals("image")) {
+                // resourceName = singleResult.getDiagramResourceName();
+                // } else if (resourceType.equals("xml")) {
+                // resourceName = singleResult.getResourceName();
+                // }
                 resourceAsStream = repositoryService.getResourceAsStream(singleResult.getDeploymentId(), resourceName);
             }
-//            else {
-//                resourceAsStream = repositoryService.getResourceAsStream(deploymentId, resourceName);
-//            }
+            // else {
+            // resourceAsStream =
+            // repositoryService.getResourceAsStream(deploymentId,
+            // resourceName);
+            // }
             StringBuilder graphFilePath = new StringBuilder();
             graphFilePath.append(proDefId.replaceAll(":", "_"));
             byte[] b = null;
-                b = FileCopyUtils.copyToByteArray(resourceAsStream);
-                if (b == null || b.length == 0)
-                {
-                    return;
-                }
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("attachContent", b);// 此处所用的参数类型为 byte[]
-                params.put("attachId", graphFilePath.toString());
-                attachMgrMapper.upload(params);
-        } catch (Exception e) {
+            b = FileCopyUtils.copyToByteArray(resourceAsStream);
+            if (b == null || b.length == 0)
+            {
+                return;
+            }
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("attachContent", b);// 此处所用的参数类型为 byte[]
+            params.put("attachId", graphFilePath.toString());
+            attachMgrMapper.upload(params);
+        }
+        catch (Exception e)
+        {
             logger.error("读取资源出错：[{}]", e);
         }
     }
 
     /**
      * 流程跟踪图
+     *
      * @return
      */
     @Override
-    public Map<String, Object> traceProcess(String processInstanceId) {
-        try {
-            Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
+    public Map<String, Object> traceProcess(String processInstanceId)
+    {
+        try
+        {
+            Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();// 执行实例
             Object property = PropertyUtils.getProperty(execution, "activityId");
             String activityId = "";
-            if (property != null) {
+            if (property != null)
+            {
                 activityId = property.toString();
             }
-            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                    .processInstanceId(processInstanceId).singleResult();
             ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
                     .getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
-            List<ActivityImpl> activitiList = processDefinition.getActivities();//获得当前任务的所有节点
+            List<ActivityImpl> activitiList = processDefinition.getActivities();// 获得当前任务的所有节点
             ActivityImpl activity = null;
-            for (ActivityImpl activityImpl : activitiList) {
+            for (ActivityImpl activityImpl : activitiList)
+            {
                 String id = activityImpl.getId();
-                if (id.equals(activityId)) {//获得执行到那个节点
+                if (id.equals(activityId))
+                {// 获得执行到那个节点
                     activity = activityImpl;
                     break;
                 }
@@ -213,44 +227,54 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
             activityImageInfo.put("width", activity.getWidth());
             activityImageInfo.put("height", activity.getHeight());
             return activityImageInfo;
-//            Struts2Utils.renderJson(activityImageInfo);
-        } catch (Exception e) {
-            logger.error("查看流程跟踪图出错：[{}]",e);
+            // Struts2Utils.renderJson(activityImageInfo);
+        }
+        catch (Exception e)
+        {
+            logger.error("查看流程跟踪图出错：[{}]", e);
         }
         return null;
     }
 
-
     /**
      * 得到当前激活的task节点
+     *
      * @return
      */
     @Override
-    public WorkFlowTaskDTO getProcessActivity(String processInstanceId) {
+    public WorkFlowTaskDTO getProcessActivity(String processInstanceId)
+    {
         WorkFlowTaskDTO workFlowTaskDTO = new WorkFlowTaskDTO();
-        try {
-            Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
+        try
+        {
+            Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();// 执行实例
             Object property = PropertyUtils.getProperty(execution, "activityId");
             String activityId = "";
-            if (property != null) {
+            if (property != null)
+            {
                 activityId = property.toString();
             }
-            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                    .processInstanceId(processInstanceId).singleResult();
             ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
                     .getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
-            List<ActivityImpl> activitiList = processDefinition.getActivities();//获得当前任务的所有节点
-            for (ActivityImpl activityImpl : activitiList) {
+            List<ActivityImpl> activitiList = processDefinition.getActivities();// 获得当前任务的所有节点
+            for (ActivityImpl activityImpl : activitiList)
+            {
                 String id = activityImpl.getId();
-                if (id.equals(activityId)) {//获得执行到那个节点
+                if (id.equals(activityId))
+                {// 获得执行到那个节点
 
                     workFlowTaskDTO.setTheId(id);
                     workFlowTaskDTO.setTheName(String.valueOf(activityImpl.getProperty("name")));
                     return workFlowTaskDTO;
                 }
             }
-//            Struts2Utils.renderJson(activityImageInfo);
-        } catch (Exception e) {
-            logger.error("查看流程跟踪图出错：[{}]",e);
+            // Struts2Utils.renderJson(activityImageInfo);
+        }
+        catch (Exception e)
+        {
+            logger.error("查看流程跟踪图出错：[{}]", e);
         }
         return null;
     }
@@ -295,8 +319,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         {
             // 调用该方法，自动把当前任务给oeprId用户
             identityService.setAuthenticatedUserId(operId);
-            processInstance = runtimeService.startProcessInstanceByKey(processKey, businessKey,
-                    variables);
+            processInstance = runtimeService.startProcessInstanceByKey(processKey, businessKey, variables);
 
         }
         finally
@@ -339,18 +362,29 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     public void completeTask(ProcessInstanceTask processTask)
     {
 
-
-
-     // 设置下个节点审批人
+        // 设置下个节点审批人
         Map<String, Object> variables = new HashMap<String, Object>();
         if (StringUtils.isNotBlank(processTask.getNextAssignee()))
         {
             variables.put(JOJOConstants.WORKFLOW_PROCESSINST_NEXT_ASSIGNEE, processTask.getNextAssignee());
+            // taskService.setVariableLocal(processTask.getTaskId(),JOJOConstants.WORKFLOW_PROCESSINST_NEXT_ASSIGNEE,
+            // processTask.getNextAssignee());
         }
-//        runtimeService.setVariable(processTask.getExecutionId(),
-//                JOJOConstants.NEXT_ASSIGNEE, processTask.getNextAssignee());
+        Map<String, Object> variablesOrgi = processTask.getVariablesLocal();
+        Object approvedByManager = variablesOrgi.get(JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER);
+        if (variablesOrgi != null && !variablesOrgi.isEmpty() && approvedByManager != null)
+        {
+             variables.put(JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER,
+             Integer.valueOf(approvedByManager.toString()));
+//            taskService.setVariable(processTask.getTaskId(),
+//                    JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER,
+//                    Integer.valueOf(approvedByManager.toString()));
+        }
 
-        taskService.complete(processTask.getTaskId(),variables);
+        // runtimeService.setVariable(processTask.getExecutionId(),
+        // JOJOConstants.NEXT_ASSIGNEE, processTask.getNextAssignee());
+        // [false]variables 全流程范围有效
+        taskService.complete(processTask.getTaskId(), variables, false);
     }
 
     /*
@@ -377,7 +411,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     public ProcessInstanceTask getProcessInstanceTask(String taskId)
     {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-        ProcessInstanceTask processInstanceTask = convert2WFTask(task,0);
+        ProcessInstanceTask processInstanceTask = convert2WFTask(task, 0);
 
         return processInstanceTask;
     }
@@ -393,7 +427,7 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * @param task
      * @return
      */
-    private ProcessInstanceTask convert2WFTask(Task task,int listIndex)
+    private ProcessInstanceTask convert2WFTask(Task task, int listIndex)
     {
         ProcessInstanceTask processInstanceTask = new ProcessInstanceTask();
         processInstanceTask.setTaskId(task.getId());
@@ -402,28 +436,28 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         processInstanceTask.setExecutionId(task.getExecutionId());
         processInstanceTask.setOwner(task.getOwner());
         processInstanceTask.setParentTaskId(task.getParentTaskId());
-//        processInstanceTask.setInitialAssignee(task.get);
+        // processInstanceTask.setInitialAssignee(task.get);
         processInstanceTask.setTaskDefinitionKey(task.getTaskDefinitionKey());
         processInstanceTask.setProcessDefinitionId(task.getProcessDefinitionId());
         processInstanceTask.setProcessInstanceId(task.getProcessInstanceId());
         processInstanceTask.setPriority(task.getPriority());
         processInstanceTask.setNumber(listIndex);
-//        processInstanceTask.set
+        // processInstanceTask.set
         processInstanceTask.setCrtTime(DateUtils.parseDateTime2Ms(task.getCreateTime()));
 
-        //任务到期时间
+        // 任务到期时间
         processInstanceTask.setDueTimeStr(DateUtils.parseDateTime2Ms(task.getDueDate()));
 
-        //待处理状态 TODO 此处状态还可细分为pending和 resolved，以后再说。
+        // 待处理状态 TODO 此处状态还可细分为pending和 resolved，以后再说。
         processInstanceTask.setStatus(JOJOConstants.WORKFLOW_TASKMODE_DOING);
 
-        Map<String, Object> localVariables = task.getTaskLocalVariables();
-        processInstanceTask.setLocalVariables(localVariables);
+        Map<String, Object> variables = taskService.getVariables(task.getId());
+        // task.getTaskLocalVariables();
+        processInstanceTask.setVariables(variables);
         return processInstanceTask;
     }
 
-
-    private ProcessInstanceTask convert2WFHistoricTask(HistoricTaskInstance historicTask,int listIndex )
+    private ProcessInstanceTask convert2WFHistoricTask(HistoricTaskInstance historicTask, int listIndex)
     {
         ProcessInstanceTask processInstanceTask = new ProcessInstanceTask();
         processInstanceTask.setTaskId(historicTask.getId());
@@ -432,24 +466,25 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         processInstanceTask.setExecutionId(historicTask.getExecutionId());
         processInstanceTask.setOwner(historicTask.getOwner());
         processInstanceTask.setParentTaskId(historicTask.getParentTaskId());
-//        processInstanceTask.setInitialAssignee(task.get);
+        // processInstanceTask.setInitialAssignee(task.get);
         processInstanceTask.setTaskDefinitionKey(historicTask.getTaskDefinitionKey());
         processInstanceTask.setProcessDefinitionId(historicTask.getProcessDefinitionId());
         processInstanceTask.setProcessInstanceId(historicTask.getProcessInstanceId());
         processInstanceTask.setPriority(historicTask.getPriority());
 
-//        processInstanceTask.set
+        // processInstanceTask.set
         processInstanceTask.setCrtTime(DateUtils.parseDateTime2Ms(historicTask.getStartTime()));
         processInstanceTask.setUpdTime(DateUtils.parseDateTime2Ms(historicTask.getEndTime()));
-        //任务到期时间
+        // 任务到期时间
         processInstanceTask.setDueTimeStr(DateUtils.parseDateTime2Ms(historicTask.getDueDate()));
         processInstanceTask.setNumber(listIndex);
 
-            //已处理
+        // 已处理
         processInstanceTask.setStatus(JOJOConstants.WORKFLOW_TASKMODE_DONE);
 
-        Map<String, Object> localVariables = historicTask.getTaskLocalVariables();
-        processInstanceTask.setLocalVariables(localVariables);
+        // Map<String, Object> variables =
+        // taskService.getVariables(historicTask.getId());
+        // processInstanceTask.setVariables(variables);
         return processInstanceTask;
     }
 
@@ -767,21 +802,21 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         int limit = query.getPageLimit();
         Long count = processMgrMapper.getTODOCount(params);
 
-        if (count == null || count ==0)
+        if (count == null || count == 0)
         {
             return resultBO;
         }
         resultBO.setTotalCount(count.intValue());
         int totalPages = (int) Math.ceil((double) count / limit);
         int currPage = Math.min(totalPages, query.getCurPage());
-//        query.setCurPage(currPage);
+        // query.setCurPage(currPage);
 
         int start = currPage * limit - limit;
         start = start < 0 ? 0 : start;
 
         params.put("limit", limit);
         params.put("start", start);
-        //翻页查找
+        // 翻页查找
         List<WorkFlowTaskDTO> dtos = processMgrMapper.qryTODOList(params);
         resultBO.setResults(dtos);
         resultBO.setCurPage(currPage);
@@ -792,7 +827,8 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     @Override
     public com.jojo.util.pojo.ProcessInstance getProcessInstance(String processInstanceId)
     {
-        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processInstanceId).singleResult();
 
         com.jojo.util.pojo.ProcessInstance result = new com.jojo.util.pojo.ProcessInstance();
         result.setBusinessKey(processInstance.getBusinessKey());
@@ -807,58 +843,81 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     @Override
     public List<ProcessInstanceTask> getInstTasks(String instanceId)
     {
+        List<ProcessInstanceTask> listPast = new ArrayList<ProcessInstanceTask>();
         List<ProcessInstanceTask> list = new ArrayList<ProcessInstanceTask>();
+        Set<String> todoList = new HashSet<String>();
+
         // 设置当前任务信息
-        List<HistoricTaskInstance> historicTasks = historyService.createHistoricTaskInstanceQuery().processInstanceId(instanceId).orderByHistoricTaskInstanceEndTime().asc().list();
-        List<Task> tasks = taskService.createTaskQuery().processInstanceId(instanceId).orderByTaskCreateTime().asc().list();
+        List<HistoricTaskInstance> historicTasks = historyService.createHistoricTaskInstanceQuery()
+                .processInstanceId(instanceId).orderByHistoricTaskInstanceEndTime().asc().list();
+        List<Task> tasks = taskService.createTaskQuery().processInstanceId(instanceId).orderByTaskCreateTime().asc()
+                .list();
+        if (tasks != null && !tasks.isEmpty())
+        {
+            for (int i = 0; i < tasks.size(); i++)
+            {
+                ProcessInstanceTask processInstanceTask = convert2WFTask(tasks.get(i), i);
+                list.add(processInstanceTask);
+                todoList.add(processInstanceTask.getTaskId());
+            }
+        }
         int historicSize = 0;
         if (historicTasks != null && !historicTasks.isEmpty())
         {
-            for (int i =0;i<historicTasks.size();i++)
+            for (int i = 0; i < historicTasks.size(); i++)
             {
-                ProcessInstanceTask processInstanceTask = convert2WFHistoricTask(historicTasks.get(i),i);
-                list.add(processInstanceTask);
+                if (!todoList.contains(historicTasks.get(i).getId()))
+                {
+                    ProcessInstanceTask processInstanceTask = convert2WFHistoricTask(historicTasks.get(i), i);
+                    listPast.add(processInstanceTask);
+                }
             }
             historicSize = historicTasks.size();
         }
 
-        if (tasks != null && !tasks.isEmpty())
+        if (!todoList.isEmpty())
         {
-            for (int i =0;i<tasks.size();i++)
+            for (int i = 0; i < list.size(); i++)
             {
-                ProcessInstanceTask processInstanceTask = convert2WFTask(tasks.get(i),i+historicSize);
-                list.add(processInstanceTask);
+                list.get(i).setNumber(i + historicSize);
             }
         }
-        return list;
+        listPast.addAll(list);
+
+        return listPast;
     }
 
     @Override
-    public List<Map<String, Object>> traceProcessDetails(String processInstanceId) throws Exception {
-        Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
+    public List<Map<String, Object>> traceProcessDetails(String processInstanceId) throws Exception
+    {
+        Execution execution = runtimeService.createExecutionQuery().executionId(processInstanceId).singleResult();// 执行实例
         Object property = PropertyUtils.getProperty(execution, "activityId");
         String activityId = "";
-        if (property != null) {
+        if (property != null)
+        {
             activityId = property.toString();
         }
-        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId)
-                .singleResult();
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processInstanceId).singleResult();
         ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
                 .getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
-        List<ActivityImpl> activitiList = processDefinition.getActivities();//获得当前任务的所有节点
+        List<ActivityImpl> activitiList = processDefinition.getActivities();// 获得当前任务的所有节点
 
         List<Map<String, Object>> activityInfos = new ArrayList<Map<String, Object>>();
-        for (ActivityImpl activity : activitiList) {
+        for (ActivityImpl activity : activitiList)
+        {
 
             boolean currentActiviti = false;
             String id = activity.getId();
 
             // 当前节点
-            if (id.equals(activityId)) {
+            if (id.equals(activityId))
+            {
                 currentActiviti = true;
             }
 
-            Map<String, Object> activityImageInfo = packageSingleActivitiInfo(activity, processInstance, currentActiviti);
+            Map<String, Object> activityImageInfo = packageSingleActivitiInfo(activity, processInstance,
+                    currentActiviti);
 
             activityInfos.add(activityImageInfo);
         }
@@ -875,7 +934,8 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * @return
      */
     private Map<String, Object> packageSingleActivitiInfo(ActivityImpl activity, ProcessInstance processInstance,
-                                                          boolean currentActiviti) throws Exception {
+            boolean currentActiviti) throws Exception
+    {
         Map<String, Object> vars = new HashMap<String, Object>();
         Map<String, Object> activityInfo = new HashMap<String, Object>();
         activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_ACTIVITI, currentActiviti);
@@ -883,30 +943,35 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         setWidthAndHeight(activity, activityInfo);
 
         Map<String, Object> properties = activity.getProperties();
-        vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_TYPE, WorkFlowUtils.parseToZhType(properties.get("type").toString()));
+        vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_TYPE,
+                WorkFlowUtils.parseToZhType(properties.get("type").toString()));
 
         ActivityBehavior activityBehavior = activity.getActivityBehavior();
         logger.debug("activityBehavior={}", activityBehavior);
-        if (activityBehavior instanceof UserTaskActivityBehavior) {
+        if (activityBehavior instanceof UserTaskActivityBehavior)
+        {
             /*
              * 当前任务的分配角色
              */
             UserTaskActivityBehavior userTaskActivityBehavior = (UserTaskActivityBehavior) activityBehavior;
             TaskDefinition taskDefinition = userTaskActivityBehavior.getTaskDefinition();
             Set<Expression> candidateGroupIdExpressions = taskDefinition.getCandidateGroupIdExpressions();
-            if (!candidateGroupIdExpressions.isEmpty()) {
+            if (!candidateGroupIdExpressions.isEmpty())
+            {
                 Task currentTask = null;
                 /*
                  * 当前节点的task
                  */
-                if (currentActiviti) {
+                if (currentActiviti)
+                {
                     currentTask = getCurrentTaskInfo(processInstance);
                 }
                 // 任务的处理角色,后续再加
-//                setTaskGroup(vars, candidateGroupIdExpressions);
+                // setTaskGroup(vars, candidateGroupIdExpressions);
 
                 // 当前处理人
-                if (currentTask != null) {
+                if (currentTask != null)
+                {
                     ProcessInstanceTask instanceTask = convert2WFTask(currentTask, 0);
                     setCurrentTaskAssignee(vars, instanceTask);
                 }
@@ -929,33 +994,40 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * @param vars
      * @param currentTask
      */
-    private void setCurrentTaskAssignee(Map<String, Object> vars, ProcessInstanceTask currentTask) {
+    private void setCurrentTaskAssignee(Map<String, Object> vars, ProcessInstanceTask currentTask)
+    {
         String assignee = currentTask.getAssignee();
-        if (StringUtils.isNotBlank(assignee)) {
-//            User assigneeUser = identityService.createUserQuery().userId(assignee).singleResult();
-//            String userInfo = assigneeUser.getFirstName() + " " + assigneeUser.getLastName();
+        if (StringUtils.isNotBlank(assignee))
+        {
+            // User assigneeUser =
+            // identityService.createUserQuery().userId(assignee).singleResult();
+            // String userInfo = assigneeUser.getFirstName() + " " +
+            // assigneeUser.getLastName();
             vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_ASSIGNEE, assignee.trim());
         }
     }
 
-
-//    /**
-//     * 获取当前节点信息
-//     *
-//     * @param processInstance
-//     * @return
-//     */
-    private Task getCurrentTaskInfo(ProcessInstance processInstance) {
+    // /**
+    // * 获取当前节点信息
+    // *
+    // * @param processInstance
+    // * @return
+    // */
+    private Task getCurrentTaskInfo(ProcessInstance processInstance)
+    {
         Task currentTask = null;
-        try {
+        try
+        {
             String activitiId = (String) PropertyUtils.getProperty(processInstance, "activityId");
             logger.debug("current activity id: {}", activitiId);
 
-            currentTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskDefinitionKey(activitiId)
-                    .singleResult();
+            currentTask = taskService.createTaskQuery().processInstanceId(processInstance.getId())
+                    .taskDefinitionKey(activitiId).singleResult();
             logger.debug("current task for processInstance: {}", ToStringBuilder.reflectionToString(currentTask));
 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             logger.error("can not get property activityId from processInstance: {}", processInstance);
         }
         return currentTask;
@@ -967,7 +1039,8 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * @param activity
      * @param activityInfo
      */
-    private void setWidthAndHeight(ActivityImpl activity, Map<String, Object> activityInfo) {
+    private void setWidthAndHeight(ActivityImpl activity, Map<String, Object> activityInfo)
+    {
         activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_WIDTH, activity.getWidth());
         activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_HEIGHT, activity.getHeight());
     }
@@ -978,7 +1051,8 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
      * @param activity
      * @param activityInfo
      */
-    private void setPosition(ActivityImpl activity, Map<String, Object> activityInfo) {
+    private void setPosition(ActivityImpl activity, Map<String, Object> activityInfo)
+    {
         activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_X, activity.getX());
         activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_Y, activity.getY());
     }

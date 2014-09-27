@@ -205,7 +205,9 @@ public interface WorkFlowExecutor
      *
      * <summary>
      * <p>
-     * 结束当前任务
+     * 结束当前任务 <br>
+     * 如果使用 task.setVariables方法，则设置的值全流程范围有效；由于当前流程没有并发执行，所以目前不会有问题。<br>
+     * 后续如果出现并发的话，还是设置全局变量，但是要为每个分支的候选人都设一个变量名，如${nextAssignee1}  ${nextAssignee2} ，避免重复。<br>
      * </p>
      * </summary>
      *

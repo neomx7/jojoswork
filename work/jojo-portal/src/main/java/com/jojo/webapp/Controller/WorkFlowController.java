@@ -18,6 +18,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.engine.impl.el.FixedValue;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,9 +223,10 @@ public class WorkFlowController extends BaseController
     @RequestMapping(value = "/workflow/startProcessInstance")
     @ResponseBody
     public ResultInfo startProcessInstance(
-    // @RequestParam(required = true, value = "proDefId")
-    // String proDefKey, HttpServletResponse httpServletResponse
-            @RequestBody WorkFlowQuery query)
+            // @RequestParam(required = true, value = "proDefId")
+            // String proDefKey, HttpServletResponse httpServletResponse
+            @RequestBody WorkFlowQuery query, HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse)
     {
         ResultInfo resultInfo = new ResultInfo();
         if (StringUtils.isBlank(query.getProDefKey()))
@@ -237,7 +239,7 @@ public class WorkFlowController extends BaseController
         String businessKey = UUID.randomUUID().toString();
         WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean(JOJOConstants.WORKFLOW_SERVICE));
         // 从session中获取operId
-        String operId = "jojo";
+        String operId = getLoginUsrId(httpServletRequest, httpServletResponse);
         Map<String, Object> variables = new HashMap<String, Object>(0);
         @SuppressWarnings("unused")
         String processInstanceId = workFlowExecutor.startProcessInstanceByKey(query.getProDefKey(), operId,
@@ -320,12 +322,13 @@ public class WorkFlowController extends BaseController
         }
         try
         {
-            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean(JOJOConstants.WORKFLOW_SERVICE));
+            WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder
+                    .getBean(JOJOConstants.WORKFLOW_SERVICE));
             list = workFlowExecutor.traceProcessDetails(query.getProInsId());
         }
         catch (Exception e)
         {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
         return list;
     }
@@ -392,6 +395,25 @@ public class WorkFlowController extends BaseController
     /**
      *
      * <summary>
+     * [进入我的在办列表]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @return
+     */
+    @RequestMapping(value = "/process/toDoingTaskList")
+    public String toDoingTaskList()
+    {
+        logger.info("match url 4 '/process/toTODOTaskList'");
+        // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
+        return "view/workflow/doingTaskList-list";
+    }
+
+    /**
+     *
+     * <summary>
      * [进入流程任务节点编辑页面]<br>
      * <br>
      * </summary>
@@ -451,9 +473,42 @@ public class WorkFlowController extends BaseController
             form.getProcessInstanceTask().setTenantId(processInstance.getTenantId());
             form.getProcessInstanceTask().setTaskId(instanceTask.getTaskId());
             form.getProcessInstanceTask().setTaskName(instanceTask.getTaskName());
+            form.getProcessInstanceTask().setVariables(instanceTask.getVariables());
+            Object approvedRequired = instanceTask.getVariables().get(
+                    JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDREQUIRED);
+            if (approvedRequired != null)
+            {
+                form.setApprovedRequired(convert2Boolean(((FixedValue) approvedRequired).getExpressionText()));
+            }
         }
 
         return "view/workflow/edit-workflow";
+    }
+
+    /**
+     *
+     * <summary>
+     * [把字符串表达式转成boolean值，如 'yes' ，'true'，'1'等字符串都按ture返回，否则按false返回]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param orgiStr
+     * @return
+     */
+    private boolean convert2Boolean(String orgiStr)
+    {
+        if (StringUtils.isBlank(orgiStr))
+        {
+            return false;
+        }
+        orgiStr = orgiStr.trim();
+        if (orgiStr.equalsIgnoreCase("yes") || orgiStr.equalsIgnoreCase("true") || orgiStr.equalsIgnoreCase("1"))
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -563,29 +618,48 @@ public class WorkFlowController extends BaseController
         // TODO 保存任务审批记录
         String instanceId = form.getTheInstId();
         String taskId = form.getTheTaskId();
-        WorkFlowTaskApprovalDO approvalDO = new WorkFlowTaskApprovalDO();
-        approvalDO.setApprvContent(form.getApprvContent());
-        approvalDO.setApprvFlg(form.getApprvFlg());
-        approvalDO.setBusinessKey(form.getBusinessKey());
-        approvalDO.setInstanceId(instanceId);
-        approvalDO.setInstTaskId(taskId);
-        approvalDO.setTheId(instanceId + JOJOConstants.UNDERLINE + taskId);
-        approvalDO.setAssigner(operId);
-        // approvalDO.setCrtTime(DateUtils.getCurrentDateTimeMs());
-        approvalDO.setCrtTimestamp(new Timestamp(new Date().getTime()));
-        approvalDO.setCrtUserId(operId);
-        try
+
+        // 只有需要审批的节点才需要保存审批记录
+        if (form.isApprovedRequired())
         {
-            workFlowBiz.addTaskApproval(approvalDO);
+            WorkFlowTaskApprovalDO approvalDO = new WorkFlowTaskApprovalDO();
+            approvalDO.setApprvContent(form.getApprvContent());
+            approvalDO.setApprvFlg(form.getApprvFlg());
+            approvalDO.setBusinessKey(form.getBusinessKey());
+            approvalDO.setInstanceId(instanceId);
+            approvalDO.setInstTaskId(taskId);
+            approvalDO.setTheId(instanceId + JOJOConstants.UNDERLINE + taskId);
+            approvalDO.setAssigner(operId);
+            // approvalDO.setCrtTime(DateUtils.getCurrentDateTimeMs());
+            approvalDO.setCrtTimestamp(new Timestamp(new Date().getTime()));
+            approvalDO.setCrtUserId(operId);
+            approvalDO.setCrtUserName(form.getAppContext().getUserName());
+            approvalDO.setUpdUserId(operId);
+            approvalDO.setUpdUserName(form.getAppContext().getUserName());
+
+            try
+            {
+                //如果已经存在，则update，否则insert
+                Map<String, Object> params = new HashMap<String, Object>(8);
+                params.put("theId", approvalDO.getTheId());
+                WorkFlowTaskApprovalDO taskApprovalDO = workFlowBiz.findTaskApproval(params);
+                if (taskApprovalDO == null)
+                {
+                    workFlowBiz.addTaskApproval(approvalDO);
+                }else {
+                    workFlowBiz.updateTaskApproval(taskApprovalDO);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.error(e.getMessage(), e);
+                dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                dataResponse.setTip("系统内部错误");
+                dataResponse.setTipDesc("无法继续流程：系统内部错误:" + ExceptionUtils.getStackTrace(e));
+                return dataResponse;
+            }
         }
-        catch (Exception e)
-        {
-            logger.error(e.getMessage(), e);
-            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            dataResponse.setTip("系统内部错误");
-            dataResponse.setTipDesc("无法继续流程：系统内部错误:" + ExceptionUtils.getStackTrace(e));
-            return dataResponse;
-        }
+
         try
         {
             // 结束流程
@@ -595,6 +669,13 @@ public class WorkFlowController extends BaseController
             task.setNextAssignee(form.getNextAssignee());
             task.setProcessInstanceId(form.getTheInstId());
             task.setTaskId(form.getTheTaskId());
+            if (form.isApprovedRequired())
+            {
+                Map<String, Object> variables4Task = new HashMap<String, Object>(10);
+                variables4Task.put(JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER,
+                        form.getApprvFlg());
+                task.setVariablesLocal(variables4Task);
+            }
             workFlowExecutor.completeTask(task);
         }
         catch (Exception e)
@@ -603,6 +684,7 @@ public class WorkFlowController extends BaseController
             dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             dataResponse.setTip("系统内部错误");
             dataResponse.setTipDesc("无法继续流程：工作流错误:" + ExceptionUtils.getStackTrace(e));
+            return dataResponse;
         }
 
         return dataResponse;

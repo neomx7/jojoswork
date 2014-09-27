@@ -40,11 +40,15 @@
 
 				<div class="form">
 					<form id="taskTODOform_${form.processInstanceTask.taskId}" method="post">
-						<input type="hidden" id="todoInstTaskId" name="theTaskId" value="${form.processInstanceTask.taskId}" readOnly="readOnly"/>
-						<input type="hidden" id="todoInstId" name="theInstId" value="${form.processInstanceTask.processInstanceId}" readOnly="readOnly"/>
-						<input type="hidden" id="todoBusinessKey" name="businessKey" value="${form.businessKey}" readOnly="readOnly"/>
+						<input type="hidden" id="todoInstTaskId" name="theTaskId" value="${form.processInstanceTask.taskId!}" readOnly="readOnly"/>
+						<input type="hidden" id="todoInstId" name="theInstId" value="${form.processInstanceTask.processInstanceId!}" readOnly="readOnly"/>
+						<input type="hidden" id="todoBusinessKey" name="businessKey" value="${form.businessKey!}" readOnly="readOnly"/>
+						<input type="text" id="approvedRequired" name="approvedRequired" value="${form.approvedRequired? string('true', 'false')}" readOnly="readOnly"/>
+
+						<#if form.approvedRequired>
 						<br><input type="radio" name="apprvFlg" value="1" class="validate[required]"/>同意 <input type="radio" name="apprvFlg" value="2"  class="validate[required]"/>打回
 						<br>批示意见<textarea rows="3" cols="40" name="apprvContent" ></textarea>
+						</#if>
 						<br><div id="setNextUser_${form.processInstanceTask.taskId}" class="ui-widget" >
 							  <label for="nextUser_${form.processInstanceTask.taskId}">转下个负责人: </label>
 							  <input id="nextUser_${form.processInstanceTask.taskId}" name="nextAssignee" class="validate[required] text-input"/>

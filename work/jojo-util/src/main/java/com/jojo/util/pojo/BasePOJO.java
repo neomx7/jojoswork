@@ -119,6 +119,11 @@ public class BasePOJO implements Serializable
 
     public String getCrtTime()
     {
+        if (getCrtTimestamp() != null)
+        {
+            return DateUtils.getDateTimeSec(getCrtTimestamp().getTime());
+        }
+
         return crtTime;
     }
 
@@ -149,6 +154,10 @@ public class BasePOJO implements Serializable
 
     public String getUpdTime()
     {
+        if (getUpdTimestamp() != null)
+        {
+            return DateUtils.getDateTimeSec(getUpdTimestamp().getTime());
+        }
         return updTime;
     }
 

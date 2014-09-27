@@ -458,8 +458,9 @@ function bind2LvMenuEvents()
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown)
                 {
-                    alert(textStatus);
-                    alert("error info :" + XMLHttpRequest.responseText)
+//                    alert(textStatus);
+//                    alert("error info :" + XMLHttpRequest.responseText)
+                    showTipMessage(XMLHttpRequest.responseText + "<p>" +  errorThrown,"出错了~~");
                 }
             });
         });

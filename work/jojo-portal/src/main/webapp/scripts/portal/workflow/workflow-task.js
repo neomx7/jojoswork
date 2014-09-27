@@ -2,6 +2,8 @@ $(function()
 {
     var instanceId = $("#todoInstId").val();
     var taskInstId = $("#todoInstTaskId").val();
+    var approvedByManager = $("#approvedByManager").val();
+
     $("#taskTODOform_" + taskInstId).validationEngine();
     $("input[id='submitBtn_" + taskInstId + "']").button(
     {
@@ -84,7 +86,7 @@ function completeTask(taskInstId)
     });
 }
 
-function showAllTasks(instanceId, taskInstId)
+function showAllTasks(instanceId, taskInstId, approvedByManager)
 {
     if (!instanceId)
     {
@@ -224,8 +226,9 @@ function showAllTasks(instanceId, taskInstId)
  *
  * @param tblId
  * @param rowid
+ * @param approvedByManager
  */
-function viewProcessGraghInfo(instanceId, taskInstId)
+function viewProcessGraghInfo(instanceId, taskInstId,approvedByManager)
 {
     if (!instanceId)
     {
@@ -258,7 +261,7 @@ function viewProcessGraghInfo(instanceId, taskInstId)
             +'src=\"'
             // + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
             // + proDefId
-            + appRelPath + '/styles/workflow/imgs/lisheng.bpmn20.png'
+            + appRelPath + '/styles/workflow/imgs/apply.png'
 
             + '\" style="border:1px solid #dddddd ;" />';
             // position:absolute; left:'

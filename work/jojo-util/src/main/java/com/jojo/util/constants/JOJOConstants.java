@@ -14,12 +14,24 @@ package com.jojo.util.constants;
  * @author jojo
  *
  */
-public class JOJOConstants
+public final class JOJOConstants
 {
+
+    /**
+     * 防止初始化该常量类
+     */
+    private JOJOConstants(){}
     /**
      * 工作流的spring httpinvoker 的bean名称
      */
     public static final String WORKFLOW_SERVICE = "workFlowServiceProxy";
+
+
+    /**
+     *""
+     */
+    public static final String WORKFLOW_TASK_VARIABLES_KYE_APPROVEDREQUIRED = "approvedRequired";
+    public static final String WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER = "approvedByManager";
 
     public static final int PAGE_STARTPAGE_DEFAULT = 1;
     public static final int PAGE_LIMIT_DEFAULT = 20;
@@ -39,6 +51,15 @@ public class JOJOConstants
     public static final String VALID_STATUS = "1";
     public static final int VALID_STATUS_FLG = 1;
 
+
+    public static final boolean WORKFLOW_PROCESSINST_TASK_APPRV_YES = true;
+    public static final boolean WORKFLOW_PROCESSINST_TASK_APPRV_NO = false;
+
+
+    /**
+     * 流程创建者
+     */
+    public static final String WORKFLOW_PROCESSINST_START_USRID = "startUserId";
     /**
      * 下一个流程处理者
      */

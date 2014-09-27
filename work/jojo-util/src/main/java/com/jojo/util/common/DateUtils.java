@@ -49,6 +49,16 @@ public class DateUtils
         return fastDateFormat4MillSeconds.format(new Date());
     }
 
+
+    public static String getDateTimeSec(long msTimeLong)
+    {
+        if (msTimeLong > 0)
+        {
+            return fastDateFormat4Seconds.format(new Date(msTimeLong));
+        }
+        return null;
+    }
+
     public static String getDateTimeMs(Date date)
     {
         if (date != null)

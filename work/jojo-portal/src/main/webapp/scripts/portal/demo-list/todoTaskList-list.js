@@ -1,6 +1,6 @@
 $(function()
 {
-    var colNames = [ "编号", "任务名称", "任务备注", "发起人", "创建时间", "流程名称", "操作", "流程定义ID", "流程实例ID", "taskID"
+    var colNames = [ "编号", "流程节点名称", "流程节点备注", "发起人", "创建时间", "流程名称", "操作", "流程定义ID", "流程实例ID", "taskID"
     ];
     var colModel = [
     {
@@ -32,7 +32,7 @@ $(function()
         name : "crtTime",
         index : "crtTime",
         width : "10%",
-        sorttype : "string"
+        sorttype : "date"
     },
     {
         name : "processName",
@@ -235,7 +235,7 @@ function viewProcessInfo(tblId, rowid)
             var infoV = '<img  src=\"'
             // + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
             // + proDefId
-            + appRelPath + '/styles/workflow/imgs/lisheng.bpmn20.png'
+            + appRelPath + '/styles/workflow/imgs/apply.png'
 
             + '\" style="border:1px solid #dddddd ;position:absolute; left:'
             // +dataResult.defX

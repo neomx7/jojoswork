@@ -6,6 +6,7 @@
 package com.jojo.service.process.usertask.listener;
 
 import org.activiti.engine.delegate.TaskListener;
+import org.activiti.engine.impl.el.FixedValue;
 
 /**
  * <summary>
@@ -22,9 +23,15 @@ public abstract class TaskHandler implements TaskListener
     /**   */
     private static final long serialVersionUID = 5603774273648788216L;
 
-//    private FixedValue formDivId;
-//    private FixedValue qryDataBeanId;
-//    private FixedValue qryDataBeanMethod;
+    private FixedValue approvedRequired;
 
+    public FixedValue getApprovedRequired()
+    {
+        return approvedRequired;
+    }
 
+    public void setApprovedRequired(FixedValue approvedRequired)
+    {
+        this.approvedRequired = approvedRequired;
+    }
 }

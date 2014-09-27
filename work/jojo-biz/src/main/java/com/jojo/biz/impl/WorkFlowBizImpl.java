@@ -5,6 +5,8 @@
  */
 package com.jojo.biz.impl;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,19 @@ public class WorkFlowBizImpl implements WorkFlowBiz
     public void addTaskApproval(WorkFlowTaskApprovalDO approvalDO)
     {
         mapper.insert(approvalDO);
+    }
+
+    @Override
+    public void updateTaskApproval(WorkFlowTaskApprovalDO approvalDO)
+    {
+        Map<String, Object> params = new HashMap<String, Object>(16);
+        params.put("theId", approvalDO.getTheId());
+        params.put("updTime", new Timestamp(new Date().getTime()));
+        params.put("apprvFlg", approvalDO.getApprvFlg());
+        params.put("updUserId", approvalDO.getUpdUserId());
+        params.put("updUserName", approvalDO.getUpdUserName());
+        mapper.update(params);
+
     }
 
 

@@ -7,6 +7,7 @@ package com.jojo.webapp.Controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -127,6 +128,7 @@ public class ApplyController extends BaseController
         applyDO.setTheName(form.getTheName());
         applyDO.setTheRemark(form.getTheRemark());
         applyDO.setCrtTime(DateUtils.getCurrentDateTimeMs());
+        applyDO.setCrtTimestamp(new Timestamp(new Date().getTime()));
         applyDO.setCrtUserId(getLoginUsrId(httpServletRequest, httpServletResponse));
         applyDO.setStatus(0);
         applyBiz.addApply(applyDO);
@@ -313,12 +315,13 @@ public class ApplyController extends BaseController
             String businessKey = form.getTheId().trim();
             WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean(JOJOConstants.WORKFLOW_SERVICE));
             Map<String, Object> variables = new HashMap<String, Object>(2);
+            variables.put(JOJOConstants.WORKFLOW_PROCESSINST_START_USRID, getLoginUsrId(httpServletRequest, httpServletResponse));
             variables.put(JOJOConstants.WORKFLOW_PROCESSINST_NEXT_ASSIGNEE, form.getNextUsrId());
             //直接给url，这样就不用转换spring bean和方法来查看表单内容了
             variables.put(JOJOConstants.WORKFLOW_PROCESSINST_BIZ_KEY_URL, "/equipment/viewApply4WorkFlow?theId="+businessKey);
 
            //lishengProcess1:8:15904 //TODO 需要把里面写死的procDefKey换成动态改变的
-            String processInstanceId = workFlowExecutor.startProcessInstanceByKey("lishengProcess1", operId, businessKey, variables);
+            String processInstanceId = workFlowExecutor.startProcessInstanceByKey("materialApplyProcess", operId, businessKey, variables);
 
             WorkFlowTaskDTO flowTaskDTO = workFlowExecutor.getProcessActivity(processInstanceId);
 
@@ -534,7 +537,7 @@ public class ApplyController extends BaseController
             for (int i=0;i<list.size();i++)
             {
                 BasePOJO pojo = (BasePOJO)(list.get(i));
-                pojo.setNumber(i);
+                pojo.setNumber((i+1));
             }
         }
 

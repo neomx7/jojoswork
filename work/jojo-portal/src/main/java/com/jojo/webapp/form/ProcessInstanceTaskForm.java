@@ -24,10 +24,19 @@ public class ProcessInstanceTaskForm extends BaseForm
     /**   */
     private static final long serialVersionUID = 3403839722668738733L;
 
-
     private ProcessInstanceTask processInstanceTask = new ProcessInstanceTask();
 
     private String businessKey;
+
+    /**
+     * 主管审批通过，true 是; false 否.
+     */
+    private boolean approvedByManager = false;
+
+    /**
+     * 是否需要主管审批
+     */
+    private boolean approvedRequired = false;
 
     /**
      * 查询表单内容的spring bean名称，即配置在applicationContext-biz.xml的 bizBean们
@@ -43,6 +52,9 @@ public class ProcessInstanceTaskForm extends BaseForm
 
 
     private String apprvContent;
+    /**
+     * 1为通过；2为打回；
+     */
     private int apprvFlg;
 
     /**
@@ -155,6 +167,30 @@ public class ProcessInstanceTaskForm extends BaseForm
     public void setApprovals(List<WorkFlowTaskApprovalDO> approvals)
     {
         this.approvals = approvals;
+    }
+
+
+    public boolean isApprovedByManager()
+    {
+        return approvedByManager;
+    }
+
+
+    public void setApprovedByManager(boolean approvedByManager)
+    {
+        this.approvedByManager = approvedByManager;
+    }
+
+
+    public boolean isApprovedRequired()
+    {
+        return approvedRequired;
+    }
+
+
+    public void setApprovedRequired(boolean approvedRequired)
+    {
+        this.approvedRequired = approvedRequired;
     }
 
 

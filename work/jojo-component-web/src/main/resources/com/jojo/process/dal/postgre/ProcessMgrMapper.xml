@@ -48,7 +48,7 @@
 		t.assignee_ as assignee,
 		i.user_id_ as initialAssignee,
 		t.priority_ as priority,
-		t.create_time_ as createTime,
+		t.create_time_ as crtTimestamp,
 		t.proc_inst_id_ as processInstanceId,
 		p.id_ as processDefinitionId,
 		p.name_ as processName,

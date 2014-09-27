@@ -11,10 +11,10 @@
 		<result property="theRemark" column="T_REMARK" />
 		<result property="crtUserId" column="CRT_USR" />
 		<result property="crtUserName" column="CRT_USR_NAME" />
-		<result property="crtTime" column="CRT_TIME" />
+		<result property="crtTimestamp" column="CRT_TIME" />
 		<result property="updUserId" column="UPD_USR" />
 		<result property="updUserName" column="UPD_USR_NAME" />
-		<result property="updTime" column="UPD_TIME" />
+		<result property="updTimestamp" column="UPD_TIME" />
 
 	</resultMap>
 
@@ -29,14 +29,14 @@
 		upd_usr_name)
 		VALUES (#{theId}, #{theName}, #{status}, #{statusDsc},
 		#{theRemark}, #{crtUserId},
-		#{crtUserName},
-		#{crtTime}, #{updUserId}, #{updUserName}, #{updTime})
+		#{crtTimestamp},
+		#{crtUserName}, #{updUserId}, #{updTimestamp}, #{updUserName})
 	</insert>
 
 	<update id="update" parameterType="java.util.Map">
 		update jojo_mtr_apply
 		set
-		upd_time = #{updTime}
+		upd_time = #{updTimestamp}
 		<if test="theName != null and theName != ''">
 			,t_title = #{theName}
 		</if>
@@ -83,6 +83,7 @@
 		<if test="theName != null and theName != ''">
 			AND T.t_title like '%${theName}%'
 		</if>
+		order by T.CRT_TIME desc
 		limit ${limitPage} offset ${offset}
 	</select>
 

@@ -64,6 +64,18 @@ public interface WorkFlowBiz
     */
    public void addTaskApproval(WorkFlowTaskApprovalDO approvalDO);
 
+   /**
+    *
+    * <summary>
+    * [update物料申请]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param approvalDO
+    */
+   public void updateTaskApproval(WorkFlowTaskApprovalDO approvalDO);
 //   /**
 //    *
 //    * <summary>

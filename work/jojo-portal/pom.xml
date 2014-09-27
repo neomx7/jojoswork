@@ -362,6 +362,12 @@
 			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
 			<version>2.1.2</version>
 		</dependency>
+
+		<!-- 工作流 -->
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-engine</artifactId>
+		</dependency>
 	</dependencies>
 
 

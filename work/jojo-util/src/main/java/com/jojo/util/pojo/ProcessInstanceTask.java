@@ -48,7 +48,9 @@ public class ProcessInstanceTask extends BasePOJO
     //下个节点审批人
     private String nextAssignee;
 
-    private Map<String, Object> localVariables = new HashMap<String, Object>();
+    private Map<String, Object> variables = new HashMap<String, Object>();
+
+    private Map<String, Object> variablesLocal = new HashMap<String, Object>();
 
     public int getRevision()
     {
@@ -249,14 +251,6 @@ public class ProcessInstanceTask extends BasePOJO
         builder.append("]");
         return builder.toString();
     }
-    public Map<String, Object> getLocalVariables()
-    {
-        return localVariables;
-    }
-    public void setLocalVariables(Map<String, Object> localVariables)
-    {
-        this.localVariables = localVariables;
-    }
     public String getDueTimeStr()
     {
         return dueTimeStr;
@@ -264,6 +258,22 @@ public class ProcessInstanceTask extends BasePOJO
     public void setDueTimeStr(String dueTimeStr)
     {
         this.dueTimeStr = dueTimeStr;
+    }
+    public Map<String, Object> getVariables()
+    {
+        return variables;
+    }
+    public void setVariables(Map<String, Object> variables)
+    {
+        this.variables = variables;
+    }
+    public Map<String, Object> getVariablesLocal()
+    {
+        return variablesLocal;
+    }
+    public void setVariablesLocal(Map<String, Object> variablesLocal)
+    {
+        this.variablesLocal = variablesLocal;
     }
 
 }
