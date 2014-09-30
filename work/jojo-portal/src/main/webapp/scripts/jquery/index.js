@@ -293,9 +293,14 @@ $(document).ready(function()
             autoOpen : false, // 是否自动弹出窗口
             modal : true, // 设置为模态对话框
             resizable : true,
-            width : window.screen.availWidth-300,
-            height : window.screen.availHeight-200,
+            width : window.screen.availWidth-400,
+            height : window.screen.availHeight-300,
             position : "center" // 窗口显示的位置
+            ,buttons: {
+                关闭: function() {
+                  $( this ).dialog( "close" );
+                }
+              }
         });
 
         // 左侧菜单栏

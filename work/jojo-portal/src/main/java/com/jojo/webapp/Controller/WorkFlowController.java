@@ -587,7 +587,7 @@ public class WorkFlowController extends BaseController
     @RequestMapping(value = "/workflow/completeTask")
     @ResponseBody
     public DataResponse<ProcessInstanceTaskForm> completeTask(HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse, @RequestBody ProcessInstanceTaskForm form)
+            HttpServletResponse httpServletResponse, @ModelAttribute("form") ProcessInstanceTaskForm form)
     {
         logger.info("match url 4 '/workflow/completeTask'");
         DataResponse<ProcessInstanceTaskForm> dataResponse = new DataResponse<ProcessInstanceTaskForm>();

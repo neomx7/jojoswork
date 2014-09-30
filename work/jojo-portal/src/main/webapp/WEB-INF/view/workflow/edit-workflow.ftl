@@ -43,7 +43,7 @@
 						<input type="hidden" id="todoInstTaskId" name="theTaskId" value="${form.processInstanceTask.taskId!}" readOnly="readOnly"/>
 						<input type="hidden" id="todoInstId" name="theInstId" value="${form.processInstanceTask.processInstanceId!}" readOnly="readOnly"/>
 						<input type="hidden" id="todoBusinessKey" name="businessKey" value="${form.businessKey!}" readOnly="readOnly"/>
-						<input type="text" id="approvedRequired" name="approvedRequired" value="${form.approvedRequired? string('true', 'false')}" readOnly="readOnly"/>
+						<input type="hidden" id="approvedRequired" name="approvedRequired" value="${form.approvedRequired? string('true', 'false')}" readOnly="readOnly"/>
 
 						<#if form.approvedRequired>
 						<br><input type="radio" name="apprvFlg" value="1" class="validate[required]"/>同意 <input type="radio" name="apprvFlg" value="2"  class="validate[required]"/>打回
@@ -53,10 +53,10 @@
 							  <label for="nextUser_${form.processInstanceTask.taskId}">转下个负责人: </label>
 							  <input id="nextUser_${form.processInstanceTask.taskId}" name="nextAssignee" class="validate[required] text-input"/>
 							</div>
-						<div class="btn-nav">
-							<input id="submitBtn_${form.processInstanceTask.taskId}" type="submit" value="转后续处理" class="submit"/>
-						</div>
 					</form>
+				</div>
+				<div class="btn-nav">
+					<button id="submitBtn_${form.processInstanceTask.taskId}">转后续处理</button>
 				</div>
 			</div>
 		</div>

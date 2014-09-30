@@ -82,6 +82,7 @@
 
 <!--hidden pane-->
 <div id="consoleDlg" style="width:90%;"></div>
+<div id="workflowDlg" style="width:90%;"></div>
 <!-- hidden error message -->
 <div id="globalErrDiv" style="display:none;">
 	<div class="errorTip">

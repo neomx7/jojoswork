@@ -39,7 +39,7 @@
 							<label for=theAttach>申请附件</label>
 							<input id="theAttach" name="" type="text" value="" />
 						</div>
-						<div id="setNextUser" class="ui-widget" style="display:none;">
+						<div id="setNextUser" class="ui-widget" >
 						  <label for="nextUser">人员姓名: </label>
 						  <input id="nextUser" name="nextUsrId"/>
 						</div>

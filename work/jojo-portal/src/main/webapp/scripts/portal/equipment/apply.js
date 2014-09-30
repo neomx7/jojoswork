@@ -2,6 +2,9 @@ $(function()
 {
     $("#setNextUser").show();
 
+    $("#targetForm").validationEngine();
+    $("#targetFormE").validationEngine();
+
     $("button[id='saveBtn']").button(
 //    {
 //        icons :
@@ -13,7 +16,10 @@ $(function()
     ).click(function(event)
     {
         //增加表单验证
-
+        if (!$("#targetForm").validationEngine('validate'))
+        {
+            return;
+        }
 
 
         // event.preventDefault();
@@ -60,6 +66,11 @@ $(function()
         text : true
     }).click(function(event)
     {
+        //增加表单验证
+        if (!$("#targetForm").validationEngine('validate'))
+        {
+            return;
+        }
         // event.preventDefault();
         var dataRequest = $.toJSON($('#targetForm').serializeObject());
         // ajax提交
@@ -107,6 +118,12 @@ $(function()
                 text : true
             }).click(function(event)
             {
+                //表单验证
+                if (!$("#targetFormE").validationEngine('validate'))
+                {
+                    return;
+                }
+
                 // event.preventDefault();
                 var dataRequest = $.toJSON($('#targetFormE').serializeObject());
                 // ajax提交
@@ -155,6 +172,12 @@ $(function()
                 text : true
             }).click(function(event)
             {
+                //表单验证
+                if (!$("#targetFormE").validationEngine('validate'))
+                {
+                    return;
+                }
+
                 // event.preventDefault();
                 var dataRequest = $.toJSON($('#targetFormE').serializeObject());
                 // ajax提交
@@ -196,6 +219,8 @@ $(function()
 
     // binds form submission and fields to the validation engine
     $("#targetForm").validationEngine();
+    $("#targetFormE").validationEngine();
+
 
     try
     {
@@ -385,10 +410,6 @@ function handleF(id)
             // alert("提交失败，错误信息为 :" + errorThrown);
         }
     });
-
-
-
-
 
 }
 function viewF(id)

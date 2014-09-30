@@ -5,7 +5,7 @@ $(function()
     var approvedByManager = $("#approvedByManager").val();
 
     $("#taskTODOform_" + taskInstId).validationEngine();
-    $("input[id='submitBtn_" + taskInstId + "']").button(
+    $("button[id='submitBtn_" + taskInstId + "']").button(
     {
         icons :
         {
@@ -53,37 +53,47 @@ $(function()
 
 function completeTask(taskInstId)
 {
-    var dataRequest = $.toJSON($('#taskTODOform_' + taskInstId).serializeObject());
+    //$.toJSON
+    var dataRequest = ($('#taskTODOform_' + taskInstId).serializeObject());
     $.ajax(
-    {
-        type : 'POST',
-        contentType : 'application/json',
-        url : "workflow/completeTask",
-        data : dataRequest,
-        dataType : 'json',
-        success : function(dataResp)
-        {
-            var josnResult = eval(dataResp);
-            $("#err_tip").empty();
-            if (josnResult.status == 200)
             {
-                $("#tip_suc").html("处理成功");
-                var targetHtml = $("#globalSucDiv").html();
-                showTipMessage(targetHtml);
-            }
-            else
-            {
-                $("#tip").html(josnResult.tip);
-                $("#tipDesc").html(josnResult.tipDesc);
-                var targetHtml = $("#globalErrDiv").html();
-                showTipMessage(targetHtml);
-            }
-        },
-        error : function(XMLHttpRequest, textStatus, errorThrown)
-        {
-            showTipMessage(XMLHttpRequest.responseText, "出错了~~", errorThrown);
-        }
-    });
+                async : false,
+                type : 'POST',
+//                contentType : 'application/json',
+                url : "workflow/completeTask",
+                data : dataRequest,
+                dataType : 'json',
+                success : function(dataResp)
+                {
+                    var josnResult = (dataResp);
+                    $("#err_tip").empty();
+                    if (josnResult.status == 200)
+                    {
+                        $("#tip_suc").html("处理成功");
+                        var targetHtml = $("#globalSucDiv").html();
+                        showTipMessage(targetHtml);
+                    }
+                    else
+                    {
+                        $("#tip").html(josnResult.tip);
+                        $("#tipDesc").html(josnResult.tipDesc);
+                        var targetHtml = $("#globalErrDiv").html();
+                        showTipMessage(targetHtml);
+                    }
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown)
+                {
+//                    $("#consoleDlg").dialog("close");
+                    alert(textStatus);
+                    $("#err_tip").empty();
+                    showTipMessage(XMLHttpRequest.responseText, "出错了~~", errorThrown);
+                },
+                complete:function(xhr,ts){
+//            alert("complete!!");
+//            alert(xhr.responseText);
+//            alert(ts);
+                }
+            });
 }
 
 function showAllTasks(instanceId, taskInstId, approvedByManager)

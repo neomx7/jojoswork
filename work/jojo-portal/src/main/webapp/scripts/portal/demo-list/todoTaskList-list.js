@@ -168,7 +168,6 @@ function toProcessTODOTask(gridId,instanceId,taskId)
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {
-// alert("error info :" + errorThrown)
             showTipMessage(XMLHttpRequest.responseText,"出错了~~");
         }
     });
