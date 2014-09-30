@@ -12,6 +12,10 @@ $(function()
 //    }
     ).click(function(event)
     {
+        //增加表单验证
+
+
+
         // event.preventDefault();
         var dataRequest = $.toJSON($('#targetForm').serializeObject());
         // ajax提交

@@ -107,7 +107,26 @@ public class SysMgrBizImpl implements SysMgrBiz
         DataRequest4DeptUser deptUser = (DataRequest4DeptUser)dataRequest;
         Map<String, Object> params = new HashMap<String, Object>(8);
         params.put("deptCode", deptUser.getDeptCode());
-        return sysMgrService.queryDeptUser(params);
+        List<UserDO> userDOs = sysMgrService.queryDeptUser(params);
+        //去重复，根据用户id
+        Map<String, UserDO> map = new HashMap<String, UserDO>(userDOs.size());
+        for (UserDO userDO : userDOs)
+        {
+            UserDO entry = map.get(userDO.getUsrId());
+
+            if (entry == null)
+            {
+                map.put(userDO.getUsrId(),userDO);
+            }
+
+            List<RoleDO> roleDOs = userDO.getRoles();
+
+            RoleDO roleDO = new RoleDO();
+            roleDO.setTheId(userDO.getRoleId());
+            roleDO.setTheName(userDO.getRoleName());
+            roleDOs.add(roleDO);
+        }
+        return new ArrayList<UserDO>(map.values());
     }
 
 }

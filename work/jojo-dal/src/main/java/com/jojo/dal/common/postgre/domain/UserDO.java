@@ -27,6 +27,20 @@ public class UserDO extends BasePOJO
     private String mobile;
     private String pwd;
 
+    /**
+     * 冗余，查询用户角色使用
+     */
+    private String roleId;
+    /**
+     * 冗余，查询用户角色使用
+     */
+    private String roleName;
+
+    /**
+     * 冗余，查询用户角色使用
+     */
+    private List<RoleDO> roles = new ArrayList<RoleDO>(10);
+
     private List<OrgUserDO> orgUserDOs = new ArrayList<OrgUserDO>(10);
 
 
@@ -89,14 +103,30 @@ public class UserDO extends BasePOJO
         this.usrId = usrId;
     }
 
+    public String getRoleId()
+    {
+        return roleId;
+    }
+    public void setRoleId(String roleId)
+    {
+        this.roleId = roleId;
+    }
+    public String getRoleName()
+    {
+        return roleName;
+    }
+    public void setRoleName(String roleName)
+    {
+        this.roleName = roleName;
+    }
     @Override
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("UserDO [sex=");
-        builder.append(sex);
-        builder.append(", usrId=");
+        builder.append("UserDO [usrId=");
         builder.append(usrId);
+        builder.append(", sex=");
+        builder.append(sex);
         builder.append(", email=");
         builder.append(email);
         builder.append(", tel=");
@@ -105,10 +135,22 @@ public class UserDO extends BasePOJO
         builder.append(mobile);
         builder.append(", pwd=");
         builder.append(pwd);
+        builder.append(", roleId=");
+        builder.append(roleId);
+        builder.append(", roleName=");
+        builder.append(roleName);
         builder.append(", orgUserDOs=");
         builder.append(orgUserDOs);
         builder.append("]");
         return builder.toString();
+    }
+    public List<RoleDO> getRoles()
+    {
+        return roles;
+    }
+    public void setRoles(List<RoleDO> roles)
+    {
+        this.roles = roles;
     }
 
 

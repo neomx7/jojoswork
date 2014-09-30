@@ -1,12 +1,22 @@
+<#--
 <ul id="user-list-table">
-<#if form.userDOs?exists>
-	<#list form.userDOs as datas>
 	  <li class="ui-state-default"  id="deptUsr_${datas.usrId}">
 		  姓名:${datas.theName}
-		  <br>电子邮件:${datas.email}
-		  <br>办公电话:${datas.tel}
-		  <br>移动电话:${datas.mobile}</span>
 	  	</li>
+</ul>
+-->
+<#if form.userDOs?exists>
+<div class="column">
+	<#list form.userDOs as datas>
+
+		  <div class="portlet">
+		    <div class="portlet-header">姓名: ${datas.theName}</div>
+		    <div class="portlet-content">角色: <#list datas.roles as roleDatas>${roleDatas.theName} </#list>
+		    <br>电子邮件: ${datas.email}
+			  <br>办公电话: ${datas.tel}
+			  <br>移动电话: ${datas.mobile}
+		    </div>
+		  </div>
+		</div>
 	</#list>
 </#if>
-</ul>

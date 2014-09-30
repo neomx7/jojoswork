@@ -78,6 +78,10 @@ public class AuthenticationAndAuthorizationFilter extends OncePerRequestFilter
         }
         // 请求的uri
         String uri = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        if (contextPath != null && contextPath.length() > 0) {
+            uri = uri.substring(contextPath.length());
+        }
 
         // 是否过滤
         boolean doFilter = true;

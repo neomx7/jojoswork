@@ -14,6 +14,10 @@
 		<result property="mobile" column="T_MOBILE" />
 		<result property="pwd" column="T_PWD" />
 
+		<result property="roleId" column="T_ROLE_ID" />
+		<result property="roleName" column="T_ROLE_NAME" />
+
+
 		<result property="theRemark" column="T_REMARK" />
 		<result property="crtUserId" column="CRT_USR" />
 		<result property="crtUserName" column="CRT_USR_NAME" />
@@ -237,9 +241,12 @@
 	</select>
 
 	<select id="queryDeptUsers" parameterType="java.util.Map" resultMap="simpleUserResultMap">
-			select u.* from jojo_deprt_usr ud,jojo_deprt d ,jojo_usr u
+			select u.*,r.t_id as T_ROLE_ID,r.t_name as T_ROLE_NAME
+			 from jojo_deprt_usr ud,jojo_deprt d ,jojo_usr u,jojo_deprt_usr_role ur,jojo_role r
 			where u.t_id = ud.t_usr_id
 			and d.t_id = ud.t_deprt_id
+			and ur.t_role_id = r.t_id
+			and ur.t_deprt_usr_id = u.t_id
 			and d.t_code = #{deptCode}
 	</select>
 
