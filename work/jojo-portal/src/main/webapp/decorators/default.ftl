@@ -6,37 +6,15 @@
 	<#-- link css -->
 	<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="${rc.contextPath}/styles/activiti/lt7.css" /><![endif]-->
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/styles/activiti/styles.css" /> 
-	<#--
-	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/styles/reindeer/styles.css" />
-	-->
-
-	<#-- 橙色, ok -->
-	<#--
-	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/ui-lightness/jquery.ui.all.css" />
-	-->
-	<#-- 蓝色, ok -->
-	<#--
-	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/start/jquery-ui.css" />
-	-->
-	<#-- gray色, ok -->
-	<#--
-	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/smoothness/jquery-ui.css" />
-	-->
-	<#-- 白底红字, ok? -->
-	<#--
-	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/flick/jquery-ui.css" />
-	-->
-	<#-- 蓝底橙字, ok? -->
-	<#--
-	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/excite-bike/jquery-ui.css" />
-	-->
 
 	<#-- 雨过天晴色, ok -->
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/cupertino/jquery-ui.css" />
 	<#--
 	-->
-	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/themes/cupertino/jquery-ui.css" />
-
-
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/styles/css/font-awesome.min.css" />
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="${rc.contextPath}/styles/css/font-awesome-ie7.min.css">
+    <![endif]-->
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryLayout/layout-default-latest.css" />
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryJqGird/css/ui.jqgrid.css" />
 	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryJqGird/plugins/ui.multiselect.css" />
@@ -45,7 +23,7 @@
 	<link rel="stylesheet" href="${rc.contextPath}/scripts/jquery/jqueryValidator/css/validationEngine.jquery.css" type="text/css"/>
 	<link rel="stylesheet" href="${rc.contextPath}/scripts/jquery/jqueryValidator/css/template.css" type="text/css"/>
 
-
+	<link rel="stylesheet" href="${rc.contextPath}/scripts/jquery/jqueryJstree/themes/default/style.min.css" type="text/css"/>
 
 	<#-- style -->
 	<style>
@@ -121,34 +99,14 @@
 	</style>
 
 	<#-- jquery -->
-	<#--
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryJstree/libs/jquery.js"></script>
-	 -->
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jquery.json-2.4.min.js"></script>
-
 
 	<#-- jquery UI -->
 	<#--
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery-ui.js"></script>
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.position.js"></script>
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.widget.js"></script>
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.button.js"></script>
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.tabs.js"></script>
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.dialog.js"></script>
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.mouse.js"></script>
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.sortable.js"></script>
-	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/ui/jquery.ui.autocomplete.js"></script>
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/jquery-ui.min.css" />
 	-->
-	<script src="${rc.contextPath}/scripts/jquery/jqueryUI/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
-
-
-
-	<#--
-	<script src="${rc.contextPath}/scripts/jquery/jqueryUI/custom/jquery-ui-custom.min.js" type="text/javascript"></script>
-	-->
-
+	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/jquery-ui.min.js" ></script>
 	<#-- jquery Layout -->
 	<script src="${rc.contextPath}/scripts/jquery/jqueryLayout/jquery.layout-latest.js" type="text/javascript"></script>
 	<script src="${rc.contextPath}/scripts/jquery/debug/debug.js" type="text/javascript"></script>
@@ -168,6 +126,10 @@
 	<script src="${rc.contextPath}/scripts/jquery/jqueryValidator/languages/jquery.validationEngine-zh_CN.js" type="text/javascript" charset="utf-8">
 	</script>
 	<script src="${rc.contextPath}/scripts/jquery/jqueryValidator/jquery.validationEngine.js" type="text/javascript" charset="utf-8">
+	</script>
+
+	<#-- jstree -->
+	<script src="${rc.contextPath}/scripts/jquery/jqueryJstree/jstree.min.js" type="text/javascript" charset="utf-8">
 	</script>
 
 	<#-- index -->

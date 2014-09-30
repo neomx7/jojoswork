@@ -8,6 +8,7 @@ package com.jojo.dal.common.postgre;
 import java.util.List;
 import java.util.Map;
 
+import com.jojo.dal.common.postgre.domain.OrgDO;
 import com.jojo.dal.common.postgre.domain.OrgUserDO;
 import com.jojo.dal.common.postgre.domain.RoleDO;
 import com.jojo.dal.common.postgre.domain.UserDO;
@@ -23,6 +24,19 @@ import com.jojo.dal.common.postgre.domain.UserResourcesDO;
  */
 public interface SysMgrMapper
 {
+
+    /**
+    *
+    * <summary>
+    * [获取用户list,根据部门code]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @return
+    */
+   public List<UserDO> queryDeptUsers(Map<String, Object> params);
 
     /**
      *
@@ -90,4 +104,18 @@ public interface SysMgrMapper
      * @return
      */
     public List<UserResourcesDO> queryUsrResources(Map<String, Object> params);
+
+    /**
+     *
+     * <summary>
+     * [根据父部门的编号获取其下一级的子类部门列表]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param params
+     * @return
+     */
+    public List<OrgDO> queryDeptsByParentCode(Map<String, Object> params);
 }

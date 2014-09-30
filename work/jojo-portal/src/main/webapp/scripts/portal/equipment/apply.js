@@ -3,13 +3,14 @@ $(function()
     $("#setNextUser").show();
 
     $("button[id='saveBtn']").button(
-    {
-        icons :
-        {
-            primary : "ui-icon-gear"
-        },
-        text : true
-    }).click(function(event)
+//    {
+//        icons :
+//        {
+//            primary : "ui-icon-gear"
+//        },
+//        text : true
+//    }
+    ).click(function(event)
     {
         // event.preventDefault();
         var dataRequest = $.toJSON($('#targetForm').serializeObject());

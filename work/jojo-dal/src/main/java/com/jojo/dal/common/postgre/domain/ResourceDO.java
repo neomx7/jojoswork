@@ -22,6 +22,7 @@ public class ResourceDO extends BasePOJO
     private int level;
     private String code;
     private String parentId;
+    private boolean isLeaf;
 
     /**
      * 冗余字段，
@@ -86,6 +87,14 @@ public class ResourceDO extends BasePOJO
         builder.append(super.toString());
         builder.append("]");
         return builder.toString();
+    }
+    public boolean isLeaf()
+    {
+        return isLeaf;
+    }
+    public void setLeaf(boolean isLeaf)
+    {
+        this.isLeaf = isLeaf;
     }
 
 

@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jojo.dal.common.postgre.SysMgrMapper">
+
+	<resultMap type="com.jojo.dal.common.postgre.domain.UserDO" id="simpleUserResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="theName" column="T_NAME" />
+
+		<result property="usrId" column="T_USRID" />
+		<result property="status" column="T_STATUS" />
+		<result property="sex" column="T_SEX" />
+		<result property="email" column="T_EMAIL" />
+		<result property="tel" column="T_TEL" />
+		<result property="mobile" column="T_MOBILE" />
+		<result property="pwd" column="T_PWD" />
+
+		<result property="theRemark" column="T_REMARK" />
+		<result property="crtUserId" column="CRT_USR" />
+		<result property="crtUserName" column="CRT_USR_NAME" />
+		<result property="crtTime" column="CRT_TIME" />
+		<result property="updUserId" column="UPD_USR" />
+		<result property="updUserName" column="UPD_USR_NAME" />
+		<result property="updTime" column="UPD_TIME" />
+
+	</resultMap>
+
 	<resultMap type="com.jojo.dal.common.postgre.domain.UserDO" id="userResultMap">
 		<id property="theId" column="T_ID" />
 		<result property="theName" column="T_NAME" />
@@ -117,6 +140,27 @@
 		<collection property="resourceDOs" resultMap="resourceResultMap" />
 	</resultMap>
 
+
+		<resultMap type="com.jojo.dal.common.postgre.domain.OrgDO" id="orgResultMap">
+		<id property="theId" column="T_ID" />
+		<result property="theName" column="T_NAME" />
+		<result property="level" column="T_LEVEL" />
+		<result property="code" column="T_CODE" />
+		<result property="parentId" column="T_PARENT_ID" />
+		<result property="leafFlg" column="T_IS_LEAF" />
+
+		<!-- <result property="status" column="T_STATUS" /> -->
+
+		<result property="theRemark" column="T_REMARK" />
+		<result property="crtUserId" column="CRT_USR" />
+		<result property="crtUserName" column="CRT_USR_NAME" />
+		<result property="crtTime" column="CRT_TIME" />
+		<result property="updUserId" column="UPD_USR" />
+		<result property="updUserName" column="UPD_USR_NAME" />
+		<result property="updTime" column="UPD_TIME" />
+
+	</resultMap>
+
 	<!-- 部门用户列表查询 -->
 	<select id="queryUsers" parameterType="java.util.Map" resultMap="userResultMap">
 		SELECT
@@ -186,6 +230,17 @@
 
 
 	<select id="getUser" parameterType="java.util.Map" resultMap="userResultMap">
+	</select>
+
+	<select id="queryDeptsByParentCode" parameterType="java.util.Map" resultMap="orgResultMap">
+		select * from jojo_deprt t where t.t_code like '${parentCode}%' and length(t.t_code)  = #{subCodeLength}
+	</select>
+
+	<select id="queryDeptUsers" parameterType="java.util.Map" resultMap="simpleUserResultMap">
+			select u.* from jojo_deprt_usr ud,jojo_deprt d ,jojo_usr u
+			where u.t_id = ud.t_usr_id
+			and d.t_id = ud.t_deprt_id
+			and d.t_code = #{deptCode}
 	</select>
 
 </mapper>

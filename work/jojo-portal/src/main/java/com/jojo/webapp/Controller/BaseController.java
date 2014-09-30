@@ -181,4 +181,42 @@ public class BaseController
 
         return response;
     }
+
+
+    public <T> List<T> findJsTreeResult(DataRequest request, Class<T> cls, Object qryService, String qryMethod)
+    {
+        List<T> list = new ArrayList<T>();
+        if (qryService == null)
+        {
+            logger.error("null query service found.");
+            return null;
+        }
+        Class<? extends Object> clazz = qryService.getClass();
+        Method query = null;
+        try
+        {
+            query = clazz.getDeclaredMethod(qryMethod, DataRequest.class);
+        }
+        catch (NoSuchMethodException e)
+        {
+            logger.error("findResult failed. exception info: [{}]", e);
+        }
+        catch (SecurityException e)
+        {
+            logger.error("findResult failed. exception info: [{}]", e);
+        }
+        Object resultList = null;
+        try
+        {
+            resultList = query.invoke(qryService, request);
+            // 转换成list对象
+            list = (List<T>) resultList;
+        }
+        catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+        {
+            logger.error("findJsTreeResult failed. exception info: [{}]", e);
+        }
+
+        return list;
+    }
 }

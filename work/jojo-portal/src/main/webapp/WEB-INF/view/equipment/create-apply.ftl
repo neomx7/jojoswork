@@ -3,8 +3,6 @@
 <link href="${rc.contextPath}/styles/reset.css" rel="stylesheet" type="text/css">
 <link href="${rc.contextPath}/styles/style.css" rel="stylesheet" type="text/css">
 <link href="${rc.contextPath}/styles/form.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryJstree/jquery.address-1.6.js"></script>
-<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryJstree/vakata.js"></script>
  -->
 <script type="text/javascript" src="${rc.contextPath}/scripts/portal/equipment/apply.js"></script>
 
@@ -48,7 +46,7 @@
 					</form>
 				</div>
 				<div class="btn-nav">
-					<button id="saveBtn">保存草稿</button>
+					<button id="saveBtn" class="ui-button-primary">保存草稿</button>
 					<button id="submitBtn">提交申请</button>
 				</div>
 

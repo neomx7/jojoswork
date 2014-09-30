@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jojo.dal.common.postgre.SysMgrMapper;
+import com.jojo.dal.common.postgre.domain.OrgDO;
 import com.jojo.dal.common.postgre.domain.OrgUserDO;
 import com.jojo.dal.common.postgre.domain.RoleDO;
 import com.jojo.dal.common.postgre.domain.UserDO;
@@ -32,6 +33,8 @@ public class SysMgrServiceImpl implements SysMgrService
 {
     @Autowired
     private SysMgrMapper mapper;
+
+
 
     @Override
     public List<UserDO> queryUsers(Map<String, Object> params)
@@ -61,5 +64,17 @@ public class SysMgrServiceImpl implements SysMgrService
     public List<UserResourcesDO> queryUsrResources(Map<String, Object> params)
     {
         return mapper.queryUsrResources(params);
+    }
+
+    @Override
+    public List<OrgDO> queryDeptsByParentCode(Map<String, Object> params)
+    {
+        return mapper.queryDeptsByParentCode(params);
+    }
+
+    @Override
+    public List<UserDO> queryDeptUser(Map<String, Object> params)
+    {
+        return mapper.queryDeptUsers(params);
     }
 }

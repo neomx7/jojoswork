@@ -274,14 +274,14 @@ $(document).ready(function()
             }
         });
         // 拖拽改变次序
-        mainTabs.find(".ui-tabs-nav").sortable(
-        {
-            axis : "x",
-            stop : function()
-            {
-                mainTabs.tabs("refresh");
-            }
-        });
+//        mainTabs.find(".ui-tabs-nav").sortable(
+//        {
+//            axis : "x",
+//            stop : function()
+//            {
+//                mainTabs.tabs("refresh");
+//            }
+//        });
 
         // 增加top窗点击事件（第1、2级menu）
 

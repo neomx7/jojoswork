@@ -2,7 +2,7 @@
 <!-- manually attach allowOverflow method to pane -->
 <div id="TopPane" class="ui-layout-north" style="padding:0px;" onmouseover="myLayout.allowOverflow('north')" onmouseout="myLayout.resetOverflow(this)">
 	<script type="text/javascript">
-		appRelPath = '${rc.contextPath}';
+		var appRelPath = '${rc.contextPath}';
 	</script>
 	<div id="indexHeader" class="v-app v-theme-activiti v-app-ExplorerApp">
 		<div class="v-view Default style" tabindex="1">
