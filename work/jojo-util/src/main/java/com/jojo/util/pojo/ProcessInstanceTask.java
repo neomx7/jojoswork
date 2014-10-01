@@ -43,6 +43,7 @@ public class ProcessInstanceTask extends BasePOJO
     private String taskDefinitionKey;
     private String taskId;
 
+    private String delegation;
 
     private String dueTimeStr;
     //下个节点审批人
@@ -204,11 +205,43 @@ public class ProcessInstanceTask extends BasePOJO
     {
         this.nextAssignee = nextAssignee;
     }
+    public String getDueTimeStr()
+    {
+        return dueTimeStr;
+    }
+    public void setDueTimeStr(String dueTimeStr)
+    {
+        this.dueTimeStr = dueTimeStr;
+    }
+    public Map<String, Object> getVariables()
+    {
+        return variables;
+    }
+    public void setVariables(Map<String, Object> variables)
+    {
+        this.variables = variables;
+    }
+    public Map<String, Object> getVariablesLocal()
+    {
+        return variablesLocal;
+    }
+    public void setVariablesLocal(Map<String, Object> variablesLocal)
+    {
+        this.variablesLocal = variablesLocal;
+    }
+    public String getDelegation()
+    {
+        return delegation;
+    }
+    public void setDelegation(String delegation)
+    {
+        this.delegation = delegation;
+    }
     @Override
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("ProcessTask [revision=");
+        builder.append("ProcessInstanceTask [revision=");
         builder.append(revision);
         builder.append(", owner=");
         builder.append(owner);
@@ -244,36 +277,20 @@ public class ProcessInstanceTask extends BasePOJO
         builder.append(taskDefinitionKey);
         builder.append(", taskId=");
         builder.append(taskId);
+        builder.append(", delegation=");
+        builder.append(delegation);
+        builder.append(", dueTimeStr=");
+        builder.append(dueTimeStr);
         builder.append(", nextAssignee=");
         builder.append(nextAssignee);
+        builder.append(", variables=");
+        builder.append(variables);
+        builder.append(", variablesLocal=");
+        builder.append(variablesLocal);
         builder.append(", toString()=");
         builder.append(super.toString());
         builder.append("]");
         return builder.toString();
-    }
-    public String getDueTimeStr()
-    {
-        return dueTimeStr;
-    }
-    public void setDueTimeStr(String dueTimeStr)
-    {
-        this.dueTimeStr = dueTimeStr;
-    }
-    public Map<String, Object> getVariables()
-    {
-        return variables;
-    }
-    public void setVariables(Map<String, Object> variables)
-    {
-        this.variables = variables;
-    }
-    public Map<String, Object> getVariablesLocal()
-    {
-        return variablesLocal;
-    }
-    public void setVariablesLocal(Map<String, Object> variablesLocal)
-    {
-        this.variablesLocal = variablesLocal;
     }
 
 }

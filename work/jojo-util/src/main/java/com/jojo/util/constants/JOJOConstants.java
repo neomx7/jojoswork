@@ -26,6 +26,7 @@ public final class JOJOConstants
      */
     public static final String WORKFLOW_SERVICE = "workFlowServiceProxy";
 
+    public static final String WORKFLOW_PROCESS_KEY_MATERIALAPPLYPROCESS = "materialApplyProcess";
 
     /**
      *""

@@ -23,6 +23,19 @@ public interface ProcessMgrMapper
 {
 
     /**
+    *
+    * <summary>
+    * [得到在办列表总数]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @return
+    */
+   public Long getDOingCount(Map<String, Object> params);
+
+    /**
      *
      * <summary>
      * [得到待办列表总数]<br>
@@ -48,4 +61,19 @@ public interface ProcessMgrMapper
      * @return
      */
     public List<WorkFlowTaskDTO> qryTODOList(Map<String, Object> params);
+
+
+    /**
+    *
+    * <summary>
+    * [得到在办列表]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param params
+    * @return
+    */
+   public List<WorkFlowTaskDTO> qryDOingList(Map<String, Object> params);
 }

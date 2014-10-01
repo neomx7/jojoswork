@@ -357,8 +357,15 @@ function bindMenuEvents()
                         "click",
                         function()
                         {
-                            var jsonData = {};
                             var menduId = ($(this).attr("id").split("#")[1]);
+                            var divEl = $("div[id='div#" + menduId + "']");
+
+                            if (divEl.find("span[id^='menu2#']").length)
+                            {
+                                return;
+                            }
+
+                            var jsonData = {};
                             if (jsonData["theId"] && jsonData["theId"].push)
                             {
                                 jsonData["theId"].push(menduId || '');
@@ -382,7 +389,6 @@ function bindMenuEvents()
                                     // json格式的 List<MenuMO> 数组字符串
                                     // 遍历 list, 并生成 html
                                     var josnArray = eval(dataResult);
-                                    var divEl = $("div[id='div#" + menduId + "']");
                                     divEl.empty();
                                     for (var idx = 0; idx < josnArray.length; idx++)
                                     {

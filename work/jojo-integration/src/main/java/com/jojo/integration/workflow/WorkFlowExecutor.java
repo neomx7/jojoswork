@@ -146,7 +146,33 @@ public interface WorkFlowExecutor
      */
     public List<WorkFlowDefine> queryFlowDefines(DataRequest request);
 
+    /**
+     *
+     * <summary>
+     * [查询当前登录用户的待办任务列表]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param query
+     * @return
+     */
     public PageResultBO<?> queryWorkFlowTODOTask(WorkFlowQuery query);
+
+    /**
+    *
+    * <summary>
+    * [查询当前登录用户的在办任务列表]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param query
+    * @return
+    */
+    public PageResultBO<WorkFlowTaskDTO> queryWorkFlowDOingTask(WorkFlowQuery query);
 
     /**
      *

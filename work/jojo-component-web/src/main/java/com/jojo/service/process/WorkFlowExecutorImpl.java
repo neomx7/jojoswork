@@ -8,6 +8,7 @@ package com.jojo.service.process;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +25,10 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -34,9 +38,11 @@ import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -374,11 +380,11 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         Object approvedByManager = variablesOrgi.get(JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER);
         if (variablesOrgi != null && !variablesOrgi.isEmpty() && approvedByManager != null)
         {
-             variables.put(JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER,
-             Integer.valueOf(approvedByManager.toString()));
-//            taskService.setVariable(processTask.getTaskId(),
-//                    JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER,
-//                    Integer.valueOf(approvedByManager.toString()));
+            variables.put(JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER,
+                    Integer.valueOf(approvedByManager.toString()));
+            // taskService.setVariable(processTask.getTaskId(),
+            // JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDBYMANAGER,
+            // Integer.valueOf(approvedByManager.toString()));
         }
 
         // runtimeService.setVariable(processTask.getExecutionId(),
@@ -753,14 +759,17 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
 
     // /**
     // * 获取未经完成的流程实例查询对象
-    // * @param userId 用户ID
+    // *
+    // * @param userId
+    // * 用户ID
     // */
     // @Transactional(readOnly = true)
-    // public List<ProcessTask> createUnFinishedProcessInstanceQuery(String
-    // userId, String processDefKey) {
+    // public List<ProcessInstanceTask>
+    // createUnFinishedProcessInstanceQuery(String userId, String processDefKey)
+    // {
     // ProcessInstanceQuery unfinishedQuery =
-    // runtimeService.createProcessInstanceQuery().processDefinitionKey(processDefKey)
-    // .active();
+    // runtimeService.createProcessInstanceQuery()
+    // .processDefinitionKey(processDefKey).active();
     // if (unfinishedQuery != null)
     // {
     // List<ProcessInstance> tasks = unfinishedQuery.list();
@@ -769,18 +778,101 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     // return null;
     // }
 
-    // /**
-    // * 获取已经完成的流程实例查询对象
-    // * @param userId 用户ID
-    // */
-    // @Transactional(readOnly = true)
-    // public List<ProcessTask> createFinishedProcessInstanceQuery(String
-    // userId, String processDefKey) {
-    // HistoricProcessInstanceQuery finishedQuery =
-    // historyService.createHistoricProcessInstanceQuery()
-    // .processDefinitionKey(processDefKey).finished();
-    // return finishedQuery.;
-    // }
+
+//    /**
+//     * 获取已经完成的流程Instance结果
+//     *
+//     * @param userId
+//     *            用户ID
+//     */
+//    @Transactional(readOnly = true)
+//    public PageResultBO<WorkFlowTaskDTO> getFinishedProcessInstanceQuery(WorkFlowQuery query)
+//    {
+//        PageResultBO<WorkFlowTaskDTO> resultBO = new PageResultBO<WorkFlowTaskDTO>();
+//        String userId = query.getOperId();
+//        int firstResult = 0;
+//        int maxResults = 0;
+//        HistoricProcessInstanceQuery finishedQuery = historyService.createHistoricProcessInstanceQuery().finished();
+//        Long count = finishedQuery.count();
+//
+//
+//    }
+
+//    /**
+//     * 获取已经完成的流程Task结果
+//     *
+//     * @param userId
+//     *            用户ID
+//     */
+//    @Transactional(readOnly = true)
+//    public PageResultBO<WorkFlowTaskDTO> getFinishedTaskProcessInstanceQuery(WorkFlowQuery query)
+//    {
+//        PageResultBO<WorkFlowTaskDTO> resultBO = new PageResultBO<WorkFlowTaskDTO>();
+//        String userId = query.getOperId();
+////        String processDefKey = params.get("");
+//        int firstResult = 0;
+//        int maxResults = 0;
+//        HistoricTaskInstanceQuery finishedQuery = historyService.createHistoricTaskInstanceQuery() // .processDefinitionKey(processDefKey)
+//               .processUnfinished().taskAssignee(userId).finished();
+//        Long count = finishedQuery.count();
+//        if (count == null || count == 0)
+//        {
+//            return resultBO;
+//        }
+//        List<HistoricTaskInstance> historicProcessInstances = finishedQuery.listPage(firstResult, maxResults);
+//
+//        if (CollectionUtils.isNotEmpty(historicProcessInstances))
+//        {
+//            int limit = query.getPageLimit();
+//            int totalPages = (int) Math.ceil((double) count / limit);
+//            int currPage = Math.min(totalPages, query.getCurPage());
+//            int start = currPage * limit - limit;
+//            start = start < 0 ? 0 : start;
+//            firstResult = start;
+//            maxResults = limit;
+//
+//            List<WorkFlowTaskDTO> list = new ArrayList<WorkFlowTaskDTO>();
+//            for (HistoricTaskInstance taskInstance : historicProcessInstances)
+//            {
+//                WorkFlowTaskDTO dto = new WorkFlowTaskDTO();
+//                dto.setAssignee(taskInstance.getAssignee());
+////                dto.setBusinessKey(taskInstance.getbusinessKey);
+//                dto.setCategory(taskInstance.getCategory());
+//                dto.setCrtTimestamp(new Timestamp(taskInstance.getClaimTime().getTime()) );
+////                dto.setDelegation(taskInstance.getdelegation);
+////                dto.setDeploymentId(taskInstance.getdeploymentId);
+//                dto.setDescription(taskInstance.getDescription());
+////                dto.setDiagramResourceName(taskInstance.getdiagramResourceName);
+//                dto.setDueDate(taskInstance.getDueDate());
+//                dto.setExecutionId(taskInstance.getExecutionId());
+////                dto.setHasStartFormKey(taskInstance.gethasStartFormKey);
+////                dto.setInitialAssignee(taskInstance.getinitialAssignee);
+//                dto.setOwner(taskInstance.getOwner());
+//                dto.setParentTaskId(taskInstance.getParentTaskId());
+//                dto.setPriority(taskInstance.getPriority());
+//                dto.setProcessDefinitionId(taskInstance.getProcessDefinitionId());
+//                dto.setProcessInstanceId(taskInstance.getProcessInstanceId());
+////                dto.setProcessKey(taskInstance.getprocessKey);
+////                dto.setProcessName(taskInstance.getprocessName);
+////                dto.setProcessRev(taskInstance.getprocessRev);
+////                dto.setProcessVersion(taskInstance.getprocessVersion);
+////                dto.setRev(taskInstance.get);
+////                dto.setRevision(taskInstance.getrevision);
+////                dto.setSuspensionState(taskInstance.getsuspensionState);
+//                dto.setTaskDefinitionKey(taskInstance.getTaskDefinitionKey());
+//                dto.setTaskId(taskInstance.getId());
+//                dto.setTaskName(taskInstance.getName());
+//                dto.setTenantId(taskInstance.getTenantId());
+////                dto.setVariables(taskInstance.getvariables);
+////                dto.setVariablesLocal(taskInstance.getvariablesLocal);
+////                dto.setVersion(taskInstance.getve);
+//                list.add(dto);
+//            }
+//            resultBO.setResults(list);
+//        }
+//
+//        return resultBO;
+//    }
 
     public String getServiceURL()
     {
@@ -790,6 +882,38 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     public void setServiceURL(String serviceURL)
     {
         this.serviceURL = serviceURL;
+    }
+
+
+    @Override
+    public PageResultBO<WorkFlowTaskDTO> queryWorkFlowDOingTask(WorkFlowQuery query)
+    {
+        PageResultBO<WorkFlowTaskDTO> resultBO = new PageResultBO<WorkFlowTaskDTO>();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("operId", query.getOperId());
+
+        int limit = query.getPageLimit();
+        Long count = processMgrMapper.getDOingCount(params);
+
+        if (count == null || count == 0)
+        {
+            return resultBO;
+        }
+        resultBO.setTotalCount(count.intValue());
+        int totalPages = (int) Math.ceil((double) count / limit);
+        int currPage = Math.min(totalPages, query.getCurPage());
+
+        int start = currPage * limit - limit;
+        start = start < 0 ? 0 : start;
+
+        params.put("limit", limit);
+        params.put("start", start);
+        // 翻页查找
+        List<WorkFlowTaskDTO> dtos = processMgrMapper.qryDOingList(params);
+        resultBO.setResults(dtos);
+        resultBO.setCurPage(currPage);
+
+        return resultBO;
     }
 
     @Override
@@ -816,6 +940,9 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
 
         params.put("limit", limit);
         params.put("start", start);
+
+        // TODO 暂时写定值
+        params.put("processDefKey", JOJOConstants.WORKFLOW_PROCESS_KEY_MATERIALAPPLYPROCESS);
         // 翻页查找
         List<WorkFlowTaskDTO> dtos = processMgrMapper.qryTODOList(params);
         resultBO.setResults(dtos);

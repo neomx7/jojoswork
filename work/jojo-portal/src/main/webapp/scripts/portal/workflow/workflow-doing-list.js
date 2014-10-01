@@ -1,6 +1,6 @@
 $(function()
 {
-    var colNames = [ "编号","发起人", "流程节点名称", "流程节点备注",  "创建时间", "流程名称", "操作", "流程定义ID", "流程实例ID", "taskID"
+    var colNames = [ "编号", "发起人", "流程节点名称", "流程节点备注", "当前任务处理人", "创建时间", "流程名称", "操作", "流程定义ID", "流程实例ID", "taskID"
     ];
     var colModel = [
     {
@@ -24,10 +24,15 @@ $(function()
     {
         name : "taskRemark",
         index : "taskRemark",
-        width : "20%",
+        width : "10%",
         sorttype : "string"
     },
-
+    {
+        name : "assignee",
+        index : "assignee",
+        width : "10%",
+        sorttype : "string"
+    },
     {
         name : "crtTime",
         index : "crtTime",
@@ -74,9 +79,9 @@ $(function()
     ];
     try
     {
-        initJqGird('todoTaskGrid', 'process/qryMyTaskList', colNames, colModel, 'number', '我的待办任务列表');
+        initJqGird('doingTaskGrid', 'process/qryDOingTaskList', colNames, colModel, 'number', '我的在办任务列表');
 
-        var currGrid = $('#todoTaskGrid');
+        var currGrid = $('#doingTaskGrid');
         // 重载jqGrid的事件，单击事件
         // var jqgridId = currGrid.attr('id'); // jqgrid 的 id
         currGrid
@@ -93,14 +98,15 @@ $(function()
                                 var ids = currGrid.jqGrid('getDataIDs');
                                 if (ids)
                                 {
-                                    var btnHtml = "<input style='height:22px;width:90px;' type='button' value='处理' onClick='toProcessTODOTask(\"todoTaskGrid\",\"#instanceId\",\"#rowid\")'/>"
+                                    var btnHtml = "<input style='height:22px;width:90px;' type='button' value='处理' onClick='toProcessDOingTask(\"doingTaskGrid\",\"#instanceId\",\"#rowid\")'/>"
                                             + "&nbsp;"
-                                            + "<input style='height:22px;width:90px;' type='button' value='查看流程' onClick='viewProcessInfo(\"todoTaskGrid\",\"#rowindex\")'/>";
+                                            + "<input style='height:22px;width:90px;' type='button' value='查看流程' onClick='viewProcessInfo(\"doingTaskGrid\",\"#rowindex\")'/>";
                                     for (var i = 0; i < ids.length; i++)
                                     {
                                         var rowdata = currGrid.jqGrid('getRowData', ids[i]);// 行数据
                                         // 按钮的html内容
-                                        var finalHtml = btnHtml.replaceAll("#instanceId", rowdata.processInstanceId).replaceAll("#rowid", rowdata.taskId).replaceAll("#rowindex", ids[i]);
+                                        var finalHtml = btnHtml.replaceAll("#instanceId", rowdata.processInstanceId)
+                                                .replaceAll("#rowid", rowdata.taskId).replaceAll("#rowindex", ids[i]);
                                         currGrid.jqGrid('setRowData', ids[i], // rowdata.processInstanceId
                                         {
                                             act : finalHtml
@@ -119,11 +125,9 @@ $(function()
 
                             }
 
-
-
                         });
 
-        currGrid.jqGrid('navGrid', '#todoTaskGridPager',
+        currGrid.jqGrid('navGrid', '#doingTaskGridPager',
         {
             add : false,
             edit : false,
@@ -137,21 +141,21 @@ $(function()
     }
     catch (e)
     {
-        showTipMessage(e,"出错了~~");
+        showTipMessage(e, "出错了~~");
     }
-//    $(window).resize(function(){　　
-//        $("#todoTaskGrid").jqGrid('setGridWidth',$(window).width()*0.9);　　
-//     });　
+    // $(window).resize(function(){
+    // $("#doingTaskGrid").jqGrid('setGridWidth',$(window).width()*0.9);
+    // });
 });
 
 /**
  * @param gridId
  * @param taskId
  */
-function toProcessTODOTask(gridId,instanceId,taskId)
+function toProcessDOingTask(gridId, instanceId, taskId)
 {
-// var currGrid = $('#' + gridId);
-    var dataRequest = 'theInstId='+instanceId + "&theTaskId=" + taskId;
+    // var currGrid = $('#' + gridId);
+    var dataRequest = 'theInstId=' + instanceId + "&theTaskId=" + taskId;
     $.ajax(
     {
         type : 'POST',
@@ -163,49 +167,12 @@ function toProcessTODOTask(gridId,instanceId,taskId)
             consoleDlg.empty();
             var infoV = dataResp;
             consoleDlg.append(dataResp);
-            consoleDlg.dialog("option", "title", "流程处理").dialog("open");
+            consoleDlg.dialog("option", "title", "流程查看").dialog("open");
 
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {
-            showTipMessage(XMLHttpRequest.responseText,"出错了~~");
-        }
-    });
-}
-
-/**
- * 弹出页面中进行操作，ajax获取弹出页面的信息
- *
- * @param tblId
- * @param rowid
- */
-function comleteTODOTask(tblId, rowid)
-{
-    // json格式的对象，可以按照rowdata.属性名依次获取需要的属性
-    var rowdata = $("#" + tblId).jqGrid('getRowData', rowid);
-    // alert(rowdata.processName);
-    var datajson = {};
-    datajson['taskId'] = (rowdata.taskId);
-    datajson = $.toJSON(datajson);
-    $.ajax(
-    {
-        type : 'POST',
-        contentType : 'application/json',
-        url : 'process/toProcessTask',
-        data : datajson,
-        dataType : 'json',
-        success : function(data)
-        {
-            var consoleDlg = $("#consoleDlg");
-            consoleDlg.empty();
-            var infoV = data;
-            consoleDlg.append(infoV);
-            consoleDlg.dialog("option", "title", "流程处理").dialog("open");
-
-        },
-        error : function(XMLHttpRequest, textStatus, errorThrown)
-        {
-            showTipMessage(XMLHttpRequest.responseText,"出错了~~");
+            showTipMessage(XMLHttpRequest.responseText, "出错了~~");
         }
     });
 }
@@ -249,43 +216,7 @@ function viewProcessInfo(tblId, rowid)
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {
-            showTipMessage(XMLHttpRequest.responseText,"出错了~~");
-        }
-    });
-}
-
-
-
-
-
-/**
- * 结束当前流程节点，进入下一个流程处理节点
- */
-function processTODOTask()
-{
-    // 提交请求
-    var datajson = {};
-    datajson['taskId'] = $("#taskId").val();
-    datajson['nextAssignee'] = $("#nextAssignee").val();
-    datajson = $.toJSON(datajson);
-    $.ajax(
-    {
-        type : 'POST',
-        contentType : 'application/json',
-        url : 'workflow/processTODOTask',
-        data : datajson,
-        dataType : 'json',
-        success : function(data)
-        {
-            var consoleDlg = $("#consoleDlg");
-            // 关闭弹出窗口
-            consoleDlg.empty();
-            consoleDlg.dialog('close');
-
-        },
-        error : function(XMLHttpRequest, textStatus, errorThrown)
-        {
-            showTipMessage(XMLHttpRequest.responseText,"出错了~~");
+            showTipMessage(XMLHttpRequest.responseText, "出错了~~");
         }
     });
 }

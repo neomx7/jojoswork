@@ -103,9 +103,6 @@
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jquery.json-2.4.min.js"></script>
 
 	<#-- jquery UI -->
-	<#--
-	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/scripts/jquery/jqueryUI/jquery-ui.min.css" />
-	-->
 	<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryUI/jquery-ui.min.js" ></script>
 	<#-- jquery Layout -->
 	<script src="${rc.contextPath}/scripts/jquery/jqueryLayout/jquery.layout-latest.js" type="text/javascript"></script>

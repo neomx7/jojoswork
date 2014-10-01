@@ -8,6 +8,8 @@ package com.jojo.webapp.Controller;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.impl.el.FixedValue;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +37,19 @@ import com.jojo.biz.WorkFlowBiz;
 import com.jojo.dal.common.postgre.domain.AttachDO;
 import com.jojo.dal.common.postgre.domain.WorkFlowTaskApprovalDO;
 import com.jojo.integration.workflow.WorkFlowExecutor;
+import com.jojo.util.biz.bo.PageResultBO;
 import com.jojo.util.constants.JOJOConstants;
+import com.jojo.util.pojo.BasePOJO;
 import com.jojo.util.pojo.DataRequest;
 import com.jojo.util.pojo.DataResponse;
+import com.jojo.util.pojo.PageQuery;
 import com.jojo.util.pojo.ProcessInstance;
 import com.jojo.util.pojo.ProcessInstanceTask;
 import com.jojo.util.pojo.ResultInfo;
 import com.jojo.util.ui.vo.workflow.LocationGraph;
 import com.jojo.util.ui.vo.workflow.WorkFlowDefine;
 import com.jojo.util.ui.vo.workflow.WorkFlowQuery;
+import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
 import com.jojo.web.common.context.ContextHolder;
 import com.jojo.webapp.form.ProcessInstanceTaskForm;
 
@@ -65,6 +72,189 @@ public class WorkFlowController extends BaseController
 
     @Autowired
     private WorkFlowBiz workFlowBiz;
+
+
+    /**
+    *
+    * <summary>
+    * [进入我的在办列表]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @return
+    */
+   @RequestMapping(value = "/process/toDoingTaskList")
+   public String toDoingTaskList()
+   {
+       logger.info("match url 4 '/process/toDOingTaskList'");
+       return "view/workflow/doingTask-list";
+   }
+
+    @RequestMapping(value = "/process/qryDOingTaskList")
+    @ResponseBody
+    public DataResponse<WorkFlowTaskDTO> queryDOingTaskList(
+            @RequestParam(defaultValue = "1", value = "page") String page,
+            @RequestParam(defaultValue = "20", value = "rows") String rows,
+            @RequestParam("sidx") String sidx,
+            @RequestParam("sord") String sord,
+            // @RequestParam("_search") boolean search,
+            @RequestParam(required = false, value = "searchField") String searchField,
+            @RequestParam(required = false, value = "searchOper") String searchOper,
+            @RequestParam(required = false, value = "searchString") String searchString,
+            @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse)
+    {
+        DataResponse<WorkFlowTaskDTO> dataResponse = new DataResponse<WorkFlowTaskDTO>();
+        try
+        {
+            DataRequest request = new DataRequest();
+            request.setPage(StringUtils.isEmpty(page) ? 1 : Integer.valueOf(page));
+            request.setRows(StringUtils.isEmpty(rows) ? 20 : Integer.valueOf(rows));
+            request.setSidx(sidx);
+            request.setSord(sord);
+            request.setSearchField(searchField);
+            request.setSearchOper(searchOper);
+            request.setSearchString(searchString);
+
+            WorkFlowQuery query = new WorkFlowQuery();
+            query.setTaskMode(JOJOConstants.WORKFLOW_TASKMODE_DOING);
+            // 从session中得到当前用户
+            query.setOperId(getLoginUsrId(httpServletRequest, httpServletResponse));
+
+             findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowDOingTask", query,
+                    WorkFlowQuery.class, dataResponse);
+            // ,httpServletRequest,httpServletResponse
+        }
+        catch (Exception e)
+        {
+            logger.error("调用工作流服务出错", e);
+            redirectGolbalErr(dataResponse, e);
+        }
+        return dataResponse;
+    }
+
+    /**
+    *
+    * <summary>
+    * [访问待办列表]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param page
+    * @param rows
+    * @param sidx
+    * @param sord
+    * @param searchField
+    * @param searchOper
+    * @param searchString
+    * @param filters
+    * @param httpServletRequest
+    * @return
+    */
+   @RequestMapping(value = "/process/qryMyTaskList")
+   @ResponseBody
+   public DataResponse<WorkFlowTaskDTO> queryMyTaskList(
+           @RequestParam(defaultValue = "1", value = "page") String page,
+           @RequestParam(defaultValue = "20", value = "rows") String rows,
+           @RequestParam("sidx") String sidx,
+           @RequestParam("sord") String sord,
+           // @RequestParam("_search") boolean search,
+           @RequestParam(required = false, value = "searchField") String searchField,
+           @RequestParam(required = false, value = "searchOper") String searchOper,
+           @RequestParam(required = false, value = "searchString") String searchString,
+           @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest,
+           HttpServletResponse httpServletResponse)
+   {
+       DataResponse<WorkFlowTaskDTO> dataResponse = new DataResponse<WorkFlowTaskDTO>();
+       try
+       {
+           DataRequest request = new DataRequest();
+           request.setPage(StringUtils.isEmpty(page) ? 1 : Integer.valueOf(page));
+           request.setRows(StringUtils.isEmpty(rows) ? 20 : Integer.valueOf(rows));
+           request.setSidx(sidx);
+           request.setSord(sord);
+           request.setSearchField(searchField);
+           request.setSearchOper(searchOper);
+           request.setSearchString(searchString);
+
+           WorkFlowQuery query = new WorkFlowQuery();
+           query.setTaskMode(JOJOConstants.WORKFLOW_TASKMODE_TODO);
+           // 从session中得到当前用户
+           query.setOperId(getLoginUsrId(httpServletRequest, httpServletResponse));
+
+           return findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowTODOTask", query,
+                   WorkFlowQuery.class, dataResponse
+           // ,httpServletRequest,httpServletResponse
+           );
+
+       }
+       catch (Exception e)
+       {
+           logger.error("调用工作流服务出错", e);
+           redirectGolbalErr(dataResponse, e);
+       }
+       return dataResponse;
+   }
+
+   @SuppressWarnings("unchecked")
+   public <T> DataResponse<T> findWorkFlowResult(DataRequest request, String qryBean, String qryMethodName,
+           PageQuery qryParamObj
+           // ,Class<T> cls
+           , Class<?> cls, DataResponse<T> response
+   // ,HttpServletRequest httpServletRequest
+   // ,HttpServletResponse httpServletResponse
+   ) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
+           InvocationTargetException
+   {
+       Object wfService = (ContextHolder.getBean(qryBean));// JOJOConstants.WORKFLOW_SERVICE
+
+       int count = 0;// 总记录数
+       int limit = request.getRows() <= 0 ? 20 : request.getRows();// 每页显示数量
+       int totalPages = 0;// 总页数
+       int page = request.getPage() <= 0 ? 1 : request.getPage();// 当前显示页码
+
+       qryParamObj.setPageLimit(limit);
+       qryParamObj.setCurPage(page);
+
+       // 反射通过查询方法得到对象
+       PageResultBO<T> resultBO = null;
+
+       Class<? extends Object> clazz = wfService.getClass();
+       Method qryMethod = null;
+       qryMethod = clazz.getDeclaredMethod(qryMethodName, cls);
+       resultBO = (PageResultBO<T>) (qryMethod.invoke(wfService, qryParamObj));
+
+       int currPage = resultBO.getCurPage();
+       // count = resultBO.getTotalCount();
+       // totalPages = (int) Math.ceil((double) count / limit);
+       // int currPage = Math.min(totalPages, page);
+       // qryParamObj.setCurPage(currPage);
+       //
+       // int start = currPage * limit - limit;
+       // start = start < 0 ? 0 : start;
+       List<T> list = resultBO.getResults();
+
+       if (CollectionUtils.isNotEmpty(list))
+       {
+           for (int i=0;i<list.size();i++)
+           {
+               BasePOJO pojo = (BasePOJO)(list.get(i));
+               pojo.setNumber((i+1));
+           }
+       }
+
+
+       response.setRecords(count);
+       response.setTotal(totalPages);
+       response.setPage(currPage);
+       response.setRows(list);
+
+       return response;
+   }
 
     /**
      *
@@ -392,24 +582,7 @@ public class WorkFlowController extends BaseController
         return "view/workflow/todoTaskList-list";
     }
 
-    /**
-     *
-     * <summary>
-     * [进入我的在办列表]<br>
-     * <br>
-     * </summary>
-     *
-     * @author jojo
-     *
-     * @return
-     */
-    @RequestMapping(value = "/process/toDoingTaskList")
-    public String toDoingTaskList()
-    {
-        logger.info("match url 4 '/process/toTODOTaskList'");
-        // 设置返回页面，这里对应 /WEB-INF/ 目录下的 {0}.ftl 文件
-        return "view/workflow/doingTaskList-list";
-    }
+
 
     /**
      *
