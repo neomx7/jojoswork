@@ -374,3 +374,26 @@ COMMENT ON COLUMN jojo_task_apprv.upd_usr IS '更新者id';
 COMMENT ON COLUMN jojo_task_apprv.upd_time IS '更新时间; ISO-8601格式,如1999-01-08 04:05:06.789';
 COMMENT ON COLUMN jojo_task_apprv.upd_usr_name IS '更新者姓名';
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+---流程业务处理结果表
+CREATE TABLE jojo_porc_bus_result
+(
+  t_id character varying(64) NOT NULL, -- 逻辑主键
+  t_task_id character varying(64), -- 流程task实例id
+  t_instance_id character varying(64), -- 流程实例id
+  t_bus_key character varying(64), -- 工作流中的业务主键
+  t_status smallint, -- 流程业务的处理结果。9:已结束
+  crt_time timestamp without time zone, -- 创建时间; ISO-8601格式,如1999-01-08 04:05:06.789
+  CONSTRAINT jojo_porc_bus_result_pkey PRIMARY KEY (t_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE jojo_task_apprv
+  OWNER TO postgres;
+COMMENT ON COLUMN jojo_porc_bus_result.t_id IS '逻辑主键';
+COMMENT ON COLUMN jojo_porc_bus_result.t_task_id IS '流程task实例id';
+COMMENT ON COLUMN jojo_porc_bus_result.t_instance_id IS '流程实例id';
+COMMENT ON COLUMN jojo_porc_bus_result.t_bus_key IS '工作流中的业务主键';
+COMMENT ON COLUMN jojo_porc_bus_result.t_status IS '流程业务的处理结果。9:已结束';
+COMMENT ON COLUMN jojo_porc_bus_result.crt_time IS '创建时间; ISO-8601格式,如1999-01-08 04:05:06.789';

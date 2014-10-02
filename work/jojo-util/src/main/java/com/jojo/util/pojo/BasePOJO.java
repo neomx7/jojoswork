@@ -328,4 +328,14 @@ public class BasePOJO implements Serializable
         this.updTimestamp = updTimestamp;
     }
 
+    public void setFormatCrtTime(String formatCrtTime)
+    {
+        this.formatCrtTime = formatCrtTime;
+    }
+
+    public void setFormatUpdTime(String formatUpdTime)
+    {
+        this.formatUpdTime = formatUpdTime;
+    }
+
 }

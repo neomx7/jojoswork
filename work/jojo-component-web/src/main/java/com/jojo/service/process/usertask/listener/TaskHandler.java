@@ -24,6 +24,7 @@ public abstract class TaskHandler implements TaskListener
     private static final long serialVersionUID = 5603774273648788216L;
 
     private FixedValue approvedRequired;
+    private FixedValue status;
 
     public FixedValue getApprovedRequired()
     {
@@ -33,5 +34,15 @@ public abstract class TaskHandler implements TaskListener
     public void setApprovedRequired(FixedValue approvedRequired)
     {
         this.approvedRequired = approvedRequired;
+    }
+
+    public FixedValue getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(FixedValue status)
+    {
+        this.status = status;
     }
 }

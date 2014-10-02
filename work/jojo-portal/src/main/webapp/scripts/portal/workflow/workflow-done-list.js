@@ -1,6 +1,7 @@
 $(function()
 {
-    var colNames = [ "编号", "发起人","流程名称", "流程启动时间", "流程节点名称", "流程节点备注", "当前任务处理人", "任务节点创建时间", "操作", "流程定义ID", "流程实例ID", "taskID"
+    //"流程节点名称", "流程节点备注",
+    var colNames = [ "编号", "发起人",  "启动时间", "完成时间", "流程名称", "操作", "流程定义ID", "流程实例ID"
     ];
     var colModel = [
     {
@@ -15,44 +16,42 @@ $(function()
         width : "10%",
         sorttype : "string"
     },
-    {
-        name : "processName",
-        index : "processName",
-        width : "20%",
-        sorttype : "string"
-    },
-
-    {
-        name : "formatProcessCrtTime",
-        index : "formatProcessCrtTime",
-        width : "10%",
-        sorttype : "date"
-    },
-    {
-        name : "taskName",
-        index : "taskName",
-        width : "20%",
-        sorttype : "string"
-    },
-    {
-        name : "description",
-        index : "description",
-        width : "10%",
-        sorttype : "string"
-    },
-    {
-        name : "assignee",
-        index : "assignee",
-        width : "10%",
-        sorttype : "string"
-    },
+//    {
+//        name : "taskName",
+//        index : "taskName",
+//        width : "20%",
+//        sorttype : "string"
+//    },
+//    {
+//        name : "taskRemark",
+//        index : "taskRemark",
+//        width : "10%",
+//        sorttype : "string"
+//    },
+//    {
+//        name : "assignee",
+//        index : "assignee",
+//        width : "10%",
+//        sorttype : "string"
+//    },
     {
         name : "formatCrtTime",
         index : "formatCrtTime",
         width : "10%",
         sorttype : "date"
     },
-
+    {
+        name : "formatUpdTime",
+        index : "formatUpdTime",
+        width : "10%",
+        sorttype : "date"
+    },
+    {
+        name : "processName",
+        index : "processName",
+        width : "20%",
+        sorttype : "string"
+    },
     {
         name : "act",
         index : "act",
@@ -75,21 +74,13 @@ $(function()
         hidden : true,
         align : "center",
         width : "5%"
-    },
-    {
-        name : "taskId",
-        index : "taskId",
-        sortable : false,
-        hidden : true,
-        align : "center",
-        width : "5%"
     }
     ];
     try
     {
-        initJqGird('doingTaskGrid', 'process/qryDOingTaskList', colNames, colModel, 'number', '我的在办任务列表');
+        initJqGird('doneTaskGrid', 'process/qryDoneTaskList', colNames, colModel, 'number', '我的已完成任务列表');
 
-        var currGrid = $('#doingTaskGrid');
+        var currGrid = $('#doneTaskGrid');
         // 重载jqGrid的事件，单击事件
         // var jqgridId = currGrid.attr('id'); // jqgrid 的 id
         currGrid
@@ -106,9 +97,9 @@ $(function()
                                 var ids = currGrid.jqGrid('getDataIDs');
                                 if (ids)
                                 {
-                                    var btnHtml = "<input style='height:22px;width:90px;' type='button' value='处理' onClick='toProcessDOingTask(\"doingTaskGrid\",\"#instanceId\",\"#rowid\")'/>"
+                                    var btnHtml = "<input style='height:22px;width:90px;' type='button' value='处理' onClick='toProcessDoneTask(\"doneTaskGrid\",\"#instanceId\",\"#rowid\")'/>"
                                             + "&nbsp;"
-                                            + "<input style='height:22px;width:90px;' type='button' value='查看流程' onClick='viewProcessInfo(\"doingTaskGrid\",\"#rowindex\")'/>";
+                                            + "<input style='height:22px;width:90px;' type='button' value='查看流程' onClick='viewProcessInfo(\"doneTaskGrid\",\"#rowindex\")'/>";
                                     for (var i = 0; i < ids.length; i++)
                                     {
                                         var rowdata = currGrid.jqGrid('getRowData', ids[i]);// 行数据
@@ -135,7 +126,7 @@ $(function()
 
                         });
 
-        currGrid.jqGrid('navGrid', '#doingTaskGridPager',
+        currGrid.jqGrid('navGrid', '#doneTaskGridPager',
         {
             add : false,
             edit : false,
@@ -152,7 +143,7 @@ $(function()
         showTipMessage(e, "出错了~~");
     }
     // $(window).resize(function(){
-    // $("#doingTaskGrid").jqGrid('setGridWidth',$(window).width()*0.9);
+    // $("#doneTaskGrid").jqGrid('setGridWidth',$(window).width()*0.9);
     // });
 });
 
@@ -160,7 +151,7 @@ $(function()
  * @param gridId
  * @param taskId
  */
-function toProcessDOingTask(gridId, instanceId, taskId)
+function toProcessDoneTask(gridId, instanceId, taskId)
 {
     // var currGrid = $('#' + gridId);
     var dataRequest = 'theInstId=' + instanceId + "&theTaskId=" + taskId;

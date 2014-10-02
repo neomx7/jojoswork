@@ -7,6 +7,14 @@
 		property="createOperId" /> <result column="LIMIT_DESC" property="limitDesc" /> <result column="STATUS" property="status"
 		/> <result column="UPDATE_TIME" property="updateTime" /> <result column="LAST_UPDATE_OPER_ID" property="lastUpdateOperId"
 		/> </resultMap> -->
+
+
+		<insert id="insertInstBusinessResult" parameterType="com.jojo.util.ui.vo.workflow.WorkFlowTaskBusinessResultDO">
+		INSERT INTO jojo_porc_bus_result(
+		            t_id, t_task_id, t_instance_id, t_bus_key, t_status, crt_time)
+		    VALUES (#{theId}, #{instanceId}, #{instTaskId}, #{instTaskId}, #{businessKey}, #{status}, #{crtTimestamp})
+		</insert>
+
 	<!-- left join provider v on v.id = e.business_key_ -->
 	<select id="getTODOCount" resultType="java.lang.Long" parameterType="java.util.Map">
 		select count(1) as countTarget from
@@ -18,14 +26,14 @@
 		on tasks2_.proc_inst_id_ = e.proc_inst_id_
 
 		left outer join
-		act_hi_procinst historicpr1_
-		on historicpr1_.id_=tasks2_.proc_inst_id_
-		left outer join
+		act_hi_procinst i_hst
+		on i_hst.id_=tasks2_.proc_inst_id_
+		inner join
 		act_re_procdef processdef4_
-		on historicpr1_.proc_def_id_=processdef4_.id_
+		on i_hst.proc_def_id_=processdef4_.id_
 		where
 		1=1
-		and historicpr1_.end_time_ is null
+		and i_hst.end_time_ is null
 		<!-- and processdef4_.key_= #{processDefKey} -->
 		and tasks2_.assignee_= #{operId}
 		) datas
@@ -37,10 +45,10 @@
 
 		from ACT_HI_PROCINST i_hst
 		left outer join act_ru_execution e on i_hst.id_ = e.proc_inst_id_
-		left outer join act_re_procdef pdef_ on i_hst.proc_def_id_=pdef_.id_
+		inner join act_re_procdef pdef_ on i_hst.proc_def_id_=pdef_.id_
 
 		inner join act_ru_task task_run on i_hst.id_= task_run.proc_inst_id_
-		where i_hst.id_ in (
+		where i_hst.end_time_ is null and i_hst.id_ in (
 		select distinct(inst_hst.id_)
 		from ACT_HI_PROCINST inst_hst
 		left outer join act_hi_taskinst task_hst on inst_hst.id_= task_hst.proc_inst_id_
@@ -50,6 +58,69 @@
 		and task_hst.assignee_ = #{operId}
 		)
 	</select>
+
+
+	<select id="getDoneCount" resultType="java.lang.Long" parameterType="java.util.Map">
+		select
+		count(1)
+
+		from ACT_HI_PROCINST i_hst
+		inner join act_re_procdef pdef_ on i_hst.proc_def_id_=pdef_.id_
+
+		where i_hst.end_time_ is not null  and i_hst.id_ in (
+		select distinct(inst_hst.id_)
+		from ACT_HI_PROCINST inst_hst
+		left outer join act_hi_taskinst task_hst on inst_hst.id_= task_hst.proc_inst_id_
+		where 1=1
+		and inst_hst.end_time_ is not null
+		<!-- and pdef_.key_= #{processDefKey} -->
+		and task_hst.assignee_ = #{operId}
+		)
+	</select>
+
+
+	<select id="qryDoneList" resultType="com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO" parameterType="java.util.Map">
+		select
+		*
+		from
+		(
+		select
+		i_hst.proc_inst_id_ as processInstanceId,
+		i_hst.business_key_ as businessKey,
+		i_hst.start_time_ as crtTimestamp,
+		i_hst.end_time_ as updTimestamp,
+		i_link_hist.user_id_ as initialAssignee,
+		pdef_.id_ as processKeyId,
+		pdef_.category_ as category,
+		pdef_.deployment_id_ as deploymentId,
+		pdef_.dgrm_resource_name_ as diagramResourceName,
+		pdef_.has_start_form_key_ as hasStartFormKey,
+		pdef_.key_ as processKey,
+		pdef_.name_ as processName,
+		pdef_.resource_name_ as resourceName,
+		pdef_.rev_ as processRev,
+		pdef_.suspension_state_ as suspensionState,
+		pdef_.version_ as processVersion
+
+		from ACT_HI_PROCINST i_hst
+		inner join act_re_procdef pdef_ on i_hst.proc_def_id_=pdef_.id_
+		left outer join act_hi_identitylink i_link_hist on i_link_hist.proc_inst_id_ = i_hst.proc_inst_id_ and i_link_hist.type_='starter'
+
+		where i_hst.end_time_ is not null and i_hst.id_ in (
+		select distinct(inst_hst.id_)
+		from ACT_HI_PROCINST inst_hst
+		left outer join act_hi_taskinst task_hst on inst_hst.id_= task_hst.proc_inst_id_
+		where 1=1
+		and inst_hst.end_time_ is not null
+		<!-- and pdef_.key_= #{processDefKey} -->
+		and task_hst.assignee_ = #{operId}
+		)
+		order by i_hst.end_time_ desc
+		) datas
+		where 1=1
+		limit #{limit} offset #{start}
+	</select>
+
 
 	<select id="qryDOingList" resultType="com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO" parameterType="java.util.Map">
 		select
@@ -61,7 +132,7 @@
 		task_run.assignee_ as assignee,
 		task_run.create_time_ as crtTimestamp,
 		task_run.delegation_ as delegation,
-		task_run.description_ as taskRemark,
+		task_run.description_ as description,
 		task_run.due_date_ as dueDate,
 		task_run.execution_id_ as executionId,
 		task_run.proc_inst_id_ as processInstanceId,
@@ -72,6 +143,7 @@
 		task_run.proc_def_id_ processDefinitionId,
 		task_run.rev_ as rev,
 		task_run.task_def_key_ as taskDefinitionKey,
+		i_hst.start_time_ as processCrtTimestamp,
 		e.business_key_ as businessKey,
 		i_link.user_id_ as initialAssignee,
 		pdef_.id_ as processKeyId,
@@ -88,11 +160,11 @@
 
 		from ACT_HI_PROCINST i_hst
 		left outer join act_ru_execution e on i_hst.id_ = e.proc_inst_id_
-		left outer join act_re_procdef pdef_ on i_hst.proc_def_id_=pdef_.id_
+		inner join act_re_procdef pdef_ on i_hst.proc_def_id_=pdef_.id_
 		left outer join act_ru_identitylink i_link on i_link.proc_inst_id_ = i_hst.proc_inst_id_ and i_link.type_='starter'
 
 		inner join act_ru_task task_run on i_hst.id_= task_run.proc_inst_id_
-		where i_hst.id_ in (
+		where  i_hst.end_time_ is null and i_hst.id_ in (
 		select distinct(inst_hst.id_)
 		from ACT_HI_PROCINST inst_hst
 		left outer join act_hi_taskinst task_hst on inst_hst.id_= task_hst.proc_inst_id_
@@ -118,7 +190,7 @@
 		tasks2_.assignee_ as assignee,
 		tasks2_.create_time_ as crtTimestamp,
 		tasks2_.delegation_ as delegation,
-		tasks2_.description_ as taskRemark,
+		tasks2_.description_ as description,
 		tasks2_.due_date_ as dueDate,
 		tasks2_.execution_id_ as executionId,
 		tasks2_.proc_inst_id_ as processInstanceId,
@@ -129,6 +201,7 @@
 		tasks2_.proc_def_id_ processDefinitionId,
 		tasks2_.rev_ as rev,
 		tasks2_.task_def_key_ as taskDefinitionKey,
+		i_hst.start_time_ as processCrtTimestamp,
 		i_link.user_id_ as initialAssignee,
 		e.business_key_ as businessKey,
 		processdef4_.category_ as category,
@@ -150,14 +223,14 @@
 		on i_link.proc_inst_id_ = tasks2_.proc_inst_id_ and i_link.type_='starter'
 
 		left outer join
-		act_hi_procinst historicpr1_
-		on historicpr1_.id_=tasks2_.proc_inst_id_
-		left outer join
+		act_hi_procinst i_hst
+		on i_hst.id_=tasks2_.proc_inst_id_
+		inner join
 		act_re_procdef processdef4_
-		on historicpr1_.proc_def_id_=processdef4_.id_
+		on i_hst.proc_def_id_=processdef4_.id_
 		where
 		1=1
-		and historicpr1_.end_time_ is null
+		and i_hst.end_time_ is null
 
 		<!-- and processdef4_.key_= #{processDefKey} -->
 		and tasks2_.assignee_= #{operId}
@@ -167,7 +240,7 @@
 		limit #{limit} offset #{start}
 	</select>
 
-	<select id="qryTODOListBack" resultType="com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO" parameterType="java.util.Map">
+	<!-- <select id="qryTODOListBack" resultType="com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO" parameterType="java.util.Map">
 		select * from (
 
 		select
@@ -215,6 +288,6 @@
 		order by t.id_ desc
 		) tt
 		limit #{limit} offset #{start}
-	</select>
+	</select> -->
 
 </mapper>

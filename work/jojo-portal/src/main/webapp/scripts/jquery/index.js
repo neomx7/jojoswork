@@ -548,7 +548,7 @@ function initLayout()
             // east__spacing_open : 0,
 
             // west__spacing_open : 0,
-            west__animatePaneSizing : false,
+            west__animatePaneSizing : true,
             west__fxSpeed_size : "fast" // 'fast' animation when
             // resizing
             // west-pane

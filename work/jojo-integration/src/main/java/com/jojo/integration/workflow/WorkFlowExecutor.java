@@ -149,7 +149,7 @@ public interface WorkFlowExecutor
     /**
      *
      * <summary>
-     * [查询当前登录用户的待办任务列表]<br>
+     * [查询当前登录用户的待办流程任务列表]<br>
      * <br>
      * </summary>
      *
@@ -163,7 +163,7 @@ public interface WorkFlowExecutor
     /**
     *
     * <summary>
-    * [查询当前登录用户的在办任务列表]<br>
+    * [查询当前登录用户的在办流程任务列表]<br>
     * <br>
     * </summary>
     *
@@ -173,6 +173,23 @@ public interface WorkFlowExecutor
     * @return
     */
     public PageResultBO<WorkFlowTaskDTO> queryWorkFlowDOingTask(WorkFlowQuery query);
+
+
+    /**
+    *
+    * <summary>
+    * [查询当前登录用户的已完成流程任务列表]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param query
+    * @return
+    */
+    public PageResultBO<WorkFlowTaskDTO> queryWorkFlowDoneTask(WorkFlowQuery query);
+
+
 
     /**
      *

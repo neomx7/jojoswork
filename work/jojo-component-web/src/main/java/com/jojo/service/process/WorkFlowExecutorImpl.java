@@ -8,7 +8,6 @@ package com.jojo.service.process;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,10 +24,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.Expression;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -38,11 +34,9 @@ import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -1182,6 +1176,37 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
     {
         activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_X, activity.getX());
         activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_GRH_Y, activity.getY());
+    }
+
+    @Override
+    public PageResultBO<WorkFlowTaskDTO> queryWorkFlowDoneTask(WorkFlowQuery query)
+    {
+        PageResultBO<WorkFlowTaskDTO> resultBO = new PageResultBO<WorkFlowTaskDTO>();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("operId", query.getOperId());
+
+        int limit = query.getPageLimit();
+        Long count = processMgrMapper.getDoneCount(params);
+
+        if (count == null || count == 0)
+        {
+            return resultBO;
+        }
+        resultBO.setTotalCount(count.intValue());
+        int totalPages = (int) Math.ceil((double) count / limit);
+        int currPage = Math.min(totalPages, query.getCurPage());
+
+        int start = currPage * limit - limit;
+        start = start < 0 ? 0 : start;
+
+        params.put("limit", limit);
+        params.put("start", start);
+        // 翻页查找
+        List<WorkFlowTaskDTO> dtos = processMgrMapper.qryDoneList(params);
+        resultBO.setResults(dtos);
+        resultBO.setCurPage(currPage);
+
+        return resultBO;
     }
 
 }

@@ -11,7 +11,7 @@ import com.jojo.util.constants.JOJOConstants;
 
 /**
  * <summary>
- * [分派下一个节点的任务负责人]<br>
+ * [维护全局使用的task变量]<br>
  * <br>
  * </summary>
  *

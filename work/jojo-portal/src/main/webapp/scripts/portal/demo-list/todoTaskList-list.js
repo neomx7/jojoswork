@@ -1,6 +1,6 @@
 $(function()
 {
-    var colNames = [ "编号","发起人", "流程节点名称", "流程节点备注",  "创建时间", "流程名称", "操作", "流程定义ID", "流程实例ID", "taskID"
+    var colNames = [ "编号","发起人","流程名称","流程启动时间", "流程节点名称", "流程节点备注",  "任务节点创建时间",  "操作", "流程定义ID", "流程实例ID", "taskID"
     ];
     var colModel = [
     {
@@ -16,30 +16,39 @@ $(function()
         sorttype : "string"
     },
     {
+        name : "processName",
+        index : "processName",
+        width : "20%",
+        sorttype : "string"
+    },
+
+    {
+        name : "formatProcessCrtTime",
+        index : "formatProcessCrtTime",
+        width : "10%",
+        sorttype : "date"
+    },
+
+    {
         name : "taskName",
         index : "taskName",
         width : "20%",
         sorttype : "string"
     },
     {
-        name : "taskRemark",
-        index : "taskRemark",
+        name : "description",
+        index : "description",
         width : "20%",
         sorttype : "string"
     },
 
     {
-        name : "crtTime",
-        index : "crtTime",
+        name : "formatCrtTime",
+        index : "formatCrtTime",
         width : "10%",
         sorttype : "date"
     },
-    {
-        name : "processName",
-        index : "processName",
-        width : "20%",
-        sorttype : "string"
-    },
+
     {
         name : "act",
         index : "act",
@@ -59,7 +68,7 @@ $(function()
         name : "processInstanceId",
         index : "processInstanceId",
         sortable : false,
-        hidden : false,
+        hidden : true,
         align : "center",
         width : "5%"
     },
@@ -67,7 +76,7 @@ $(function()
         name : "taskId",
         index : "taskId",
         sortable : false,
-        hidden : false,
+        hidden : true,
         align : "center",
         width : "5%"
     }

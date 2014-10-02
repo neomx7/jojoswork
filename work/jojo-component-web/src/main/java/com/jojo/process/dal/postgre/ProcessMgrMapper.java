@@ -8,6 +8,7 @@ package com.jojo.process.dal.postgre;
 import java.util.List;
 import java.util.Map;
 
+import com.jojo.util.ui.vo.workflow.WorkFlowTaskBusinessResultDO;
 import com.jojo.util.ui.vo.workflow.WorkFlowTaskDTO;
 
 /**
@@ -49,9 +50,22 @@ public interface ProcessMgrMapper
     public Long getTODOCount(Map<String, Object> params);
 
     /**
+    *
+    * <summary>
+    * [得到已完成列表总数]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @return
+    */
+   public Long getDoneCount(Map<String, Object> params);
+
+    /**
      *
      * <summary>
-     * [得到待办列表]<br>
+     * [得到待办任务列表]<br>
      * <br>
      * </summary>
      *
@@ -66,7 +80,7 @@ public interface ProcessMgrMapper
     /**
     *
     * <summary>
-    * [得到在办列表]<br>
+    * [得到在办流程列表]<br>
     * <br>
     * </summary>
     *
@@ -76,4 +90,31 @@ public interface ProcessMgrMapper
     * @return
     */
    public List<WorkFlowTaskDTO> qryDOingList(Map<String, Object> params);
+
+   /**
+   *
+   * <summary>
+   * [得到已完成流程列表]<br>
+   * <br>
+   * </summary>
+   *
+   * @author jojo
+   *
+   * @param params
+   * @return
+   */
+  public List<WorkFlowTaskDTO> qryDoneList(Map<String, Object> params);
+
+   /**
+    *
+    * <summary>
+    * [新增流程业务处理结果]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param params
+    */
+   public void insertInstBusinessResult(WorkFlowTaskBusinessResultDO taskBusinessResultDO);
 }

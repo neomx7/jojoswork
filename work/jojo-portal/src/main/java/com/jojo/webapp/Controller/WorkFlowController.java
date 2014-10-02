@@ -77,6 +77,68 @@ public class WorkFlowController extends BaseController
     /**
     *
     * <summary>
+    * [进入我的已完成列表]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @return
+    */
+   @RequestMapping(value = "/process/toDoneTaskList")
+   public String toDoneTaskList()
+   {
+       logger.info("match url 4 '/process/toDoneTaskList'");
+       return "view/workflow/doneTask-list";
+   }
+
+   @RequestMapping(value = "/process/qryDoneTaskList")
+   @ResponseBody
+   public DataResponse<WorkFlowTaskDTO> qryDoneTaskList(
+           @RequestParam(defaultValue = "1", value = "page") String page,
+           @RequestParam(defaultValue = "20", value = "rows") String rows,
+           @RequestParam("sidx") String sidx,
+           @RequestParam("sord") String sord,
+           // @RequestParam("_search") boolean search,
+           @RequestParam(required = false, value = "searchField") String searchField,
+           @RequestParam(required = false, value = "searchOper") String searchOper,
+           @RequestParam(required = false, value = "searchString") String searchString,
+           @RequestParam(required = false, value = "filters") String filters, HttpServletRequest httpServletRequest,
+           HttpServletResponse httpServletResponse)
+   {
+       DataResponse<WorkFlowTaskDTO> dataResponse = new DataResponse<WorkFlowTaskDTO>();
+       try
+       {
+           DataRequest request = new DataRequest();
+           request.setPage(StringUtils.isEmpty(page) ? 1 : Integer.valueOf(page));
+           request.setRows(StringUtils.isEmpty(rows) ? 20 : Integer.valueOf(rows));
+           request.setSidx(sidx);
+           request.setSord(sord);
+           request.setSearchField(searchField);
+           request.setSearchOper(searchOper);
+           request.setSearchString(searchString);
+
+           WorkFlowQuery query = new WorkFlowQuery();
+           query.setTaskMode(JOJOConstants.WORKFLOW_TASKMODE_DOING);
+           // 从session中得到当前用户
+           query.setOperId(getLoginUsrId(httpServletRequest, httpServletResponse));
+
+            findWorkFlowResult(request, JOJOConstants.WORKFLOW_SERVICE, "queryWorkFlowDoneTask", query,
+                   WorkFlowQuery.class, dataResponse);
+           // ,httpServletRequest,httpServletResponse
+       }
+       catch (Exception e)
+       {
+           logger.error("调用工作流服务出错", e);
+           redirectGolbalErr(dataResponse, e);
+       }
+       return dataResponse;
+   }
+
+
+    /**
+    *
+    * <summary>
     * [进入我的在办列表]<br>
     * <br>
     * </summary>

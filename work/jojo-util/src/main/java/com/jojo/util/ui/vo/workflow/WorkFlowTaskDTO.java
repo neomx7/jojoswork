@@ -1,5 +1,8 @@
 package com.jojo.util.ui.vo.workflow;
 
+import java.sql.Timestamp;
+
+import com.jojo.util.common.DateUtils;
 import com.jojo.util.pojo.ProcessInstanceTask;
 
 /**
@@ -43,6 +46,13 @@ public class WorkFlowTaskDTO extends ProcessInstanceTask
     private String rev;
     private String processRev;
     private boolean hasStartFormKey;
+
+    /**
+     * 流程启动时间
+     */
+    private Timestamp processCrtTimestamp;
+    /** 页面显示的格式化日期 */
+    private String formatProcessCrtTime;
 
     public String getDeploymentId()
     {
@@ -160,6 +170,30 @@ public class WorkFlowTaskDTO extends ProcessInstanceTask
     public void setProcessKeyId(String processKeyId)
     {
         this.processKeyId = processKeyId;
+    }
+
+    public Timestamp getProcessCrtTimestamp()
+    {
+        return processCrtTimestamp;
+    }
+
+    public void setProcessCrtTimestamp(Timestamp processCrtTimestamp)
+    {
+        this.processCrtTimestamp = processCrtTimestamp;
+    }
+
+    public String getFormatProcessCrtTime()
+    {
+        if (getProcessCrtTimestamp() != null)
+        {
+            return DateUtils.parseDateTimeMsPostgre2Sec(DateUtils.getDateTimeSec(getProcessCrtTimestamp().getTime()));
+        }
+        return formatProcessCrtTime;
+    }
+
+    public void setFormatProcessCrtTime(String formatProcessCrtTime)
+    {
+        this.formatProcessCrtTime = formatProcessCrtTime;
     }
 
 }
