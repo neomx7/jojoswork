@@ -52,7 +52,7 @@
 <!-- #LeftPane -->
 <!-- allowOverflow auto-attached by option: west__showOverflowOnHover = true -->
 <div id="LeftPane" class="ui-layout-west">
-	<div style="height: 100%;  width: 100%;">
+	<div style="height: 98%;  width: 100%;">
 		<div id="accordion">
 			<#list form.menus as menulist>
 				  <h3 id="menu1#${menulist.theId}" code="code#${menulist.dictCode}">${menulist.theName}</h3>
