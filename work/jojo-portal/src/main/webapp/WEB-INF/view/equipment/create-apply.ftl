@@ -1,20 +1,12 @@
 <#-- 增加初始化 js -->
-<#--
-<link href="${rc.contextPath}/styles/reset.css" rel="stylesheet" type="text/css">
-<link href="${rc.contextPath}/styles/style.css" rel="stylesheet" type="text/css">
-<link href="${rc.contextPath}/styles/form.css" rel="stylesheet" type="text/css">
- -->
 <script type="text/javascript" src="${rc.contextPath}/scripts/portal/equipment/apply.js"></script>
-
-<!-- 树形菜单js -->
-<#--
-<script type="text/javascript" src="${rc.contextPath}/scripts/jquery/jqueryJstree/jstree.min.js"></script>
-<script type="text/javascript" src="${rc.contextPath}/scripts/portal/common/deprt-tree.js"></script>
-<link href="${rc.contextPath}/scripts/jquery/jqueryJstree/themes/default/style.min.css" rel="stylesheet" type="text/css">
- -->
-
 <script type="text/javascript" src="${rc.contextPath}/scripts/portal/common/user-search.js"></script>
-
+ <style>
+  label {
+    display: inline-block;
+    width: 5em;
+  }
+  </style>
 <div class="v-csslayout" style="width: 100%;">
 	<div class="v-csslayout-margin">
 		<div class="v-csslayout-container">
@@ -24,10 +16,12 @@
 					<div class="form-header">
 						发起新物料申请
 					</div>
+					<p>
 					<form id="targetForm" method="post">
 						<div class="field">
 							<label for="theName">申请名称　</label>
-							<input id="theName" name="theName" type="text" value="" class="validate[required] text-input"/>
+							<input id="theName" name="theName" type="text" value="" class="validate[required] text-input" title="必填项"/>
+							<span><font  color="red">*</font></span>
 						</div>
 
 						<div class="field">
@@ -41,7 +35,9 @@
 						</div>
 						<div id="setNextUser" class="ui-widget" >
 						  <label for="nextUser">人员姓名: </label>
-						  <input id="nextUser" name="nextUsrId"/>
+						  <input id="nextUser"  title="输入要提交的人员姓名"/>
+						  <input id="nextUsrId" name="nextUsrId" style="display:none;"/>
+
 						</div>
 					</form>
 				</div>

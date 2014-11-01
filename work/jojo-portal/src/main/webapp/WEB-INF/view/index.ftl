@@ -30,6 +30,8 @@
 															<span class="v-menubar-menuitem v-menubar-menuitem-person-menu">
 																<span class="v-menubar-menuitem-caption">${form.userDO.usrId}</span>
 															</span>
+															&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+															<span class="v-menubar-menuitem "><a href="${rc.contextPath}/logout">注销</a></span>
 														</div>
 													</div>
 												</div>

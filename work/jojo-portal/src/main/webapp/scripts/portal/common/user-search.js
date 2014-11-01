@@ -7,6 +7,16 @@ $(function()
 
     try
     {
+
+        $( document ).tooltip({
+            track: true,
+            show: {
+                effect: "slideDown",
+                delay: 250
+            }
+          });
+
+
         $("input[id^=nextUser]").each(function()
         {
             searchUser($(this));
@@ -61,8 +71,14 @@ function searchUser(userInputObj)
             // "Nothing selected, input was " + this.value );
             if (ui.item)
             {
-                // alert("Selected: " + ui.item.value + "; itemId: " + ui.item.id);
-                // $("#nextUser").val(ui.item.label)
+//                 alert("Selected: " + ui.item.value + "; itemId: " + ui.item.id);
+                 $("#nextUsrId").val(ui.item.id);
+                 var nextAssignee =  $("input[name='nextAssignee']");
+                 if (nextAssignee && nextAssignee.length >0)
+                {
+                     nextAssignee.eq(0).val(ui.item.id);
+                }
+
             }
         }
     });

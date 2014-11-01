@@ -84,4 +84,15 @@ public class LogInOutController extends BaseController
     private String getRedirectURL(String redirectURL) {
         return "redirect:" + (StringUtils.isBlank(redirectURL) ? "/index" : redirectURL);
     }
+
+
+    @RequestMapping(value = "/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        CookieUtil cookieUtil = new CookieUtil(request, response);
+        cookieUtil.removeCokie(AuthenticationUtil.APP_CID);
+
+//        log("退出控台");
+
+        return "redirect:/login";
+    }
 }

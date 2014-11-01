@@ -103,8 +103,8 @@ $(function()
                                 if (ids)
                                 {
                                     var btnHtml = "<input style='height:22px;width:90px;' type='button' value='处理' onClick='toProcessTODOTask(\"todoTaskGrid\",\"#instanceId\",\"#rowid\")'/>"
-                                            + "&nbsp;"
-                                            + "<input style='height:22px;width:90px;' type='button' value='查看流程' onClick='viewProcessInfo(\"todoTaskGrid\",\"#rowindex\")'/>";
+                                            + "&nbsp;";
+//                                            + "<input style='height:22px;width:90px;' type='button' value='查看流程' onClick='viewProcessInfo(\"todoTaskGrid\",\"#rowindex\")'/>";
                                     for (var i = 0; i < ids.length; i++)
                                     {
                                         var rowdata = currGrid.jqGrid('getRowData', ids[i]);// 行数据

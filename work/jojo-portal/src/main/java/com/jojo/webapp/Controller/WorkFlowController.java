@@ -614,6 +614,15 @@ public class WorkFlowController extends BaseController
             return resultInfo;
         }
 
+        // 检查用户是否为有效用户，无效则抛出异常
+
+        if (!ContextHolder.isValidUsr(form.getProcessInstanceTask().getNextAssignee()))
+        {
+            logger.error("无法启动申请流程：下一个流程节点的申请人id无效。");
+            return resultInfo;
+        }
+
+
         WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean(JOJOConstants.WORKFLOW_SERVICE));
 
         ProcessInstanceTask processTask = new ProcessInstanceTask();
