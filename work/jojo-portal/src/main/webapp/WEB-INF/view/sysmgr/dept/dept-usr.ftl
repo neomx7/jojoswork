@@ -1,10 +1,3 @@
-<#--
-<ul id="user-list-table">
-	  <li class="ui-state-default"  id="deptUsr_${datas.usrId}">
-		  姓名:${datas.theName}
-	  	</li>
-</ul>
--->
 <#if form.userDOs?exists>
 <div class="column">
 	<#list form.userDOs as datas>
@@ -17,6 +10,6 @@
 			  <br>移动电话: ${datas.mobile}
 		    </div>
 		  </div>
-		</div>
 	</#list>
+</div>
 </#if>
