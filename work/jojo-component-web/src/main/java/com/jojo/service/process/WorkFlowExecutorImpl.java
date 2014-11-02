@@ -24,7 +24,10 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -1046,6 +1049,30 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
         return activityInfos;
     }
 
+
+    @Override
+    public List<Map<String, Object>> traceHisProcessDetails(String processInstanceId) throws Exception
+    {
+        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+                .processInstanceId(processInstanceId).singleResult();
+        ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+                .getDeployedProcessDefinition(historicProcessInstance.getProcessDefinitionId());
+        List<ActivityImpl> activitiList = processDefinition.getActivities();// 获得当前任务的所有节点
+
+        List<Map<String, Object>> activityInfos = new ArrayList<Map<String, Object>>();
+        for (ActivityImpl activity : activitiList)
+        {
+
+//            String id = activity.getId();
+
+            Map<String, Object> activityImageInfo = packageHisSingleActivitiInfo(activity);
+
+            activityInfos.add(activityImageInfo);
+        }
+
+        return activityInfos;
+    }
+
     /**
      * 封装输出信息，包括：当前节点的X、Y坐标、变量信息、任务类型、任务描述
      *
@@ -1098,6 +1125,41 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
                 }
             }
         }
+
+        vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_TIP, properties.get("documentation"));
+
+        String description = activity.getProcessDefinition().getDescription();
+        vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_DESC, description);
+
+        logger.debug("trace variables: {}", vars);
+        activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_VARS_KEY, vars);
+        return activityInfo;
+    }
+
+
+    /**
+     * 封装输出信息，包括：当前节点的X、Y坐标、变量信息、任务类型、任务描述
+     * (历史记录，已完成的流程)
+     *
+     * @param activity
+     * @param processInstance
+     * @param currentActiviti
+     * @return
+     */
+    private Map<String, Object> packageHisSingleActivitiInfo(ActivityImpl activity) throws Exception
+    {
+        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> activityInfo = new HashMap<String, Object>();
+        activityInfo.put(JOJOConstants.WORKFLOW_PROCESSINST_TASK_ACTIVITI, false);
+        setPosition(activity, activityInfo);
+        setWidthAndHeight(activity, activityInfo);
+
+        Map<String, Object> properties = activity.getProperties();
+        vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_TYPE,
+                WorkFlowUtils.parseToZhType(properties.get("type").toString()));
+
+        ActivityBehavior activityBehavior = activity.getActivityBehavior();
+        logger.debug("activityBehavior={}", activityBehavior);
 
         vars.put(JOJOConstants.WORKFLOW_PROCESSINST_VALS_TASK_TIP, properties.get("documentation"));
 
@@ -1208,5 +1270,30 @@ public class WorkFlowExecutorImpl implements WorkFlowExecutor
 
         return resultBO;
     }
+
+    @Override
+    public com.jojo.util.pojo.ProcessInstance getProcessInstanceHistory(String processInstanceId)
+    {
+
+        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+
+
+        com.jojo.util.pojo.ProcessInstance result = new com.jojo.util.pojo.ProcessInstance();
+        result.setBusinessKey(historicProcessInstance.getBusinessKey());
+        result.setProcessDefinitionId(historicProcessInstance.getProcessDefinitionId());
+        result.setProcessInstanceId(processInstanceId);
+        result.setTenantId(historicProcessInstance.getTenantId());
+
+        List<HistoricVariableInstance> list = historyService.createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list();
+        Map<String, Object> processVariables = new HashMap<String, Object>();
+
+        for (HistoricVariableInstance historicVariableInstance : list)
+        {
+            processVariables.put(historicVariableInstance.getVariableName(), historicVariableInstance.getValue());
+        }
+        result.setProcessVariables(processVariables);
+        return result;
+    }
+
 
 }

@@ -81,7 +81,7 @@
 			AND T.t_status = #{status}
 		</if>
 		<if test="theName != null and theName != ''">
-			AND T.t_title like '%${theName}%'
+			AND T.t_title like  CONCAT(CONCAT('%', #{theName}), '%')
 		</if>
 		order by T.CRT_TIME desc
 		limit ${limitPage} offset ${offset}

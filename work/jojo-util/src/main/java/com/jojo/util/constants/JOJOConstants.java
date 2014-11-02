@@ -28,6 +28,8 @@ public final class JOJOConstants
 
     public static final String WORKFLOW_PROCESS_KEY_MATERIALAPPLYPROCESS = "materialApplyProcess";
 
+    public static final String WORKFLOW_TASK_VARIABLES_KYE_ISLASTNODE = "isLastNode";
+
     /**
      *""
      */

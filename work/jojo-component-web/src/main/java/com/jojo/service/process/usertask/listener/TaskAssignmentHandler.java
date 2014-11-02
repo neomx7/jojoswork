@@ -31,6 +31,7 @@ public class TaskAssignmentHandler extends TaskHandler
     {
         // Execute custom identity lookups here
         delegateTask.setVariableLocal(JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_APPROVEDREQUIRED, getApprovedRequired());
+        delegateTask.setVariableLocal(JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_ISLASTNODE, getIsLastNode());
     }
 
 }

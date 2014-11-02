@@ -56,6 +56,9 @@
 					<activiti:field name="approvedRequired">
 						<activiti:string><![CDATA[yes]]></activiti:string>
 					</activiti:field>
+					<activiti:field name="isLastNode">
+						<activiti:string><![CDATA[yes]]></activiti:string>
+					</activiti:field>
 				</activiti:taskListener>
 			</extensionElements>
 		</userTask>

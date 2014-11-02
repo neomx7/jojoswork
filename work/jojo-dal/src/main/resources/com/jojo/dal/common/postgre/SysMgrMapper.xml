@@ -226,7 +226,7 @@
 	<!-- 全部子菜单查询 -->
 <!-- 	<select id="queryAllChildrenMenus" parameterType="java.util.Map" resultMap="resourceResultMap">
 		select  r.* from jojo_resource r
-			where r.t_code  like ${code} '%'
+			where r.t_code  like CONCAT(CONCAT('%', #{code}), '%')
 			and r.t_code != #{code}
 			and
 		and u.t_usrid = ${}
@@ -237,7 +237,7 @@
 	</select>
 
 	<select id="queryDeptsByParentCode" parameterType="java.util.Map" resultMap="orgResultMap">
-		select * from jojo_deprt t where t.t_code like '${parentCode}%' and length(t.t_code)  = #{subCodeLength}
+		select * from jojo_deprt t where t.t_code like CONCAT(CONCAT('%', #{parentCode}), '%') and length(t.t_code)  = #{subCodeLength}
 	</select>
 
 	<select id="queryDeptUsers" parameterType="java.util.Map" resultMap="simpleUserResultMap">

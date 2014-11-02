@@ -31,7 +31,7 @@
 		FROM JOJO_USR T
 		WHERE 1=1
 		<if test="userName != null and userName != ''">
-			AND T.T_NAME like  '${userName}%'
+			AND T.T_NAME like CONCAT(CONCAT('%', #{userName}), '%')
 		</if>
 	</select>
 </mapper>

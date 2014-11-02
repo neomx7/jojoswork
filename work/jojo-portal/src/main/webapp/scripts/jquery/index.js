@@ -297,8 +297,10 @@ $(document).ready(function()
             height : window.screen.availHeight-300,
             position : "center" // 窗口显示的位置
             ,buttons: {
-                关闭: function() {
-                  $( this ).dialog( "close" );
+                '关闭': function() {
+                    //刷新todo列表
+                    $('#todoTaskGrid').trigger("reloadGrid");
+                    $( this ).dialog( "close" );
                 }
               }
         });

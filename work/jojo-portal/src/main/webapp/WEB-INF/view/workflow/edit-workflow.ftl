@@ -44,19 +44,44 @@
 						<input type="hidden" id="todoInstId" name="theInstId" value="${form.processInstanceTask.processInstanceId!}" readOnly="readOnly"/>
 						<input type="hidden" id="todoBusinessKey" name="businessKey" value="${form.businessKey!}" readOnly="readOnly"/>
 						<input type="hidden" id="approvedRequired" name="approvedRequired" value="${form.approvedRequired? string('true', 'false')}" readOnly="readOnly"/>
+						<input type="hidden" id="lastNode" name="lastNode" value="${form.lastNode? string('true', 'false')}" readOnly="readOnly"/>
 
 						<#if form.approvedRequired>
-						<br><input type="radio" name="apprvFlg" value="1" class="validate[required]"/>同意 <input type="radio" name="apprvFlg" value="2"  class="validate[required]"/>打回
-						<br>批示意见<textarea rows="3" cols="40" name="apprvContent" ></textarea>
-						</#if>
+							<br><input type="radio" name="apprvFlg" value="1" class="validate[required]" checked="checked"/>同意 <input type="radio" name="apprvFlg" value="2"  class="validate[required]"/>打回
+							<br>批示意见<textarea rows="3" cols="40" name="apprvContent" ></textarea>
+							  <#if (form.lastNode??) && ((form.lastNode? string('true', 'false')) == 'true')>
+							  	<br><div id="setNextUser_${form.processInstanceTask.taskId}" style="display:none;" class="ui-widget" >
+								  <label for="nextUser_${form.processInstanceTask.taskId}">转下个负责人: </label>
+								  <input id="nextUser_${form.processInstanceTask.taskId}" name="nextAssigneeName" class="validate[required] text-input"/>
+								  <input id="nextUserId_${form.processInstanceTask.taskId}" name="nextAssignee" type="hidden"/>
+								</div>
+							  <#else>
+								<br><div id="setNextUser_${form.processInstanceTask.taskId}" class="ui-widget" >
+								  <label for="nextUser_${form.processInstanceTask.taskId}">转下个负责人: </label>
+								  <input id="nextUser_${form.processInstanceTask.taskId}" name="nextAssigneeName" class="validate[required] text-input"/>
+								  <input id="nextUserId_${form.processInstanceTask.taskId}" name="nextAssignee" type="hidden"/>
+								</div>
+							  </#if>
+
+
+					  <#else>
 						<br><div id="setNextUser_${form.processInstanceTask.taskId}" class="ui-widget" >
-							  <label for="nextUser_${form.processInstanceTask.taskId}">转下个负责人: </label>
-							  <input id="nextUser_${form.processInstanceTask.taskId}" name="nextAssignee" class="validate[required] text-input"/>
-							</div>
+						  <label for="nextUser_${form.processInstanceTask.taskId}">转下个负责人: </label>
+						  <input id="nextUser_${form.processInstanceTask.taskId}" name="nextAssigneeName" class="validate[required] text-input"/>
+						  <input id="nextUserId_${form.processInstanceTask.taskId}" name="nextAssignee" type="hidden"/>
+						</div>
+					   </#if>
+
 					</form>
 				</div>
 				<div class="btn-nav">
+
+				<#if (form.lastNode??) && ((form.lastNode? string('true', 'false')) == 'true')>
+					<button id="endTaskBtn" >结束流程</button>
+					<button id="submitBtn_${form.processInstanceTask.taskId}" style="display:none;">转后续处理</button>
+			  	<#else>
 					<button id="submitBtn_${form.processInstanceTask.taskId}">转后续处理</button>
+			  	</#if>
 				</div>
 			</div>
 		</div>

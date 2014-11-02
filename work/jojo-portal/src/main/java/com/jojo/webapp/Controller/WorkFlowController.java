@@ -585,6 +585,42 @@ public class WorkFlowController extends BaseController
         return list;
     }
 
+
+    /**
+    *
+    * <summary>
+    * [获取已完成的流程跟踪详情]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param query
+    * @return
+    */
+   @RequestMapping(value = "/workflow/traceHisProcessDetails")
+   @ResponseBody
+   public List<Map<String, Object>> traceHisProcessDetails(@RequestBody WorkFlowQuery query)
+   {
+       List<Map<String, Object>> list = null;
+       if (StringUtils.isBlank(query.getProInsId()))
+       {
+           logger.error("can not start process instance cause proInsId is null");
+           return list;
+       }
+       try
+       {
+           WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder
+                   .getBean(JOJOConstants.WORKFLOW_SERVICE));
+           list = workFlowExecutor.traceHisProcessDetails(query.getProInsId());
+       }
+       catch (Exception e)
+       {
+           logger.error(e.getMessage(), e);
+       }
+       return list;
+   }
+
     /**
      *
      * <summary>
@@ -724,10 +760,60 @@ public class WorkFlowController extends BaseController
             {
                 form.setApprovedRequired(convert2Boolean(((FixedValue) approvedRequired).getExpressionText()));
             }
+
+            Object isLastNode = instanceTask.getVariables().get(JOJOConstants.WORKFLOW_TASK_VARIABLES_KYE_ISLASTNODE);
+            if (isLastNode != null)
+            {
+                form.setLastNode(convert2Boolean(((FixedValue) isLastNode).getExpressionText()));
+            }
+
         }
 
         return "view/workflow/edit-workflow";
     }
+
+
+    /**
+    *
+    * <summary>
+    * [展示历史task节点信息]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param httpServletRequest
+    * @param httpServletResponse
+    * @param form
+    * @return
+    */
+   @RequestMapping(value = "/workflow/showHistoryTask")
+   public String showHistoryTask(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+           @ModelAttribute("form") ProcessInstanceTaskForm form)
+   {
+       String processInstanceId = form.getTheInstId();
+//       String instTaskId = form.getTheTaskId();
+
+       if (StringUtils.isBlank(processInstanceId))
+       {
+           form.setErrorMsg("未获取到有效的流程实例id");
+           return "view/common/common-error";
+       }
+       WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder.getBean(JOJOConstants.WORKFLOW_SERVICE));
+       ProcessInstance processInstance = workFlowExecutor.getProcessInstanceHistory(processInstanceId);
+//       ProcessInstanceTask instanceTask = workFlowExecutor.getProcessInstanceTask(instTaskId);
+       if (processInstance != null)
+       {
+           form.setBusinessKey(processInstance.getBusinessKey());
+           form.setBusinessKeyURL(String.valueOf(processInstance.getProcessVariables().get(
+                   JOJOConstants.WORKFLOW_PROCESSINST_BIZ_KEY_URL)));
+           form.getProcessInstanceTask().setProcessDefinitionId(processInstance.getProcessDefinitionId());
+           form.getProcessInstanceTask().setProcessInstanceId(processInstanceId);
+           form.getProcessInstanceTask().setTenantId(processInstance.getTenantId());
+       }
+
+       return "view/workflow/view-workflow";
+   }
 
     /**
      *
@@ -816,6 +902,69 @@ public class WorkFlowController extends BaseController
         return dataResponse;
     }
 
+
+    /**
+    *
+    * <summary>
+    * [展示历史任务节点记录列表（已完成的流程），只读]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param httpServletRequest
+    * @param httpServletResponse
+    * @param form
+    * @return
+    */
+   @RequestMapping(value = "/workflow/showAllHisTasks")
+   @ResponseBody
+   public DataResponse<ProcessInstanceTask> showAllHisTasks(
+           HttpServletRequest httpServletRequest,
+           HttpServletResponse httpServletResponse,
+           @RequestParam(required = false, defaultValue = "1", value = "page") String page,
+           @RequestParam(required = false, defaultValue = "20", value = "rows") String rows,
+           @RequestParam(required = false, value = "sidx") String sidx,
+           @RequestParam(required = false, value = "sord") String sord,
+
+           // @RequestParam("_search") boolean search,
+           @RequestParam(required = false, value = "searchField") String searchField,
+           @RequestParam(required = false, value = "searchOper") String searchOper,
+           @RequestParam(required = false, value = "searchString") String searchString,
+           @RequestParam(required = false, value = "filters") String filters,
+           @RequestParam(required = true, value = "instanceId") String instanceId)
+   {
+       logger.info("match url 4 '/workflow/showAllHisTasks'");
+       DataResponse<ProcessInstanceTask> dataResponse = new DataResponse<ProcessInstanceTask>();
+
+       String processInstanceId = instanceId;
+
+       if (StringUtils.isBlank(processInstanceId))
+       {
+           dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+           dataResponse.setTip("未获取到有效的流程实例id");
+           dataResponse.setTipDesc("无法保存申请：未获取到有效的流程实例id");
+           return dataResponse;
+       }
+       // 得到流程实例对应的全部流程task节点
+       try
+       {
+           WorkFlowExecutor workFlowExecutor = (WorkFlowExecutor) (ContextHolder
+                   .getBean(JOJOConstants.WORKFLOW_SERVICE));
+           List<ProcessInstanceTask> list = workFlowExecutor.getInstTasks(processInstanceId);
+           dataResponse.setRows(list);
+       }
+       catch (Exception e)
+       {
+           dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+           dataResponse.setTip(e.getMessage());
+           dataResponse.setTipDesc(ExceptionUtils.getStackTrace(e));
+           return dataResponse;
+       }
+       return dataResponse;
+   }
+
+
     /**
      *
      * <summary>
@@ -844,13 +993,30 @@ public class WorkFlowController extends BaseController
             dataResponse.setTipDesc("无法继续流程：当前流程task的id未设置。");
             return dataResponse;
         }
-        if (StringUtils.isBlank(form.getNextAssignee()))
+
+        if (!form.isLastNode())
         {
-            dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            dataResponse.setTip("未获取到有效的下一个流程处理人的id");
-            dataResponse.setTipDesc("无法继续流程：下一个流程节点的申请人id未设置。");
-            return dataResponse;
+            if (StringUtils.isBlank(form.getNextAssignee()))
+            {
+                dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                dataResponse.setTip("未获取到有效的下一个流程处理人的id");
+                dataResponse.setTipDesc("无法继续流程：下一个流程节点的申请人id未设置。");
+                return dataResponse;
+            }
+
+            // 检查用户是否为有效用户，无效则抛出异常
+
+            if (!ContextHolder.isValidUsr(form.getNextAssignee()))
+            {
+                dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                logger.error("无法启动申请流程：下一个流程节点的申请人id无效。");
+                dataResponse.setTip("下一个流程处理人的id无效");
+                dataResponse.setTipDesc("无法继续流程：下一个流程节点的申请人id无效。");
+                return dataResponse;
+            }
         }
+
+
         if (StringUtils.isBlank(form.getBusinessKey()))
         {
             dataResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

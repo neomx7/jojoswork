@@ -39,6 +39,11 @@ public class ProcessInstanceTaskForm extends BaseForm
     private boolean approvedRequired = false;
 
     /**
+     * 是否是最后一个节点
+     */
+    private boolean lastNode = false;
+
+    /**
      * 查询表单内容的spring bean名称，即配置在applicationContext-biz.xml的 bizBean们
      */
     private String businessKeyURL;
@@ -192,6 +197,20 @@ public class ProcessInstanceTaskForm extends BaseForm
     {
         this.approvedRequired = approvedRequired;
     }
+
+
+    public boolean isLastNode()
+    {
+        return lastNode;
+    }
+
+
+    public void setLastNode(boolean lastNode)
+    {
+        this.lastNode = lastNode;
+    }
+
+
 
 
 

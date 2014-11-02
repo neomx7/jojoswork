@@ -375,4 +375,33 @@ public interface WorkFlowExecutor
      */
     public ProcessInstance getProcessInstance(String processInstanceId);
 
+    /**
+     *
+     * <summary>
+     * [获取历史流程实例(已完成)对象]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @return
+     */
+    public ProcessInstance getProcessInstanceHistory(String processInstanceId);
+
+
+    /**
+     *
+     * <summary>
+     * [跟踪已完成的流程信息]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param processInstanceId
+     * @return
+     * @throws Exception
+     */
+    public List<Map<String, Object>> traceHisProcessDetails(String processInstanceId) throws Exception;
+
 }

@@ -19,6 +19,47 @@ $(function()
             completeTask(taskInstId);
         }
     });
+
+    // 同意或不同意的页面不同方式的展示
+
+    $("input[name='apprvFlg']").each(function()
+    {
+       $(this).bind(
+               "change",
+               function()
+               {
+                   if ($(this).val() == '2')
+                {
+                    //改成同意
+                   $("#endTaskBtn").hide();
+                   $("#submitBtn_"+taskInstId).show();
+                   $("#setNextUser_"+taskInstId).show();
+
+                }else if ($(this).val() == '1') {
+                    //改成不同意
+                    $("#endTaskBtn").show();
+                    $("#submitBtn_"+taskInstId).hide();
+                    $("#setNextUser_"+taskInstId).hide();
+                }
+               });
+    });
+
+    // 结束流程
+    $("button[id='endTaskBtn']").button(
+    {
+        icons :
+        {
+            primary : "ui-icon-gear"
+        },
+        text : true
+    }).click(function(event)
+    {
+        if ($("#taskTODOform_" + taskInstId).validationEngine('validate'))
+        {
+            completeTask(taskInstId);
+        }
+    });
+
     // 页签展示流程图和流程记录
     $('#taskTabs_' + taskInstId).tabs();
 
@@ -53,47 +94,49 @@ $(function()
 
 function completeTask(taskInstId)
 {
-    //$.toJSON
+    // $.toJSON
     var dataRequest = ($('#taskTODOform_' + taskInstId).serializeObject());
+
     $.ajax(
+    {
+        async : false,
+        type : 'POST',
+        // contentType : 'application/json',
+        url : "workflow/completeTask",
+        data : dataRequest,
+        dataType : 'json',
+        success : function(dataResp)
+        {
+            var josnResult = (dataResp);
+            $("#err_tip").empty();
+            if (josnResult.status == 200)
             {
-                async : false,
-                type : 'POST',
-//                contentType : 'application/json',
-                url : "workflow/completeTask",
-                data : dataRequest,
-                dataType : 'json',
-                success : function(dataResp)
-                {
-                    var josnResult = (dataResp);
-                    $("#err_tip").empty();
-                    if (josnResult.status == 200)
-                    {
-                        $("#tip_suc").html("处理成功");
-                        var targetHtml = $("#globalSucDiv").html();
-                        showTipMessage(targetHtml);
-                    }
-                    else
-                    {
-                        $("#tip").html(josnResult.tip);
-                        $("#tipDesc").html(josnResult.tipDesc);
-                        var targetHtml = $("#globalErrDiv").html();
-                        showTipMessage(targetHtml);
-                    }
-                },
-                error : function(XMLHttpRequest, textStatus, errorThrown)
-                {
-//                    $("#consoleDlg").dialog("close");
-                    alert(textStatus);
-                    $("#err_tip").empty();
-                    showTipMessage(XMLHttpRequest.responseText, "出错了~~", errorThrown);
-                },
-                complete:function(xhr,ts){
-//            alert("complete!!");
-//            alert(xhr.responseText);
-//            alert(ts);
-                }
-            });
+                $("#tip_suc").html("处理成功");
+                var targetHtml = $("#globalSucDiv").html();
+                showTipMessage(targetHtml);
+            }
+            else
+            {
+                $("#tip").html(josnResult.tip);
+                $("#tipDesc").html(josnResult.tipDesc);
+                var targetHtml = $("#globalErrDiv").html();
+                showTipMessage(targetHtml);
+            }
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown)
+        {
+            // $("#consoleDlg").dialog("close");
+            alert(textStatus);
+            $("#err_tip").empty();
+            showTipMessage(XMLHttpRequest.responseText, "出错了~~", errorThrown);
+        },
+        complete : function(xhr, ts)
+        {
+            // alert("complete!!");
+            // alert(xhr.responseText);
+            // alert(ts);
+        }
+    });
 }
 
 function showAllTasks(instanceId, taskInstId, approvedByManager)
@@ -238,7 +281,7 @@ function showAllTasks(instanceId, taskInstId, approvedByManager)
  * @param rowid
  * @param approvedByManager
  */
-function viewProcessGraghInfo(instanceId, taskInstId,approvedByManager)
+function viewProcessGraghInfo(instanceId, taskInstId, approvedByManager)
 {
     if (!instanceId)
     {
@@ -266,9 +309,7 @@ function viewProcessGraghInfo(instanceId, taskInstId,approvedByManager)
             {
                 return;
             }
-            var infoV = '<img  '
-            +'id="processGragh_' + instanceId + '"'
-            +'src=\"'
+            var infoV = '<img  ' + 'id="processGragh_' + instanceId + '"' + 'src=\"'
             // + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
             // + proDefId
             + appRelPath + '/styles/workflow/imgs/apply.png'
@@ -285,9 +326,9 @@ function viewProcessGraghInfo(instanceId, taskInstId,approvedByManager)
             var widthPos = 0;
             var heightPos = 0;
 
-            //获取左偏移 和 上偏移
-            var graphAbslLeft = $("#processGragh_"+ instanceId).position().left;
-            var graphAbslTop = $("#processGragh_"+ instanceId).position().top;
+            // 获取左偏移 和 上偏移
+            var graphAbslLeft = $("#processGragh_" + instanceId).position().left;
+            var graphAbslTop = $("#processGragh_" + instanceId).position().top;
             var taskInfo = null;
             for (var i = 0; i < dataResult.length; i++)
             {
@@ -298,11 +339,11 @@ function viewProcessGraghInfo(instanceId, taskInstId,approvedByManager)
                     yPos = taskInfo["y"];
                     widthPos = taskInfo["width"];
                     heightPos = taskInfo["height"];
-                    // relative  absolute
-                    var activiTaskHtml = '<div style="position:absolute; border:2px solid red;left:' + (xPos - 1+ graphAbslLeft)
-                            + 'px;top:' + (yPos - 1 + graphAbslTop) + 'px;width:' + (widthPos - 2) + 'px;height:' + (heightPos - 2)
-                            + 'px;"></div>' + '';
-//                    infoV = infoV + activiTaskHtml;
+                    // relative absolute
+                    var activiTaskHtml = '<div style="position:absolute; border:2px solid red;left:'
+                            + (xPos - 1 + graphAbslLeft) + 'px;top:' + (yPos - 1 + graphAbslTop) + 'px;width:'
+                            + (widthPos - 2) + 'px;height:' + (heightPos - 2) + 'px;"></div>' + '';
+                    // infoV = infoV + activiTaskHtml;
                     $("#taskTabs_" + taskInstId + "-1").append(activiTaskHtml);
                 }
             }

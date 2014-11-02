@@ -23,8 +23,18 @@ public abstract class TaskHandler implements TaskListener
     /**   */
     private static final long serialVersionUID = 5603774273648788216L;
 
+    /**
+     * 需要审批意见
+     */
     private FixedValue approvedRequired;
+    /**
+     * 流程状态自定义，9为已经完成。
+     */
     private FixedValue status;
+    /**
+     * 为最后一个节点 ，'yes' | 'true' | '1' 为是，其他都不是。
+     */
+    private FixedValue isLastNode;
 
     public FixedValue getApprovedRequired()
     {
@@ -44,5 +54,15 @@ public abstract class TaskHandler implements TaskListener
     public void setStatus(FixedValue status)
     {
         this.status = status;
+    }
+
+    public FixedValue getIsLastNode()
+    {
+        return isLastNode;
+    }
+
+    public void setIsLastNode(FixedValue isLastNode)
+    {
+        this.isLastNode = isLastNode;
     }
 }

@@ -97,9 +97,7 @@ $(function()
                                 var ids = currGrid.jqGrid('getDataIDs');
                                 if (ids)
                                 {
-                                    var btnHtml = "<input style='height:22px;width:90px;' type='button' value='处理' onClick='toProcessDoneTask(\"doneTaskGrid\",\"#instanceId\",\"#rowid\")'/>"
-                                            + "&nbsp;"
-                                            + "<input style='height:22px;width:90px;' type='button' value='查看流程' onClick='viewProcessInfo(\"doneTaskGrid\",\"#rowindex\")'/>";
+                                    var btnHtml = "<input style='height:22px;width:90px;' type='button' value='查看流程' onClick='viewProcessInfo(\"doneTaskGrid\",\"#instanceId\",\"#rowid\")'/>";
                                     for (var i = 0; i < ids.length; i++)
                                     {
                                         var rowdata = currGrid.jqGrid('getRowData', ids[i]);// 行数据
@@ -147,18 +145,14 @@ $(function()
     // });
 });
 
-/**
- * @param gridId
- * @param taskId
- */
-function toProcessDoneTask(gridId, instanceId, taskId)
+
+function viewProcessInfo(tblId, instanceId, taskId)
 {
-    // var currGrid = $('#' + gridId);
-    var dataRequest = 'theInstId=' + instanceId + "&theTaskId=" + taskId;
+    var dataRequest = 'theInstId=' + instanceId ;
     $.ajax(
     {
         type : 'POST',
-        url : 'workflow/showTask',
+        url : 'workflow/showHistoryTask',
         data : dataRequest,
         success : function(dataResp)
         {
@@ -166,52 +160,8 @@ function toProcessDoneTask(gridId, instanceId, taskId)
             consoleDlg.empty();
             var infoV = dataResp;
             consoleDlg.append(dataResp);
-            consoleDlg.dialog("option", "title", "流程查看").dialog("open");
+            consoleDlg.dialog("option", "title", "历史流程查看").dialog("open");
 
-        },
-        error : function(XMLHttpRequest, textStatus, errorThrown)
-        {
-            showTipMessage(XMLHttpRequest.responseText, "出错了~~");
-        }
-    });
-}
-
-function viewProcessInfo(tblId, rowid)
-{
-    var rowdata = $("#" + tblId).jqGrid('getRowData', rowid);
-    var proDefId = rowdata.processDefinitionId;
-    var proInsId = rowdata.processInstanceId;
-    var jsonData = {};
-    jsonData["proDefId"] = proDefId;
-    jsonData["proInsId"] = proInsId;
-    jsonData = $.toJSON(jsonData);
-    // 弹出页面显示流程信息
-    $.ajax(
-    {
-        type : 'POST',
-        contentType : 'application/json',
-        url : 'workflow/traceProcess',
-        data : jsonData,
-        dataType : 'json',
-        success : function(dataResult)
-        {
-            var consoleDlg = $("#consoleDlg");
-            consoleDlg.empty();
-            var infoV = '<img  src=\"'
-            // + appRelPath + '/workflow/getWorkFlowGraph?proDefId='
-            // + proDefId
-            + appRelPath + '/styles/workflow/imgs/apply.png'
-
-            + '\" style="border:1px solid #dddddd ;position:absolute; left:'
-            // +dataResult.defX
-            + '0' + 'px; top:'
-            // +dataResult.defY
-            + '0' + 'px;" />' + '<div style="position:absolute; border:2px solid red;left:' + (dataResult.x - 1)
-                    + 'px;top:' + (dataResult.y - 1) + 'px;width:' + (dataResult.width - 2) + 'px;height:'
-                    + (dataResult.height - 2) + 'px;"></div>' + '';
-            // alert(infoV);
-            consoleDlg.append(infoV);
-            consoleDlg.dialog("option", "title", "查看流程信息").dialog("open");
         },
         error : function(XMLHttpRequest, textStatus, errorThrown)
         {

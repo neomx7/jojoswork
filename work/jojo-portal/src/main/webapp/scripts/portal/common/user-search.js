@@ -76,7 +76,7 @@ function searchUser(userInputObj)
                  var nextAssignee =  $("input[name='nextAssignee']");
                  if (nextAssignee && nextAssignee.length >0)
                 {
-                     nextAssignee.eq(0).val(ui.item.id);
+                     nextAssignee.first().val(ui.item.id);
                 }
 
             }
