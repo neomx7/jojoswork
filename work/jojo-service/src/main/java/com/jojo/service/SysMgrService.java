@@ -104,4 +104,6 @@ public interface SysMgrService
   public List<OrgDO> queryDeptsByParentCode(Map<String, Object> params);
 
   public List<UserDO> queryDeptUser(Map<String, Object> params);
+
+  public void saveUser(Map<String, Object> params);
 }

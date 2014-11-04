@@ -38,14 +38,16 @@ public class UserController extends BaseController
     @Autowired
     private UserBiz userBiz;
 
+
+
+
     /**
      *
      * <summary>
      * <p>
-     * 点击top栏的上层菜单,页面刷新 top 栏目的二级菜单
+     * 根据用户名字(不是登录名)模糊查询用户列表
      * </p>
      * </summary>
-     * , method = RequestMethod.POST
      *
      * @author jojo
      *

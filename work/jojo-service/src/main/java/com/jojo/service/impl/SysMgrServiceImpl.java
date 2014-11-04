@@ -8,10 +8,12 @@ package com.jojo.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.activemq.filter.function.splitFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jojo.dal.common.postgre.SysMgrMapper;
+import com.jojo.dal.common.postgre.UserMapper;
 import com.jojo.dal.common.postgre.domain.OrgDO;
 import com.jojo.dal.common.postgre.domain.OrgUserDO;
 import com.jojo.dal.common.postgre.domain.RoleDO;
@@ -34,6 +36,8 @@ public class SysMgrServiceImpl implements SysMgrService
     @Autowired
     private SysMgrMapper mapper;
 
+    @Autowired
+    private UserMapper userMapper;
 
 
     @Override
@@ -57,7 +61,7 @@ public class SysMgrServiceImpl implements SysMgrService
     @Override
     public UserDO getUser(Map<String, Object> params)
     {
-        return mapper.getUser(params);
+        return userMapper.getUser(params);
     }
 
     @Override
@@ -76,5 +80,11 @@ public class SysMgrServiceImpl implements SysMgrService
     public List<UserDO> queryDeptUser(Map<String, Object> params)
     {
         return mapper.queryDeptUsers(params);
+    }
+
+    @Override
+    public void saveUser(Map<String, Object> params)
+    {
+        userMapper.saveUser(params);
     }
 }

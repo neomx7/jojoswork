@@ -16,13 +16,51 @@
 		<result property="theRemark" column="T_REMARK" />
 		<result property="crtUserId" column="CRT_USR" />
 		<result property="crtUserName" column="CRT_USR_NAME" />
-		<result property="crtTimestamp" column="CRT_TIME" typeHandler="org.apache.ibatis.type.SqlTimestampTypeHandler"/>
+		<result property="crtTimestamp" column="CRT_TIME" typeHandler="org.apache.ibatis.type.SqlTimestampTypeHandler" />
 		<result property="updUserId" column="UPD_USR" />
 		<result property="updUserName" column="UPD_USR_NAME" />
-		<result property="updTimestamp" column="UPD_TIME" typeHandler="org.apache.ibatis.type.SqlTimestampTypeHandler"/>
+		<result property="updTimestamp" column="UPD_TIME" typeHandler="org.apache.ibatis.type.SqlTimestampTypeHandler" />
 
 	</resultMap>
 
+	<!-- 编辑用户 -->
+	<update id="saveUser" parameterType="java.util.Map">
+		UPDATE JOJO_USR
+		SET
+		 UPD_TIME = #{updTimestamp}
+		<if test="theName != null and theName != ''">
+			, T_NAME = #{theName}
+		</if>
+		<if test="email != null and email != ''">
+			, T_EMAIL = #{email}
+		</if>
+		<if test="tel != null and tel != ''">
+			, T_TEL = #{tel}
+		</if>
+		<if test="pwd != null and pwd != ''">
+			, T_PWD = #{pwd}
+		</if>
+
+		<if test="mobile != null and mobile != ''">
+			, T_MOBILE = #{mobile}
+		</if>
+		<if test="updUserId != null and updUserId != ''">
+			, UPD_USR = #{updUserId}
+		</if>
+		WHERE 1=1
+		AND  T_USRID = #{usrId}
+	</update>
+
+
+	<!-- 用户查询 -->
+	<select id="getUser" parameterType="java.util.Map" resultMap="simpleUserResultMap">
+		SELECT
+		T.*
+		FROM JOJO_USR T
+		WHERE 1=1
+		AND T.T_USRID =
+		#{usrId}
+	</select>
 
 	<!-- 部门用户列表查询 -->
 	<select id="queryUsers" parameterType="java.util.Map" resultMap="simpleUserResultMap">

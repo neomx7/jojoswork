@@ -22,6 +22,20 @@ public interface UserMapper
 {
 
     /**
+    *
+    * <summary>
+    * [获取单个用户,联立得到部门用户list]<br>
+    * <br>
+    * </summary>
+    *
+    * @author jojo
+    *
+    * @param params
+    * @return
+    */
+   public UserDO getUser(Map<String, Object> params);
+
+    /**
      *
      * <summary>
      * [获取用户list,每个用户联立得到部门用户list]<br>
@@ -33,5 +47,18 @@ public interface UserMapper
      * @return
      */
     public List<UserDO> queryUsers(Map<String, Object> params);
+
+    /**
+     *
+     * <summary>
+     * [保存用户信息]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param params
+     */
+    public void saveUser(Map<String, Object> params);
 
 }

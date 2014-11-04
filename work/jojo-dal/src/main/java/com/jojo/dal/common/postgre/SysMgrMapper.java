@@ -77,19 +77,6 @@ public interface SysMgrMapper
      */
     public List<RoleDO> queryRoles(Map<String, Object> params);
 
-    /**
-     *
-     * <summary>
-     * [获取单个用户,联立得到部门用户list]<br>
-     * <br>
-     * </summary>
-     *
-     * @author jojo
-     *
-     * @param params
-     * @return
-     */
-    public UserDO getUser(Map<String, Object> params);
 
     /**
      *

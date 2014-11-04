@@ -5,7 +5,9 @@
  */
 package com.jojo.biz.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,23 @@ public class SysMgrBizImpl implements SysMgrBiz
 {
     @Autowired
     private SysMgrService sysMgrService;
+
+    public void saveUser(UserDO userDO){
+        Map<String, Object> params = new HashMap<String, Object>(16);
+        params.put("usrId", userDO.getUsrId());
+
+        params.put("updTimestamp", new Timestamp(new Date().getTime()));
+        params.put("theName", userDO.getTheName());
+        params.put("email", userDO.getEmail());
+        params.put("tel", userDO.getTel());
+        params.put("mobile", userDO.getMobile());
+        params.put("updUserId", userDO.getUpdUserId());
+        params.put("usrId", userDO.getUsrId());
+        params.put("pwd", userDO.getPwd());
+
+
+        sysMgrService.saveUser(params);
+    }
 
     @Override
     public List<UserDO> queryUsers(Map<String, Object> params)

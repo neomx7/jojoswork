@@ -233,8 +233,6 @@
 	</select> -->
 
 
-	<select id="getUser" parameterType="java.util.Map" resultMap="userResultMap">
-	</select>
 
 	<select id="queryDeptsByParentCode" parameterType="java.util.Map" resultMap="orgResultMap">
 		select * from jojo_deprt t where t.t_code like CONCAT(CONCAT('%', #{parentCode}), '%') and length(t.t_code)  = #{subCodeLength}

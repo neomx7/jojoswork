@@ -29,6 +29,19 @@ public interface SysMgrBiz
     /**
      *
      * <summary>
+     * [保存用户信息]<br>
+     * <br>
+     * </summary>
+     *
+     * @author jojo
+     *
+     * @param params
+     */
+    public void saveUser(UserDO userDO);
+
+    /**
+     *
+     * <summary>
      * [获取用户list,每个用户联立得到部门用户list]<br>
      * <br>
      * </summary>

@@ -76,7 +76,7 @@ public class LogInOutController extends BaseController
 //            DateUtil.getCurrentLongDateTimeMs());
 //
 //        log(getOperateType(), punUser.getUserName(), "登录控台");
-        System.out.println(getRedirectURL(form.getRedirectURL()));
+//        System.out.println(getRedirectURL(form.getRedirectURL()));
         return getRedirectURL(form.getRedirectURL());
 
     }
